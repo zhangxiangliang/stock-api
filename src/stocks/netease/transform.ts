@@ -1,5 +1,8 @@
-import BaseTransform from "../base/transform";
-import { SZ, HK, US, SH } from "../../utils/constant";
+// Stocks
+import BaseTransform from "@stocks/base/transform";
+
+// Utils
+import { SZ, HK, US, SH } from "@utils/constant";
 
 /**
  * 网易股票代码转换
