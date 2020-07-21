@@ -1,0 +1,14 @@
+{
+  "extends": ["taro"],
+  "rules": {
+    "semi": ["error", "always"]
+  },
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "useJSXTextNode": true,
+    "project": "./tsconfig.json"
+  }
+}
