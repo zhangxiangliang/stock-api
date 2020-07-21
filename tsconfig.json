@@ -1,14 +1,31 @@
 {
   "compilerOptions": {
+    "baseUrl": "src",
+    "rootDir": "src",
     "target": "es2017",
     "outDir": "dist",
-    "rootDir": "src",
     "module": "commonjs",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "paths": {
+      "@stocks/*": [
+        "stocks/*"
+      ],
+      "@utils/*": [
+        "utils/*"
+      ],
+      "@interfaces/*": [
+        "interfaces/*"
+      ]
+    }
   },
-  "include": ["src/**/*.ts"],
-  "exclude": ["node_modules/**", "dist/**"]
+  "include": [
+    "src/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules/**",
+    "dist/**"
+  ]
 }
