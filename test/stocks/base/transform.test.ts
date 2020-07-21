@@ -1,4 +1,4 @@
-import BaseTransform from "../../../src/stocks-api/base/transform";
+import BaseTransform from "../../../src/stocks/base/transform";
 
 describe("【基础】股票代码转换测试", () => {
   it("深交所股票代码转换", async () => {
