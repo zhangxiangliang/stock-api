@@ -1,14 +1,17 @@
 // Utils
 import { SZ, SH, HK, US } from "@utils/constant";
 
+// Types
+import Transform from "@interfaces/Transform";
+
 /**
  * 基础股票代码转换
  */
-class BaseTransform {
+class BaseTransform implements Transform {
   /**
    * 构造函数
    */
-  constructor() { }
+  constructor() {}
 
   /**
    * 交易所股票代码转换
@@ -39,7 +42,7 @@ class BaseTransform {
    * @param codes 股票代码
    */
   public transforms(codes: string[]): string[] {
-    return codes.map(code => this.transform(code));
+    return codes.map((code) => this.transform(code));
   }
 
   /**

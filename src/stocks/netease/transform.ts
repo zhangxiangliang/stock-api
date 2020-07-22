@@ -16,6 +16,22 @@ class NeteaseTransform extends BaseTransform {
   }
 
   /**
+   * 交易所股票代码转换
+   * @param code 股票代码
+   */
+  public transform(code: string): string {
+    return super.transform(code);
+  }
+
+  /**
+   * 交易所股票组代码转换
+   * @param codes 股票代码
+   */
+  public transforms(codes: string[]): string[] {
+    return super.transforms(codes);
+  }
+
+  /**
    * 深交所股票代码转换
    * @param code 股票代码
    */
