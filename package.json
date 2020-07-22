@@ -1,11 +1,17 @@
 {
   "name": "free-api",
   "version": "1.0.0",
-  "main": "index.js",
+  "description": "免费股票数据分析相关接口 -- 韭菜小猪出品",
+  "keywords": ["股票", "数据分析", "接口"],
   "repository": "https://github.com/jiucaixiaozhu/free-api",
   "author": "zhangxiangliang",
   "license": "MIT",
+  "files": ["dist/**/*"],
   "scripts": {
+    "prepublishOnly": "yarn run test",
+    "prepare": "yarn run build",
+    "version": "git add -A *",
+    "postversion": "git push && git push --tags",
     "build": "tsc",
     "watch": "tsc --watch",
     "test": "jest --config jestconfig.json"
