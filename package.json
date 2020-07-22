@@ -1,9 +1,9 @@
 {
-  "name": "free-api",
+  "name": "stock-api",
   "version": "1.0.0",
-  "description": "免费股票数据分析相关接口 -- 韭菜小猪出品",
+  "description": "【韭菜小猪】免费股票数据分析相关接口",
   "keywords": ["股票", "数据分析", "接口"],
-  "repository": "https://github.com/jiucaixiaozhu/free-api",
+  "repository": "https://github.com/jiucaixiaozhu/stock-api",
   "author": "zhangxiangliang",
   "license": "MIT",
   "files": ["dist/**/*"],
