@@ -1,7 +1,7 @@
 // Stocks
 import BaseTransform from "@stocks/base/transform";
 
-// Stock
+// Types
 import Stock from "@interfaces/Stock";
 
 /**
