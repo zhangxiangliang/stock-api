@@ -10,7 +10,8 @@
   "scripts": {
     "prepublishOnly": "yarn run test",
     "prepare": "yarn run build",
-    "version": "git add -A *",
+    "preversion": "npm test",
+    "version": "git add -A ./",
     "postversion": "git push && git push --tags",
     "build": "tsc",
     "watch": "tsc --watch",
