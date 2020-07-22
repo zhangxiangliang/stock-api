@@ -1,12 +1,18 @@
 {
   "name": "stock-api",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "【韭菜小猪】免费股票数据分析相关接口",
-  "keywords": ["股票", "数据分析", "接口"],
+  "keywords": [
+    "股票",
+    "数据分析",
+    "接口"
+  ],
   "repository": "https://github.com/jiucaixiaozhu/stock-api",
   "author": "zhangxiangliang",
   "license": "MIT",
-  "files": ["dist/**/*"],
+  "files": [
+    "dist/**/*"
+  ],
   "scripts": {
     "prepublishOnly": "yarn run test",
     "prepare": "yarn run build",
