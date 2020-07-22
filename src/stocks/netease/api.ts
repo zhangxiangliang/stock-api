@@ -1,4 +1,4 @@
-// Stock
+// Stocks
 import Base from "@stocks/base/api";
 import NeteaseTransform from "@stocks/netease/transform";
 
