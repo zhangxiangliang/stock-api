@@ -7,6 +7,7 @@
     "数据分析",
     "接口"
   ],
+  "main": "dist/index.js",
   "repository": "https://github.com/jiucaixiaozhu/stock-api",
   "author": "zhangxiangliang",
   "license": "MIT",
