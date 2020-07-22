@@ -1,3 +1,3 @@
-const fetch = require('axios').default;
+import fetch from 'flyio';
 
 export default fetch;
