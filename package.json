@@ -37,7 +37,6 @@
     "@interfaces": "./dist/interfaces"
   },
   "dependencies": {
-    "flyio": "^0.6.14",
-    "module-alias": "^2.2.2"
+    "flyio": "^0.6.14"
   }
 }
