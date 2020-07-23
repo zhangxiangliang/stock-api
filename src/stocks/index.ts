@@ -1,6 +1,6 @@
 // Stocks
-import base from '@stocks/base';
-import netease from '@stocks/netease';
+import base from './base';
+import netease from './netease';
 
 export default {
   base,

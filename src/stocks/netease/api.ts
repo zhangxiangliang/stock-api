@@ -1,12 +1,12 @@
 // Stocks
-import Base from "@stocks/base/api";
-import NeteaseTransform from "@stocks/netease/transform";
+import Base from "../../stocks/base/api";
+import NeteaseTransform from "../../stocks/netease/transform";
 
 // Utils
-import fetch from "@utils/fetch";
+import fetch from "../../utils/fetch";
 
 // Types
-import Stock from "@interfaces/Stock";
+import Stock from "../../interfaces/Stock";
 
 /**
  * 网易股票代码接口
