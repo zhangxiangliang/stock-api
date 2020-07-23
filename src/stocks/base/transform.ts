@@ -1,8 +1,8 @@
 // Utils
-import { SZ, SH, HK, US } from "@utils/constant";
+import { SZ, SH, HK, US } from "../../utils/constant";
 
 // Types
-import Transform from "@interfaces/Transform";
+import Transform from "../../interfaces/Transform";
 
 /**
  * 基础股票代码转换
@@ -11,7 +11,7 @@ class BaseTransform implements Transform {
   /**
    * 构造函数
    */
-  constructor() {}
+  constructor() { }
 
   /**
    * 交易所股票代码转换
