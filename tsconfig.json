@@ -8,18 +8,7 @@
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "paths": {
-      "@stocks/*": [
-        "stocks/*"
-      ],
-      "@utils/*": [
-        "utils/*"
-      ],
-      "@interfaces/*": [
-        "interfaces/*"
-      ]
-    }
+    "forceConsistentCasingInFileNames": true
   },
   "include": [
     "src/**/*.ts"
