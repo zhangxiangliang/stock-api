@@ -6,7 +6,7 @@ import NeteaseTransform from "../../stocks/netease/transform";
 import fetch from "../../utils/fetch";
 
 // Types
-import Stock from "../../interfaces/Stock";
+import Stock from "../../../types/stock";
 
 /**
  * 网易股票代码接口

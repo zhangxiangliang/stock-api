@@ -2,7 +2,7 @@
 import BaseTransform from "../../stocks/base/transform";
 
 // Types
-import Stock from "../../interfaces/Stock";
+import Stock from "../../../types/stock";
 
 /**
  * 基础股票代码接口
