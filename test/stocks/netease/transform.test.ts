@@ -1,3 +1,4 @@
+// Stock
 import NeteaseTransform from "../../../src/stocks/netease/transform";
 
 describe("【网易】股票代码转换测试", () => {

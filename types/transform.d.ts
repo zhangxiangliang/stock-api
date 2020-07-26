@@ -1,4 +1,4 @@
-interface Transform {
+export interface Transform {
   transform(code: string): string;
   transforms(codes: string[]): string[];
   SZExchangeTransform(code: string): string;

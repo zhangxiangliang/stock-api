@@ -1,3 +1,4 @@
+// Stock
 import BaseTransform from "../../../src/stocks/base/transform";
 
 describe("【基础】股票代码转换测试", () => {

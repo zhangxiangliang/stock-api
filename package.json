@@ -8,6 +8,7 @@
     "接口"
   ],
   "main": "dist/index.js",
+  "types": "types/index.d.ts",
   "repository": "https://github.com/jiucaixiaozhu/stock-api",
   "author": "zhangxiangliang",
   "license": "MIT",
