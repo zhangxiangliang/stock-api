@@ -5,6 +5,7 @@ import SinaExchangeTransform from "../../stocks/sina/exchangeTransform";
 
 // Utils
 import fetch from "../../utils/fetch";
+import iconv from "../../utils/iconv";
 
 // Types
 import Stock from "../../../types/stock";
@@ -31,7 +32,8 @@ class Sina extends Base {
     const url = `https://hq.sinajs.cn/list=${transform}`;
     const res = await fetch.get(url);
 
-    const rows = res.data.split(";\n");
+    const body = iconv.decode(res.body, "gb18030");
+    const rows = body.split(";\n");
     const row = rows[0];
 
     // 数据深解析
@@ -57,7 +59,9 @@ class Sina extends Base {
     // 数据获取
     const url = `https://hq.sinajs.cn/list=${transforms.join(',')}`;
     const res = await fetch.get(url);
-    const rows: string[] = res.data.split(";\n");
+
+    const body = iconv.decode(res.body, "gb18030");
+    const rows = body.split(";\n");
 
     return codes.map((code, index) => {
       // 数据深解析
