@@ -1,3 +1,3 @@
-import fetch from 'flyio';
+const superagent = require('superagent');
 
-export default fetch;
+export default superagent;
