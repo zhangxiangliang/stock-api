@@ -27,13 +27,14 @@
     "test": "jest --config jestconfig.json"
   },
   "devDependencies": {
+    "@types/jest": "^26.0.5",
+    "@typescript-eslint/parser": "^3.7.0",
     "jest": "^26.1.0",
     "ts-jest": "^26.1.3",
-    "typescript": "^3.9.7",
-    "@types/jest": "^26.0.5",
-    "@typescript-eslint/parser": "^3.7.0"
+    "typescript": "^3.9.7"
   },
   "dependencies": {
-    "flyio": "^0.6.14"
+    "iconv-lite": "^0.6.2",
+    "superagent": "^5.3.1"
   }
 }
