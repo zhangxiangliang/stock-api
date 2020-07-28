@@ -1,5 +1,5 @@
 // Stocks
-import BaseTransform from "../../stocks/base/transform";
+import BaseTransform from "./exchangeTransform";
 
 // Types
 import Stock from "../../../types/stock";
@@ -11,7 +11,7 @@ class Base {
   /**
    * 构造函数
    */
-  constructor(public transform: BaseTransform) { }
+  constructor() { }
 
   /**
    * 获取股票数据
