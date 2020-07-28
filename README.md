@@ -9,7 +9,8 @@
 | 名称 | 接口名 | 官网 |
 | --- | --- | --- |
 | 基础示例 | base | 无 |
-| 网易财经 | netease | [传送门](https://money.163.com/)
+| 网易财经 | netease | [传送门](https://money.163.com/) |
+| 新浪股票 | sina | [传送门](https://finance.sina.com.cn/) |
 
 ## 安装 
 
