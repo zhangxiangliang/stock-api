@@ -29,7 +29,7 @@ class Netease extends Base {
     const url = `https://api.money.126.net/data/feed/${transform},money.api?callback=topstock`;
     const res = await fetch.get(url);
 
-    const items = JSON.parse(res.data.replace(/\(|\)|;|(topstock)/g, ''));
+    const items = JSON.parse(res.body.toString().replace(/\(|\)|;|(topstock)/g, ''));
     const item = items[transform];
 
     return {
@@ -50,7 +50,7 @@ class Netease extends Base {
     const url = `https://api.money.126.net/data/feed/${transforms.join(',')},money.api?callback=topstock`;
     const res = await fetch.get(url);
 
-    const items = JSON.parse(res.data.replace(/\(|\)|;|(topstock)/g, ''));
+    const items = JSON.parse(res.body.toString().replace(/\(|\)|;|(topstock)/g, ''));
 
     return codes.map(code => {
       const transform = (new NeteaseExchangeTransform).transform(code);
