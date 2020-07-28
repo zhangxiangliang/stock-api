@@ -1,5 +1,5 @@
 // Stocks
-import BaseTransform from "../../stocks/base/transform";
+import BaseExchangeTransform from "../base/exchangeTransform";
 
 // Utils
 import { SZ, HK, US, SH } from "../../utils/constant";
@@ -7,7 +7,7 @@ import { SZ, HK, US, SH } from "../../utils/constant";
 /**
  * 网易股票代码转换
  */
-class NeteaseTransform extends BaseTransform {
+class NeteaseExchangeTransform extends BaseExchangeTransform {
   /**
    * 构造函数
    */
@@ -80,4 +80,4 @@ class NeteaseTransform extends BaseTransform {
   }
 }
 
-export default NeteaseTransform;
+export default NeteaseExchangeTransform;

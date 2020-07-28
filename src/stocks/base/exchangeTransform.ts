@@ -7,7 +7,7 @@ import Transform from "../../../types/transform";
 /**
  * 基础股票代码转换
  */
-class BaseTransform implements Transform {
+class BaseExchangeTransform implements Transform {
   /**
    * 构造函数
    */
@@ -94,4 +94,4 @@ class BaseTransform implements Transform {
   }
 }
 
-export default BaseTransform;
+export default BaseExchangeTransform;
