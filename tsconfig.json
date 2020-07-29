@@ -8,7 +8,26 @@
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "paths": {
+      "types/*": [
+        "../types/*"
+      ],
+      "@stocks/*": [
+        "stocks/*"
+      ],
+      "@utils/*": [
+        "utils/*"
+      ],
+      "@interfaces/*": [
+        "interfaces/*"
+      ]
+    },
+    "plugins": [
+      {
+        "transform": "typescript-transform-paths"
+      }
+    ]
   },
   "include": [
     "src/**/*.ts"
