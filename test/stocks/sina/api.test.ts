@@ -1,7 +1,7 @@
 // Stock
 import Sina from "../../../src/stocks/sina/api";
 
-describe("【网易】股票代码接口", () => {
+describe("【新浪】股票代码接口", () => {
   it("需要获取的股票代码", async () => {
     await expect(new Sina().getStock("SH510500"))
       .resolves
