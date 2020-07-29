@@ -1,5 +1,5 @@
 // Stock
-import TencentExchangeTransform from "../../../src/stocks/tencent/exchangeTransform";
+const TencentExchangeTransform = require("stocks/tencent/transforms/exchange").default;
 
 describe("【腾讯】股票代码转换测试", () => {
   it("深交所股票代码转换", async () => {

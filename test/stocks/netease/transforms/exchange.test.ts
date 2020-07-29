@@ -1,5 +1,5 @@
 // Stock
-import NeteaseExchangeTransform from "../../../src/stocks/netease/exchangeTransform";
+const NeteaseExchangeTransform = require("stocks/netease/transforms/exchange").default;
 
 describe("【网易】股票代码转换测试", () => {
   it("深交所股票代码转换", async () => {

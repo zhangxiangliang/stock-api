@@ -12,6 +12,7 @@
     "json",
     "node"
   ],
+  "moduleDirectories": ["node_modules", "src"],
   "moduleNameMapper": {
     "^@stocks/(.*)$": "<rootDir>/src/stocks/$1",
     "^@utils/(.*)$": "<rootDir>/src/utils/$1",

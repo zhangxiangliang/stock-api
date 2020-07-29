@@ -1,5 +1,5 @@
 // Stock
-import Base from "../../../src/stocks/base/api";
+const Base = require("stocks/base").default;
 
 describe("【基础】股票代码接口", () => {
   it("需要获取的股票代码", async () => {

@@ -1,5 +1,5 @@
 // Stock
-import SinaExchangeTransform from "../../../src/stocks/sina/exchangeTransform";
+const SinaExchangeTransform = require("stocks/sina/transforms/exchange").default;
 
 describe("【新浪】股票代码转换测试", () => {
   it("深交所股票代码转换", async () => {
