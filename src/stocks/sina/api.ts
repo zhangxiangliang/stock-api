@@ -11,7 +11,7 @@ import iconv from "@utils/iconv";
 import Stock from "types/stock";
 
 /**
- * 网易股票代码接口
+ * 新浪股票代码接口
  */
 class Sina extends Base {
   /**
@@ -42,7 +42,7 @@ class Sina extends Base {
     const data = (new SinaDataTransform(code, params));
 
     return {
-      code: code,
+      code: data.getCode(),
       name: data.getName(),
       percent: data.getPercent(),
 
@@ -74,7 +74,7 @@ class Sina extends Base {
       const data = (new SinaDataTransform(code, params));
 
       return {
-        code: code,
+        code: data.getCode(),
         name: data.getName(),
         percent: data.getPercent(),
 

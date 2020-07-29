@@ -1,14 +1,26 @@
+// Stocks
+import BaseDataTransform from "@stocks/base/dataTransform";
+
 // Utils
 import { SZ, HK, US, SH } from "@utils/constant";
 
 /**
- * 网易数据解析
+ * 新浪股票数据解析
  */
-class SinaDataTransform {
+class SinaDataTransform extends BaseDataTransform {
   /**
    * 构造函数
    */
-  constructor(public code: string, public params: string[]) { }
+  constructor(public code: string, public params: string[]) {
+    super();
+  }
+
+  /**
+   * 获取代码
+   */
+  getCode(): string {
+    return String(this.code);
+  }
 
   /**
    * 获取名称

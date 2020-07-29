@@ -1,5 +1,6 @@
 // Stocks
 import Base from "@stocks/base/api";
+import NeteaseDataTransform from "@stocks/netease/dataTransform";
 import NeteaseExchangeTransform from "@stocks/netease/exchangeTransform";
 
 // Utils
@@ -30,13 +31,18 @@ class Netease extends Base {
     const res = await fetch.get(url);
 
     const items = JSON.parse(res.body.toString().replace(/\(|\)|;|(topstock)/g, ''));
-    const item = items[transform];
+    const params = items[transform];
+    const data = (new NeteaseDataTransform(code, params));
 
     return {
-      code: String(code),
-      name: String(item.name),
-      price: Number(item.price),
-      percent: Number(item.percent),
+      code: data.getCode(),
+      name: data.getName(),
+      percent: data.getPercent(),
+
+      now: data.getNow(),
+      low: data.getLow(),
+      high: data.getHigh(),
+      yesterday: data.getYesterday(),
     };
   }
 
@@ -54,13 +60,18 @@ class Netease extends Base {
 
     return codes.map(code => {
       const transform = (new NeteaseExchangeTransform).transform(code);
-      const item = items[transform];
+      const params = items[transform];
+      const data = (new NeteaseDataTransform(code, params));
 
       return {
-        code: code,
-        name: item.name,
-        price: item.price,
-        percent: item.percent,
+        code: data.getCode(),
+        name: data.getName(),
+        percent: data.getPercent(),
+
+        now: data.getNow(),
+        low: data.getLow(),
+        high: data.getHigh(),
+        yesterday: data.getYesterday(),
       }
     });
   }
