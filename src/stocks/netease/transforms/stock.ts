@@ -1,57 +1,68 @@
+// Stocks
+import BaseStockTransform from "@stocks/base/transforms/stock";
+
 // Types
 import Stock from "types/stock";
+import Dictionary from "types/dictionary";
 
 /**
- * 基础股票数据解析
+ * 网易股票数据解析
  */
-class BaseDataTransform {
+class NeteaseStockTransform extends BaseStockTransform {
+  /**
+   * 构造函数
+   */
+  constructor(public code: string, public params: Dictionary<number | string>) {
+    super();
+  }
+
   /**
    * 获取代码
    */
   getCode(): string {
-    throw new Error('未实现获取代码');
+    return String(this.code);
   }
 
   /**
    * 获取名称
    */
   getName(): string {
-    throw new Error('未实现获取名称');
+    return String(this.params.name);
   }
 
   /**
    * 获取现价
    */
   getNow(): number {
-    throw new Error('未实现获取现价');
+    return Number(this.params.price);
   }
 
   /**
    * 获取最低价
    */
   getLow(): number {
-    throw new Error('未实现获取最低价');
+    return Number(this.params.low);
   }
 
   /**
    * 获取最高价
    */
   getHigh(): number {
-    throw new Error('未实现获取最高价');
+    return Number(this.params.high);
   }
 
   /**
    * 获取昨日收盘价
    */
   getYesterday(): number {
-    throw new Error('未实现获取昨日收盘价');
+    return Number(this.params.yestclose);
   }
 
   /**
    * 获取涨跌
    */
   getPercent(): number {
-    throw new Error('未实现获取涨跌');
+    return Number(this.params.percent);
   }
 
   /**
@@ -71,4 +82,4 @@ class BaseDataTransform {
   }
 }
 
-export default BaseDataTransform;
+export default NeteaseStockTransform;

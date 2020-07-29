@@ -1,18 +1,17 @@
 // Stocks
-import BaseDataTransform from "@stocks/base/dataTransform";
+import BaseStockTransform from "@stocks/base/transforms/stock";
 
 // Types
-import Stock from "types/stock";
-import Dictionary from "types/dictionary";
+import { Stock } from "types/stock";
 
 /**
- * 网易股票数据解析
+ * 腾讯股票数据解析
  */
-class NeteaseDataTransform extends BaseDataTransform {
+class TencentStockTransform extends BaseStockTransform {
   /**
    * 构造函数
    */
-  constructor(public code: string, public params: Dictionary<number | string>) {
+  constructor(public code: string, public params: string[]) {
     super();
   }
 
@@ -27,42 +26,42 @@ class NeteaseDataTransform extends BaseDataTransform {
    * 获取名称
    */
   getName(): string {
-    return String(this.params.name);
+    return String(this.params[1]);
   }
 
   /**
    * 获取现价
    */
   getNow(): number {
-    return Number(this.params.price);
+    return Number(this.params[3]);
   }
 
   /**
    * 获取最低价
    */
   getLow(): number {
-    return Number(this.params.low);
+    return Number(this.params[34]);
   }
 
   /**
    * 获取最高价
    */
   getHigh(): number {
-    return Number(this.params.high);
+    return Number(this.params[33]);
   }
 
   /**
    * 获取昨日收盘价
    */
   getYesterday(): number {
-    return Number(this.params.yestclose);
+    return Number(this.params[4]);
   }
 
   /**
    * 获取涨跌
    */
   getPercent(): number {
-    return Number(this.params.percent);
+    return this.getNow() ? this.getNow() / this.getYesterday() - 1 : 0;
   }
 
   /**
@@ -82,4 +81,4 @@ class NeteaseDataTransform extends BaseDataTransform {
   }
 }
 
-export default NeteaseDataTransform;
+export default TencentStockTransform;

@@ -1,5 +1,5 @@
 // Stocks
-import BaseDataTransform from "@stocks/base/dataTransform";
+import BaseStockTransform from "@stocks/base/transforms/stock";
 
 // Utils
 import { SZ, HK, US, SH } from "@utils/constant";
@@ -10,7 +10,7 @@ import Stock from "types/stock";
 /**
  * 新浪股票数据解析
  */
-class SinaDataTransform extends BaseDataTransform {
+class SinaStockTransform extends BaseStockTransform {
   /**
    * 构造函数
    */
@@ -139,4 +139,4 @@ class SinaDataTransform extends BaseDataTransform {
   }
 }
 
-export default SinaDataTransform;
+export default SinaStockTransform;

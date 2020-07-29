@@ -1,67 +1,57 @@
-// Stocks
-import BaseDataTransform from "@stocks/base/dataTransform";
-
 // Types
-import { Stock } from "types/stock";
+import Stock from "types/stock";
 
 /**
- * 腾讯股票数据解析
+ * 基础股票数据解析
  */
-class TencentDataTransform extends BaseDataTransform {
-  /**
-   * 构造函数
-   */
-  constructor(public code: string, public params: string[]) {
-    super();
-  }
-
+class BaseStockTransform {
   /**
    * 获取代码
    */
   getCode(): string {
-    return String(this.code);
+    throw new Error('未实现获取代码');
   }
 
   /**
    * 获取名称
    */
   getName(): string {
-    return String(this.params[1]);
+    throw new Error('未实现获取名称');
   }
 
   /**
    * 获取现价
    */
   getNow(): number {
-    return Number(this.params[3]);
+    throw new Error('未实现获取现价');
   }
 
   /**
    * 获取最低价
    */
   getLow(): number {
-    return Number(this.params[34]);
+    throw new Error('未实现获取最低价');
   }
 
   /**
    * 获取最高价
    */
   getHigh(): number {
-    return Number(this.params[33]);
+    throw new Error('未实现获取最高价');
   }
 
   /**
    * 获取昨日收盘价
    */
   getYesterday(): number {
-    return Number(this.params[4]);
+    throw new Error('未实现获取昨日收盘价');
   }
 
   /**
    * 获取涨跌
    */
   getPercent(): number {
-    return this.getNow() ? this.getNow() / this.getYesterday() - 1 : 0;
+    throw new Error('未实现获取涨跌');
   }
 
   /**
@@ -81,4 +71,4 @@ class TencentDataTransform extends BaseDataTransform {
   }
 }
 
-export default TencentDataTransform;
+export default BaseStockTransform;

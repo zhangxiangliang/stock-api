@@ -1,5 +1,5 @@
 // Stocks
-import BaseExchangeTransform from "@stocks/base/exchangeTransform";
+import BaseExchangeTransform from "@stocks/base/transforms/exchange";
 
 // Utils
 import { SZ, HK, US, SH } from "@utils/constant";
