@@ -1,14 +1,14 @@
 // Stocks
-import Base from "../../stocks/base/api";
-import SinaDataTransform from "../../stocks/sina/dataTransform";
-import SinaExchangeTransform from "../../stocks/sina/exchangeTransform";
+import Base from "@stocks/base/api";
+import SinaDataTransform from "@stocks/sina/dataTransform";
+import SinaExchangeTransform from "@stocks/sina/exchangeTransform";
 
 // Utils
-import fetch from "../../utils/fetch";
-import iconv from "../../utils/iconv";
+import fetch from "@utils/fetch";
+import iconv from "@utils/iconv";
 
 // Types
-import Stock from "../../../types/stock";
+import Stock from "types/stock";
 
 /**
  * 网易股票代码接口

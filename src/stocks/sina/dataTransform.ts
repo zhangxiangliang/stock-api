@@ -1,9 +1,5 @@
-// Stocks
-import Base from "../base/api";
-import SinaTransform from "./exchangeTransform";
-
 // Utils
-import { SZ, HK, US, SH } from "../../utils/constant";
+import { SZ, HK, US, SH } from "@utils/constant";
 
 /**
  * 网易数据解析

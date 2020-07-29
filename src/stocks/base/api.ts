@@ -1,8 +1,5 @@
-// Stocks
-import BaseTransform from "./exchangeTransform";
-
 // Types
-import Stock from "../../../types/stock";
+import Stock from "types/stock";
 
 /**
  * 基础股票代码接口

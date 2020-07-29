@@ -1,4 +1,4 @@
 // Stocks
-import Sina from "../../stocks/sina/api";
+import Sina from "@stocks/sina/api";
 
 export default Sina;

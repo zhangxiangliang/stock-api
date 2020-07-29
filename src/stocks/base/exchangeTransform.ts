@@ -1,8 +1,8 @@
 // Utils
-import { SZ, SH, HK, US } from "../../utils/constant";
+import { SZ, SH, HK, US } from "@utils/constant";
 
 // Types
-import Transform from "../../../types/transform";
+import Transform from "types/transform";
 
 /**
  * 基础股票代码转换

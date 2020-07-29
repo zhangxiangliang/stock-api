@@ -1,4 +1,4 @@
 // Stocks
-import Netease from "../../stocks/netease/api";
+import Netease from "@stocks/netease/api";
 
 export default Netease;
