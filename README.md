@@ -22,17 +22,17 @@ yarn install stock-api
 
 ## 使用
 
-### 选择股票数据
+### 选择数据源
 
 ##### 可选导入
 
 ```typescript
-import { api } from "stock-api/stocks";
+import { stocks } from "stock-api";
 
 // 省略 async 相关内容
-const sina = api["sina"];
-const netease = api["netease"];
-const tencent = api["tencent"];
+const sina = stocks["sina"];
+const netease = stocks["netease"];
+const tencent = stocks["tencent"];
 ```
 
 ##### 直接导入
@@ -48,11 +48,13 @@ import Tencent from "stock-api/stocks/tencent";
 ##### 示例
 
 ```typescript
-import { api } from "stock-api/stocks";
+import { stocks } from "stock-api";
 
-// 省略 async 相关内容
-const sina = api["sina"];
-const stock = await(new sina()).getStock("SH510500");
+// 选择数据源
+const api = new stocks["sina"];
+
+// 获取数据
+api.getStock("SH510500").then(console.log);
 ```
 
 ##### 输出
@@ -74,11 +76,13 @@ const stock = await(new sina()).getStock("SH510500");
 ##### 示例
 
 ```typescript
-import { api } from "stock-api/stocks";
+import { stocks } from "stock-api";
 
-// 省略 async 相关内容
-const sina = api["sina"];
-const stock = await(new sina()).getStocks(["SH510500"]);
+// 选择数据源
+const api = new stocks["sina"];
+
+// 获取数据
+api.getStocks(["SH510500"]).then(console.log);
 ```
 
 ##### 输出
