@@ -18,7 +18,7 @@
   ],
   "scripts": {
     "prepublishOnly": "yarn run test",
-    "prepare": "yarn run build",
+    "prepare": "rm -rf ./dist && yarn run build",
     "preversion": "npm test",
     "version": "git add -A ./",
     "postversion": "git push && git push --tags",
