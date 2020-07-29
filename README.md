@@ -22,7 +22,7 @@ yarn install stock-api
 
 ## 使用
 
-### 选着股票数据
+### 选择股票数据
 
 ##### 可选导入
 
@@ -51,8 +51,8 @@ import Tencent from "stock-api/stocks/tencent";
 import { api } from "stock-api/stocks";
 
 // 省略 async 相关内容
-const stock = await(new api["sina"]()).getStock("SH510500");
-const stock = await(new api["netease"]()).getStock("SH510500");
+const sina = api["sina"];
+const stock = await(new sina()).getStock("SH510500");
 ```
 
 ##### 输出
@@ -77,8 +77,8 @@ const stock = await(new api["netease"]()).getStock("SH510500");
 import { api } from "stock-api/stocks";
 
 // 省略 async 相关内容
-const stock = await(new api["sina"]()).getStocks(["SH510500"]);
-const stock = await(new api["netease"]()).getStocks(["SH510500"]);
+const sina = api["sina"];
+const stock = await(new sina()).getStocks(["SH510500"]);
 ```
 
 ##### 输出
