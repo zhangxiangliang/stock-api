@@ -44,8 +44,12 @@ class Sina extends Base {
     return {
       code: code,
       name: data.getName(),
-      price: data.getPrice(),
       percent: data.getPercent(),
+
+      now: data.getNow(),
+      low: data.getLow(),
+      high: data.getHigh(),
+      yesterday: data.getYesterday(),
     };
   }
 
@@ -72,8 +76,12 @@ class Sina extends Base {
       return {
         code: code,
         name: data.getName(),
-        price: data.getPrice(),
         percent: data.getPercent(),
+
+        now: data.getNow(),
+        low: data.getLow(),
+        high: data.getHigh(),
+        yesterday: data.getYesterday(),
       };
     })
   }

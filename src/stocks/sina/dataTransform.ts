@@ -31,7 +31,7 @@ class SinaDataTransform {
   /**
    * 获取现价
    */
-  getPrice(): number {
+  getNow(): number {
     switch (this.code.slice(0, 2)) {
       case SH:
         return Number(this.params[3]);
@@ -41,6 +41,42 @@ class SinaDataTransform {
         return Number(this.params[6]);
       case US:
         return Number(this.params[1]);
+      default:
+        throw new Error('不支持当前交易所');
+    }
+  }
+
+  /**
+   * 获取最低价
+   */
+  getLow(): number {
+    switch (this.code.slice(0, 2)) {
+      case SH:
+        return Number(this.params[5]);
+      case SZ:
+        return Number(this.params[5]);
+      case HK:
+        return Number(this.params[5]);
+      case US:
+        return Number(this.params[7]);
+      default:
+        throw new Error('不支持当前交易所');
+    }
+  }
+
+  /**
+   * 获取最高价
+   */
+  getHigh(): number {
+    switch (this.code.slice(0, 2)) {
+      case SH:
+        return Number(this.params[4]);
+      case SZ:
+        return Number(this.params[4]);
+      case HK:
+        return Number(this.params[4]);
+      case US:
+        return Number(this.params[6]);
       default:
         throw new Error('不支持当前交易所');
     }
@@ -68,7 +104,7 @@ class SinaDataTransform {
    * 获取涨跌
    */
   getPercent(): number {
-    return this.getPrice() ? this.getPrice() / this.getYesterday() - 1 : 0;
+    return this.getNow() ? this.getNow() / this.getYesterday() - 1 : 0;
   }
 }
 
