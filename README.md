@@ -6,11 +6,12 @@
 
 ## 股票数据
 
-| 名称     | 接口名  | 官网                                   |
-| -------- | ------- | -------------------------------------- |
-| 基础示例 | base    | 无                                     |
-| 网易财经 | netease | [传送门](https://money.163.com/)       |
-| 新浪股票 | sina    | [传送门](https://finance.sina.com.cn/) |
+| 名称 | 接口名 | 官网 |
+| --- | --- | --- |
+| 基础示例 | base | 无 |
+| 网易财经 | netease | [传送门](https://money.163.com/) |
+| 新浪股票 | sina | [传送门](https://finance.sina.com.cn/) |
+| 腾讯股票 | tencent | [传送门](http://gu.qq.com/) |
 
 ## 安装
 
@@ -31,6 +32,7 @@ import { api } from "stock-api/stocks";
 // 省略 async 相关内容
 const sina = api["sina"];
 const netease = api["netease"];
+const tencent = api["tencent"];
 ```
 
 ##### 直接导入
@@ -38,6 +40,7 @@ const netease = api["netease"];
 ```typescript
 import Sina from "stock-api/stocks/sina";
 import Netease from "stock-api/stocks/netease";
+import Tencent from "stock-api/stocks/tencent";
 ```
 
 ### 获取股票实时数据
