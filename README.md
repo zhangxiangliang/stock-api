@@ -21,7 +21,28 @@ yarn install stock-api
 
 ## 使用
 
+### 选着股票数据
+
+##### 可选导入
+
+```typescript
+import { api } from "stock-api/stocks";
+
+// 省略 async 相关内容
+const sina = api["sina"];
+const netease = api["netease"];
+```
+
+##### 直接导入
+
+```typescript
+import Sina from "stock-api/stocks/sina";
+import Netease from "stock-api/stocks/netease";
+```
+
 ### 获取股票实时数据
+
+##### 示例
 
 ```typescript
 import { api } from "stock-api/stocks";
@@ -29,12 +50,25 @@ import { api } from "stock-api/stocks";
 // 省略 async 相关内容
 const stock = await(new api["sina"]()).getStock("SH510500");
 const stock = await(new api["netease"]()).getStock("SH510500");
+```
 
-// 结果:
-// { code: 'SH510500', name: '500ETF', price: 7.253, percent: -0.001102 }
+##### 输出
+
+```typescript
+{
+  code: 'SH510500',
+  name: '500ETF',
+  percent: 0.028383,
+  now: 7.174,
+  low: 6.93,
+  high: 7.184,
+  yesterday: 6.976
+}
 ```
 
 ### 获取股票组实时数据
+
+##### 示例
 
 ```typescript
 import { api } from "stock-api/stocks";
@@ -42,10 +76,23 @@ import { api } from "stock-api/stocks";
 // 省略 async 相关内容
 const stock = await(new api["sina"]()).getStocks(["SH510500"]);
 const stock = await(new api["netease"]()).getStocks(["SH510500"]);
-
-// 结果:
-// [{ code: 'SH510500', name: '500ETF', price: 7.253, percent: -0.001102 }]
 ```
+
+##### 输出
+
+```typescript
+ [{
+    code: 'SH510500',
+    name: '500ETF',
+    percent: 0.028383,
+    now: 7.174,
+    low: 6.93,
+    high: 7.184,
+    yesterday: 6.976
+  }]
+```
+
+
 
 ## 一起成长
 
