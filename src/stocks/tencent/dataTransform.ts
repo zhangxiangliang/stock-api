@@ -1,6 +1,9 @@
 // Stocks
 import BaseDataTransform from "@stocks/base/dataTransform";
 
+// Types
+import { Stock } from "types/stock";
+
 /**
  * 腾讯股票数据解析
  */
@@ -59,6 +62,22 @@ class TencentDataTransform extends BaseDataTransform {
    */
   getPercent(): number {
     return this.getNow() ? this.getNow() / this.getYesterday() - 1 : 0;
+  }
+
+  /**
+   * 获取股票数据
+   */
+  getStock(): Stock {
+    return {
+      code: this.getCode(),
+      name: this.getName(),
+      percent: this.getPercent(),
+
+      now: this.getNow(),
+      low: this.getLow(),
+      high: this.getHigh(),
+      yesterday: this.getYesterday(),
+    };
   }
 }
 

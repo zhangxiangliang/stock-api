@@ -4,6 +4,9 @@ import BaseDataTransform from "@stocks/base/dataTransform";
 // Utils
 import { SZ, HK, US, SH } from "@utils/constant";
 
+// Types
+import Stock from "types/stock";
+
 /**
  * 新浪股票数据解析
  */
@@ -117,6 +120,22 @@ class SinaDataTransform extends BaseDataTransform {
    */
   getPercent(): number {
     return this.getNow() ? this.getNow() / this.getYesterday() - 1 : 0;
+  }
+
+  /**
+   * 获取股票数据
+   */
+  getStock(): Stock {
+    return {
+      code: this.getCode(),
+      name: this.getName(),
+      percent: this.getPercent(),
+
+      now: this.getNow(),
+      low: this.getLow(),
+      high: this.getHigh(),
+      yesterday: this.getYesterday(),
+    };
   }
 }
 

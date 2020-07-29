@@ -40,16 +40,7 @@ class Tencent extends Base {
     const params = paramsUnformat.replace('"', '').split("~");
     const data = (new TencentDataTransform(code, params));
 
-    return {
-      code: data.getCode(),
-      name: data.getName(),
-      percent: data.getPercent(),
-
-      now: data.getNow(),
-      low: data.getLow(),
-      high: data.getHigh(),
-      yesterday: data.getYesterday(),
-    };
+    return data.getStock();
   }
 
   /**
@@ -72,16 +63,7 @@ class Tencent extends Base {
       const params = paramsUnformat.replace('"', '').split("~");
       const data = (new TencentDataTransform(code, params));
 
-      return {
-        code: data.getCode(),
-        name: data.getName(),
-        percent: data.getPercent(),
-
-        now: data.getNow(),
-        low: data.getLow(),
-        high: data.getHigh(),
-        yesterday: data.getYesterday(),
-      };
+      return data.getStock();
     })
   }
 }

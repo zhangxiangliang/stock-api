@@ -34,16 +34,7 @@ class Netease extends Base {
     const params = items[transform];
     const data = (new NeteaseDataTransform(code, params));
 
-    return {
-      code: data.getCode(),
-      name: data.getName(),
-      percent: data.getPercent(),
-
-      now: data.getNow(),
-      low: data.getLow(),
-      high: data.getHigh(),
-      yesterday: data.getYesterday(),
-    };
+    return data.getStock();
   }
 
   /**
@@ -63,16 +54,7 @@ class Netease extends Base {
       const params = items[transform];
       const data = (new NeteaseDataTransform(code, params));
 
-      return {
-        code: data.getCode(),
-        name: data.getName(),
-        percent: data.getPercent(),
-
-        now: data.getNow(),
-        low: data.getLow(),
-        high: data.getHigh(),
-        yesterday: data.getYesterday(),
-      }
+      return data.getStock();
     });
   }
 }

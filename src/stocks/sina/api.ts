@@ -41,16 +41,7 @@ class Sina extends Base {
     const params = paramsUnformat.replace('"', '').split(",");
     const data = (new SinaDataTransform(code, params));
 
-    return {
-      code: data.getCode(),
-      name: data.getName(),
-      percent: data.getPercent(),
-
-      now: data.getNow(),
-      low: data.getLow(),
-      high: data.getHigh(),
-      yesterday: data.getYesterday(),
-    };
+    return data.getStock();
   }
 
   /**
@@ -73,16 +64,7 @@ class Sina extends Base {
       const params = paramsUnformat.replace('"', '').split(",");
       const data = (new SinaDataTransform(code, params));
 
-      return {
-        code: data.getCode(),
-        name: data.getName(),
-        percent: data.getPercent(),
-
-        now: data.getNow(),
-        low: data.getLow(),
-        high: data.getHigh(),
-        yesterday: data.getYesterday(),
-      };
+      return data.getStock();
     })
   }
 }

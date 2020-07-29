@@ -1,5 +1,5 @@
 // Types
-import Dictionary from "types/dictionary";
+import Stock from "types/stock";
 
 /**
  * 基础股票数据解析
@@ -52,6 +52,22 @@ class BaseDataTransform {
    */
   getPercent(): number {
     throw new Error('未实现获取涨跌');
+  }
+
+  /**
+   * 获取股票数据
+   */
+  getStock(): Stock {
+    return {
+      code: this.getCode(),
+      name: this.getName(),
+      percent: this.getPercent(),
+
+      now: this.getNow(),
+      low: this.getLow(),
+      high: this.getHigh(),
+      yesterday: this.getYesterday(),
+    };
   }
 }
 

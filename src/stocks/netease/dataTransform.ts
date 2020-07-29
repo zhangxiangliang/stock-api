@@ -2,6 +2,7 @@
 import BaseDataTransform from "@stocks/base/dataTransform";
 
 // Types
+import Stock from "types/stock";
 import Dictionary from "types/dictionary";
 
 /**
@@ -62,6 +63,22 @@ class NeteaseDataTransform extends BaseDataTransform {
    */
   getPercent(): number {
     return Number(this.params.percent);
+  }
+
+  /**
+   * 获取股票数据
+   */
+  getStock(): Stock {
+    return {
+      code: this.getCode(),
+      name: this.getName(),
+      percent: this.getPercent(),
+
+      now: this.getNow(),
+      low: this.getLow(),
+      high: this.getHigh(),
+      yesterday: this.getYesterday(),
+    };
   }
 }
 
