@@ -12,6 +12,7 @@
 | 网易财经 | netease | [传送门](https://money.163.com/) |
 | 新浪股票 | sina | [传送门](https://finance.sina.com.cn/) |
 | 腾讯股票 | tencent | [传送门](http://gu.qq.com/) |
+| 雪球 | xueqiu | [传送门](https://xueqiu.com/) |
 
 ## 安装
 
@@ -33,6 +34,7 @@ import { stocks } from "stock-api";
 const sina = stocks["sina"];
 const netease = stocks["netease"];
 const tencent = stocks["tencent"];
+const xueqiu = stocks["xueqiu"];
 ```
 
 ##### 直接导入
@@ -41,6 +43,7 @@ const tencent = stocks["tencent"];
 import Sina from "stock-api/stocks/sina";
 import Netease from "stock-api/stocks/netease";
 import Tencent from "stock-api/stocks/tencent";
+import Xueqiu from "stock-api/stocks/xuiqiu";
 ```
 
 ### 获取股票实时数据
