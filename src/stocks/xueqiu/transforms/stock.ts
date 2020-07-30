@@ -3,15 +3,16 @@ import BaseStockTransform from "@stocks/base/transforms/stock";
 
 // Types
 import Stock from "types/stock";
+import Dictionary from "types/dictionary";
 
 /**
- * 腾讯股票数据解析
+ * 雪球股票数据解析
  */
-class TencentStockTransform extends BaseStockTransform {
+class XueqiuStockTransform extends BaseStockTransform {
   /**
    * 构造函数
    */
-  constructor(public code: string, public params: string[]) {
+  constructor(public code: string, public params: Dictionary<number | string>) {
     super();
   }
 
@@ -26,35 +27,35 @@ class TencentStockTransform extends BaseStockTransform {
    * 获取名称
    */
   getName(): string {
-    return String(this.params[1]);
+    return String(this.params.name || this.code);
   }
 
   /**
    * 获取现价
    */
   getNow(): number {
-    return Number(this.params[3]);
+    return Number(this.params.current);
   }
 
   /**
    * 获取最低价
    */
   getLow(): number {
-    return Number(this.params[34]);
+    return Number(this.params.low);
   }
 
   /**
    * 获取最高价
    */
   getHigh(): number {
-    return Number(this.params[33]);
+    return Number(this.params.high);
   }
 
   /**
    * 获取昨日收盘价
    */
   getYesterday(): number {
-    return Number(this.params[4]);
+    return Number(this.params.last_close);
   }
 
   /**
@@ -81,4 +82,4 @@ class TencentStockTransform extends BaseStockTransform {
   }
 }
 
-export default TencentStockTransform;
+export default XueqiuStockTransform;
