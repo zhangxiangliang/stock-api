@@ -1,4 +1,4 @@
-# 股票数据小助手
+<h1 align="center">股票数据小助手</h1>
 
 <p align="center">
   <a href="https://codecov.io/github/jiucaixiaozhu/stock-api?branch=master"><img src="https://img.shields.io/codecov/c/github/jiucaixiaozhu/stock-api/master.svg?sanitize=true" alt="Coverage Status"></a>
