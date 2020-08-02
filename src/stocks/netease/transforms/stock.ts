@@ -34,28 +34,28 @@ class NeteaseStockTransform extends BaseStockTransform {
    * 获取现价
    */
   getNow(): number {
-    return Number(this.params.price);
+    return Number(this.params.price || 0);
   }
 
   /**
    * 获取最低价
    */
   getLow(): number {
-    return Number(this.params.low);
+    return Number(this.params.low || 0);
   }
 
   /**
    * 获取最高价
    */
   getHigh(): number {
-    return Number(this.params.high);
+    return Number(this.params.high || 0);
   }
 
   /**
    * 获取昨日收盘价
    */
   getYesterday(): number {
-    return Number(this.params.yestclose);
+    return Number(this.params.yestclose || 0);
   }
 
   /**

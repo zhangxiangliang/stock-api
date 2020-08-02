@@ -30,11 +30,20 @@ class Netease extends Base {
     const url = `https://api.money.126.net/data/feed/${transform},money.api?callback=topstock`;
     const res = await fetch.get(url);
 
-    const items = JSON.parse(res.body.toString().replace(/\(|\)|;|(topstock)/g, ''));
+    const items = JSON.parse(res.body.toString().replace(/\(|\)|;|(topstock)|\s/g, '').replace('{{', '{').replace('}}}', "}}"));
     const params = items[transform];
     const data = (new NeteaseStockTransform(code, params));
 
-    return data.getStock();
+    return params ? data.getStock() : {
+      code: transform,
+      name: '---',
+      percent: 0,
+
+      now: 0,
+      low: 0,
+      high: 0,
+      yesterday: 0,
+    };
   }
 
   /**
@@ -47,14 +56,22 @@ class Netease extends Base {
     const url = `https://api.money.126.net/data/feed/${transforms.join(',')},money.api?callback=topstock`;
     const res = await fetch.get(url);
 
-    const items = JSON.parse(res.body.toString().replace(/\(|\)|;|(topstock)/g, ''));
-
+    const items = JSON.parse(res.body.toString().replace(/\(|\)|;|(topstock)|\s/g, '').replace('{{', '{').replace('}}}', "}}"));
     return codes.map(code => {
       const transform = (new NeteaseExchangeTransform).transform(code);
       const params = items[transform];
       const data = (new NeteaseStockTransform(code, params));
 
-      return data.getStock();
+      return params ? data.getStock() : {
+        code: transform,
+        name: '---',
+        percent: 0,
+
+        now: 0,
+        low: 0,
+        high: 0,
+        yesterday: 0,
+      };
     });
   }
 }
