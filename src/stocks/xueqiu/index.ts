@@ -82,7 +82,6 @@ class Xueqiu extends Base {
       const data = (new XueqiuStockTransform(code, params.quote));
       return data.getStock();
     });
-    return [];
   }
 }
 
