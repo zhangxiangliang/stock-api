@@ -23,7 +23,7 @@ describe("【雪球】股票代码转换测试", () => {
       .toThrow(new Error("请检查股票代码是否正确"));
 
     expect((new XueqiuExchangeTransform()).HKExchangeTransform("HK000000"))
-      .toBe("000000");
+      .toBe("HK000000");
   });
 
   it("美交所股票代码转换", async () => {
@@ -42,7 +42,7 @@ describe("【雪球】股票代码转换测试", () => {
       .toBe("SH000000");
 
     expect((new XueqiuExchangeTransform()).transform("HK000000"))
-      .toBe("000000");
+      .toBe("HK000000");
 
     expect((new XueqiuExchangeTransform()).transform("US000000"))
       .toBe("000000");
@@ -59,7 +59,7 @@ describe("【雪球】股票代码转换测试", () => {
       .toStrictEqual(["SH000000"]);
 
     expect((new XueqiuExchangeTransform()).transforms(["HK000000"]))
-      .toStrictEqual(["000000"]);
+      .toStrictEqual(["HK000000"]);
 
     expect((new XueqiuExchangeTransform()).transforms(["US000000"]))
       .toStrictEqual(["000000"]);

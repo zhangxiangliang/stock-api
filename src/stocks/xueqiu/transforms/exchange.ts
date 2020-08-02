@@ -64,7 +64,7 @@ class XueqiuExchangeTransform extends BaseTransform {
       throw new Error("请检查股票代码是否正确");
     }
 
-    return "" + code.replace(HK, "");
+    return "HK" + code.replace(HK, "");
   }
 
   /**
