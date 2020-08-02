@@ -24,12 +24,15 @@
     "postversion": "git push && git push --tags",
     "build": "ttsc",
     "watch": "ttsc --watch",
-    "test": "jest --config jestconfig.json"
+    "test": "jest --config jestconfig.json --coverage",
+    "coverage": "yarn run test && codecov"
   },
   "devDependencies": {
     "@types/jest": "^26.0.5",
     "@typescript-eslint/parser": "^3.7.0",
+    "codecov": "^3.7.2",
     "jest": "^26.1.0",
+    "nyc": "^15.1.0",
     "ts-jest": "^26.1.3",
     "ttypescript": "^1.5.10",
     "typescript": "^3.9.7",

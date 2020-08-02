@@ -1,4 +1,14 @@
-# 股票接口
+<h1 style='text-align:center;'>股票数据小助手</h1>
+
+<p align="center">
+  <a href="https://codecov.io/github/jiucaixiaozhu/stock-api?branch=master"><img src="https://img.shields.io/codecov/c/github/jiucaixiaozhu/stock-api/master.svg?sanitize=true" alt="Coverage Status"></a>
+  <a href="https://npmcharts.com/compare/stock-api?minimal=true"><img src="https://img.shields.io/npm/dm/stock-api.svg?sanitize=true" alt="Downloads"></a>
+  <a href="https://www.npmjs.com/package/stock-api"><img src="https://img.shields.io/npm/v/stock-api.svg?sanitize=true" alt="Version"></a>
+  <a href="https://www.npmjs.com/package/stock-api"><img src="https://img.shields.io/npm/l/stock-api.svg?sanitize=true" alt="License"></a>
+  <a href="https://www.npmjs.com/package/stock-api"><img src="https://img.shields.io/badge/language-typescript-blue" alt="License"></a>
+</p>
+
+
 
 ## 简介
 
