@@ -76,7 +76,7 @@ class SinaExchangeTransform extends BaseTransform {
       throw new Error("请检查股票代码是否正确");
     }
 
-    return "gb_" + code.replace(US, "");
+    return "gb_" + code.replace(US, "").toLowerCase();
   }
 }
 
