@@ -5,6 +5,7 @@ import TencentExchangeTransform from "@stocks/tencent/transforms/exchange";
 
 // Utils
 import fetch from "@utils/fetch";
+import iconv from "@utils/iconv";
 
 // Types
 import Stock from "types/stock";
@@ -29,9 +30,9 @@ class Tencent extends Base {
 
     // 数据获取
     const url = `https://qt.gtimg.cn/q=${transform}`;
-    const res = await fetch.get(url);
+    const res = await fetch.get(url).responseType('blob');
 
-    const body = res.text;
+    const body = iconv.decode(res.body, "gbk");
     const rows = body.split(";\n");
     const row = rows[0];
 
@@ -52,9 +53,9 @@ class Tencent extends Base {
 
     // 数据获取
     const url = `https://qt.gtimg.cn/q=${transforms.join(',')}`;
-    const res = await fetch.get(url);
+    const res = await fetch.get(url).responseType('blob');
 
-    const body = res.text;
+    const body = iconv.decode(res.body, "gbk");
     const rows = body.split(";\n");
 
     return codes.map((code, index) => {
