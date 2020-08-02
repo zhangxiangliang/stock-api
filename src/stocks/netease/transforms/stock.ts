@@ -62,7 +62,7 @@ class NeteaseStockTransform extends BaseStockTransform {
    * 获取涨跌
    */
   getPercent(): number {
-    return Number(this.params.percent);
+    return this.getNow() ? this.getNow() / this.getYesterday() - 1 : 0;
   }
 
   /**
