@@ -1,7 +1,5 @@
 import StockApi from './stocks/index';
 
-export { Stock } from './utils/stock';
-
 declare namespace Root {
   export const stocks: {
     base: StockApi,
@@ -12,4 +10,4 @@ declare namespace Root {
   };
 }
 
-export default Root;
+export = Root;
