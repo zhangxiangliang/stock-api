@@ -2,6 +2,16 @@ import Stock from '../utils/stock';
 
 export interface StockApi {
   /**
+   * 构造函数
+   */
+  new();
+
+  /**
+   * 构造函数
+   */
+  constructor();
+
+  /**
    * 获取股票数据
    * @param code 需要获取的股票代码
    */
