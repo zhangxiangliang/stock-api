@@ -8,7 +8,7 @@ import fetch from "@utils/fetch";
 import iconv from "@utils/iconv";
 
 // Types
-import Stock from "types/stock";
+import Stock from "types/utils/stock";
 
 /**
  * 新浪股票代码接口

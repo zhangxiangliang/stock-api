@@ -2,7 +2,7 @@
 import BaseStockTransform from "@stocks/base/transforms/stock";
 
 // Types
-import Stock from "types/stock";
+import Stock from "types/utils/stock";
 
 /**
  * 腾讯股票数据解析

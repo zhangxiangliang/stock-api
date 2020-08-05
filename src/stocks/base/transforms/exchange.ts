@@ -2,12 +2,12 @@
 import { SZ, SH, HK, US } from "@utils/constant";
 
 // Types
-import Transform from "types/transform";
+import ExchangeTransform from "types/stocks/transforms/exchange";
 
 /**
  * 基础股票代码转换
  */
-class BaseExchangeTransform implements Transform {
+class BaseExchangeTransform implements ExchangeTransform {
   /**
    * 构造函数
    */

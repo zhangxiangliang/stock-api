@@ -2,8 +2,8 @@
 import BaseStockTransform from "@stocks/base/transforms/stock";
 
 // Types
-import Stock from "types/stock";
-import Dictionary from "types/dictionary";
+import Stock from "types/utils/stock";
+import Dictionary from "types/utils/dictionary";
 
 /**
  * 网易股票数据解析

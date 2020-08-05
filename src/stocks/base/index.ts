@@ -1,5 +1,5 @@
 // Types
-import Stock from "types/stock";
+import Stock from "types/utils/stock";
 
 /**
  * 基础股票代码接口

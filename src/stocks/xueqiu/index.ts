@@ -7,8 +7,8 @@ import XueqiuExchangeTransform from "@stocks/xueqiu/transforms/exchange";
 import fetch from "@utils/fetch";
 
 // Types
-import Stock from "types/stock";
-import Dictionary from "types/dictionary";
+import Stock from "types/utils/stock";
+import Dictionary from "types/utils/dictionary";
 
 /**
  * 雪球股票代码接口

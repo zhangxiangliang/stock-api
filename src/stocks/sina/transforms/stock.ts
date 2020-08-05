@@ -5,7 +5,7 @@ import BaseStockTransform from "@stocks/base/transforms/stock";
 import { SZ, HK, US, SH } from "@utils/constant";
 
 // Types
-import Stock from "types/stock";
+import Stock from "types/utils/stock";
 
 /**
  * 新浪股票数据解析
