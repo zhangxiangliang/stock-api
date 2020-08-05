@@ -1,13 +1,21 @@
 import StockApi from './stocks/index';
 
-declare namespace Root {
-  export const stocks: {
+export declare const stocks: {
+  base: StockApi,
+  netease: StockApi,
+  sina: StockApi,
+  tencent: StockApi,
+  xueqiu: StockApi,
+};
+
+export declare const root: {
+  stocks: {
     base: StockApi,
     netease: StockApi,
     sina: StockApi,
     tencent: StockApi,
     xueqiu: StockApi,
-  };
-}
+  },
+};
 
-export = Root;
+export default root;
