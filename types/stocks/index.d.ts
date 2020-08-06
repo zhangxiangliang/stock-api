@@ -4,12 +4,12 @@ export interface StockApi {
   /**
    * 构造函数
    */
-  new();
+  new(): StockApi;
 
   /**
    * 构造函数
    */
-  constructor();
+  constructor(): StockApi;
 
   /**
    * 获取股票数据
