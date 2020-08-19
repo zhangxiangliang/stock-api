@@ -51,7 +51,7 @@ describe("【网易】统一代码转换股票代码", () => {
       .toThrow(new Error("请检查统一代码是否正确"));
   });
 
-  it("交易所统一代码组转换股票组代码组", async () => {
+  it("交易所统一代码组转换股票代码组", async () => {
     expect((new NeteaseCommonCodeTransform()).transforms(["SZ000000"]))
       .toStrictEqual(["1000000"]);
 

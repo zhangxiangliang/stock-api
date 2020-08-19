@@ -18,19 +18,19 @@ class BaseCommonCodeTransform implements CommonCodeTransform {
    * @param code 统一代码
    */
   public transform(code: string): string {
-    if (code.includes(COMMON_SH)) {
+    if (code.indexOf(COMMON_SH) === 0) {
       return this.SHTransform(code);
     }
 
-    if (code.includes(COMMON_SZ)) {
+    if (code.indexOf(COMMON_SZ) === 0) {
       return this.SZTransform(code);
     }
 
-    if (code.includes(COMMON_HK)) {
+    if (code.indexOf(COMMON_HK) === 0) {
       return this.HKTransform(code);
     }
 
-    if (code.includes(COMMON_US)) {
+    if (code.indexOf(COMMON_US) === 0) {
       return this.USTransform(code);
     }
 
