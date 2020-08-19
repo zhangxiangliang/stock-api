@@ -1,6 +1,6 @@
 import Stock from '../utils/stock';
 
-declare class StockApi {
+export interface StockApi {
   /**
    * 获取股票数据
    * @param code 股票代码

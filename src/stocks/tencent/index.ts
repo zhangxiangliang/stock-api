@@ -9,18 +9,12 @@ import iconv from "@utils/iconv";
 
 // Types
 import Stock from "types/utils/stock";
+import StockApi from "types/stocks/index";
 
 /**
  * 腾讯股票代码接口
  */
-class Tencent extends Base {
-  /**
-   * 构造函数
-   */
-  constructor() {
-    super();
-  }
-
+const Tencent: StockApi = {
   /**
    * 获取股票数据
    * @param code 股票代码
@@ -42,7 +36,7 @@ class Tencent extends Base {
     const data = (new TencentStockTransform(code, params));
 
     return data.getStock();
-  }
+  },
 
   /**
    * 获取股票数据组

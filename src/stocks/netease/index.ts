@@ -8,11 +8,12 @@ import fetch from "@utils/fetch";
 
 // Types
 import Stock from "types/utils/stock";
+import StockApi from "types/stocks/index";
 
 /**
  * 网易股票代码接口
  */
-class Netease extends Base {
+const Netease: StockApi = {
   /**
    * 获取股票数据
    * @param code 股票代码
@@ -37,7 +38,7 @@ class Netease extends Base {
       high: 0,
       yesterday: 0,
     };
-  }
+  },
 
   /**
    * 获取股票数据组

@@ -8,28 +8,29 @@ import fetch from "@utils/fetch";
 
 // Types
 import Stock from "types/utils/stock";
+import StockApi from "types/stocks/index";
 import Dictionary from "types/utils/dictionary";
+
+let token: string = '';
 
 /**
  * 雪球股票代码接口
  */
-class Xueqiu extends Base {
-  public token: string = '';
-
+const Xueqiu: StockApi & { getToken(): Promise<string> } = {
   /**
    * 获取 Token
    */
-  async getToken() {
-    if (this.token !== '') return this.token;
+  async getToken(): Promise<string> {
+    if (token !== '') return token;
 
     const res = await fetch.get('https://xueqiu.com/');
     const cookies: string[] = res.headers['set-cookie'];
 
     const param: string = cookies.filter(key => key.includes('xq_a_token'))[0] || '';
-    this.token = param.split(';')[0] || '';
+    token = param.split(';')[0] || '';
 
-    return this.token;
-  }
+    return token;
+  },
 
   /**
    * 获取股票数据
@@ -51,7 +52,7 @@ class Xueqiu extends Base {
     const data = (new XueqiuStockTransform(code, params));
 
     return data.getStock();
-  }
+  },
 
   /**
    * 获取股票数据组

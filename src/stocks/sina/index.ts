@@ -9,11 +9,12 @@ import iconv from "@utils/iconv";
 
 // Types
 import Stock from "types/utils/stock";
+import StockApi from "types/stocks/index";
 
 /**
  * 新浪股票代码接口
  */
-class Sina extends Base {
+const Sina: StockApi = {
   /**
    * 获取股票数据
    * @param code 股票代码
@@ -35,7 +36,7 @@ class Sina extends Base {
     const data = (new SinaStockTransform(code, params));
 
     return data.getStock();
-  }
+  },
 
   /**
    * 获取股票数据组
