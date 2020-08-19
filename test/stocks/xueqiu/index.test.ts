@@ -14,7 +14,7 @@ describe("【雪球】股票代码接口", () => {
       .toMatchObject({ code: "SH510500", name: "中证500ETF" });
   });
 
-  it("需要获取的股票组代码", async () => {
+  it("需要获取的股票代码组", async () => {
     await expect((new Xueqiu()).getStocks(["SH510500"]))
       .resolves
       .toMatchObject([{ code: "SH510500", name: "中证500ETF" }]);

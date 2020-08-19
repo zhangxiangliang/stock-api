@@ -2,10 +2,11 @@
 import BaseApiCodeTransform from "@stocks/base/transforms/api-code";
 
 // Utils
-import { SZ, HK, US, SH } from "@utils/constant";
+import { COMMON_SH, COMMON_SZ, COMMON_HK, COMMON_US } from "@stocks/base/utils/constant";
+import { XUEQIU_SZ, XUEQIU_SH, XUEQIU_HK, XUEQIU_US } from "@stocks/xueqiu/utils/constant";
 
 /**
- * 雪球股票代码转换
+ * 【雪球】股票代码转换统一代码
  */
 class XueqiuApiCodeTransform extends BaseApiCodeTransform {
   /**
@@ -16,67 +17,79 @@ class XueqiuApiCodeTransform extends BaseApiCodeTransform {
   }
 
   /**
-   * 交易所股票代码转换
+   * 交易所股票代码转换统一代码
    * @param code 股票代码
    */
   public transform(code: string): string {
-    return super.transform(code);
+    if (code.includes(XUEQIU_SZ)) {
+      return this.SZTransform(code);
+    }
+
+    if (code.includes(XUEQIU_SH)) {
+      return this.SHTransform(code);
+    }
+
+    if (code.includes(XUEQIU_HK)) {
+      return this.HKTransform(code);
+    }
+
+    return this.USTransform(code);
   }
 
   /**
-   * 交易所股票组代码转换
-   * @param codes 股票代码
+   * 交易所股票组代码组转换统一代码组
+   * @param codes 股票代码组
    */
   public transforms(codes: string[]): string[] {
     return super.transforms(codes);
   }
 
   /**
-   * 深交所股票代码转换
+   * 深交所股票代码转换统一代码
    * @param code 股票代码
    */
   public SZTransform(code: string): string {
-    if (!code.includes(SZ)) {
+    if (!code.includes(XUEQIU_SZ)) {
       throw new Error("请检查股票代码是否正确");
     }
 
-    return "SZ" + code.replace(SZ, "");
+    return COMMON_SZ + code.replace(XUEQIU_SZ, "");
   }
 
   /**
-   * 上交所股票代码转换
+   * 上交所股票代码转换统一代码
    * @param code 股票代码
    */
   public SHTransform(code: string): string {
-    if (!code.includes(SH)) {
+    if (!code.includes(XUEQIU_SH)) {
       throw new Error("请检查股票代码是否正确");
     }
 
-    return "SH" + code.replace(SH, "");
+    return COMMON_SH + code.replace(XUEQIU_SH, "");
   }
 
   /**
-   * 港交所股票代码转换
+   * 港交所股票代码转换统一代码
    * @param code 股票代码
    */
   public HKTransform(code: string): string {
-    if (!code.includes(HK)) {
+    if (!code.includes(XUEQIU_HK)) {
       throw new Error("请检查股票代码是否正确");
     }
 
-    return "HK" + code.replace(HK, "");
+    return COMMON_HK + code.replace(XUEQIU_HK, "");
   }
 
   /**
-   * 美交所股票代码转换
+   * 美交所股票代码转换统一代码
    * @param code 股票代码
    */
   public USTransform(code: string): string {
-    if (!code.includes(US)) {
+    if (code.includes(XUEQIU_SZ) || code.includes(XUEQIU_SH) || code.includes(XUEQIU_HK)) {
       throw new Error("请检查股票代码是否正确");
     }
 
-    return "" + code.replace(US, "");
+    return COMMON_US + code.replace(XUEQIU_US, "");
   }
 }
 
