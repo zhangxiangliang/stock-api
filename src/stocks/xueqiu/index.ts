@@ -15,12 +15,6 @@ import Dictionary from "types/utils/dictionary";
  */
 class Xueqiu extends Base {
   public token: string = '';
-  /**
-   * 构造函数
-   */
-  constructor() {
-    super();
-  }
 
   /**
    * 获取 Token
@@ -39,7 +33,7 @@ class Xueqiu extends Base {
 
   /**
    * 获取股票数据
-   * @param code 需要获取的股票代码
+   * @param code 股票代码
    */
   async getStock(code: string): Promise<Stock> {
     const token = await this.getToken();
@@ -60,8 +54,8 @@ class Xueqiu extends Base {
   }
 
   /**
-   * 获取股票组数据
-   * @param codes 需要获取的股票代码组
+   * 获取股票数据组
+   * @param codes 股票代码组
    */
   async getStocks(codes: string[]): Promise<Stock[]> {
     const token = await this.getToken();

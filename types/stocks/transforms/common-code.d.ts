@@ -1,4 +1,4 @@
-export interface LocalCodeTransform {
+export interface CommonCodeTransform {
   transform(code: string): string;
   transforms(codes: string[]): string[];
   SZTransform(code: string): string;
@@ -7,4 +7,4 @@ export interface LocalCodeTransform {
   USTransform(code: string): string;
 }
 
-export default LocalCodeTransform;
+export default CommonCodeTransform;

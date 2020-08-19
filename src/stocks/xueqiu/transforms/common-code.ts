@@ -10,13 +10,6 @@ import { XUEQIU_SZ, XUEQIU_SH, XUEQIU_HK, XUEQIU_US } from "@stocks/xueqiu/utils
  */
 class XueqiuCommonCodeTransform extends BaseCommonCodeTransform {
   /**
-   * 构造函数
-   */
-  constructor() {
-    super();
-  }
-
-  /**
    * 交易所统一代码转换股票代码
    * @param code 统一代码
    */
@@ -26,7 +19,7 @@ class XueqiuCommonCodeTransform extends BaseCommonCodeTransform {
 
   /**
    * 交易所股 统一代码 转换 票组代码
-   * @param codes 股票代码
+   * @param codes 统一代码组
    */
   public transforms(codes: string[]): string[] {
     return super.transforms(codes);

@@ -8,9 +8,9 @@ describe("【基础】股票代码接口", () => {
       .toThrow(new Error("未实现获取股票数据"));
   });
 
-  it("需要获取的股票组代码", async () => {
+  it("需要获取的股票代码组", async () => {
     await expect(new Base().getStocks(["SZ000000"]))
       .rejects
-      .toThrow(new Error("未实现获取股票组数据"));
+      .toThrow(new Error("未实现获取股票数据组"));
   });
 });

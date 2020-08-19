@@ -51,7 +51,7 @@ describe("【基础】统一代码转换股票代码", () => {
       .toThrow(new Error("未实现美交所统一代码转换股票代码"));
   });
 
-  it("交易所股票组代码转换", async () => {
+  it("交易所统一代码组转换股票代码组", async () => {
     expect(() => (new BaseCommonCodeTransform()).transforms(["000000"]))
       .toThrow(new Error("请检查统一代码是否正确"));
 

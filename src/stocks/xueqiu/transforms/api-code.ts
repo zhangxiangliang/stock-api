@@ -10,13 +10,6 @@ import { XUEQIU_SZ, XUEQIU_SH, XUEQIU_HK, XUEQIU_US } from "@stocks/xueqiu/utils
  */
 class XueqiuApiCodeTransform extends BaseApiCodeTransform {
   /**
-   * 构造函数
-   */
-  constructor() {
-    super();
-  }
-
-  /**
    * 交易所股票代码转换统一代码
    * @param code 股票代码
    */

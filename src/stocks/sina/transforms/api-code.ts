@@ -10,13 +10,6 @@ import { SINA_SZ, SINA_SH, SINA_HK, SINA_US } from "@stocks/sina/utils/constant"
  */
 class SinaCommonCodeTransform extends BaseCommonCodeTransform {
   /**
-   * 构造函数
-   */
-  constructor() {
-    super();
-  }
-
-  /**
    * 交易所股票代码转换统一代码
    * @param code 股票代码
    */
@@ -42,7 +35,7 @@ class SinaCommonCodeTransform extends BaseCommonCodeTransform {
 
   /**
    * 交易所股票代码组转换统一代码组
-   * @param codes 股票代码
+   * @param codes 股票代码组
    */
   public transforms(codes: string[]): string[] {
     return super.transforms(codes);

@@ -10,14 +10,7 @@ import { NETEASE_SZ, NETEASE_SH, NETEASE_HK, NETEASE_US } from "@stocks/netease/
  */
 class NeteaseCommonCodeTransform extends BaseCommonCodeTransform {
   /**
-   * 构造函数
-   */
-  constructor() {
-    super();
-  }
-
-  /**
-   * 交易所统一代码转股票代码
+   * 统一代码转股票代码
    * @param code 统一代码
    */
   public transform(code: string): string {
@@ -25,8 +18,8 @@ class NeteaseCommonCodeTransform extends BaseCommonCodeTransform {
   }
 
   /**
-   * 交易所股票组代码转换
-   * @param codes 股票代码
+   * 统一代码组转换股票代码组
+   * @param codes 统一代码组
    */
   public transforms(codes: string[]): string[] {
     return super.transforms(codes);

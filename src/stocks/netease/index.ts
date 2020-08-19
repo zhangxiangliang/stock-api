@@ -14,15 +14,8 @@ import Stock from "types/utils/stock";
  */
 class Netease extends Base {
   /**
-   * 构造函数
-   */
-  constructor() {
-    super();
-  }
-
-  /**
    * 获取股票数据
-   * @param code 需要获取的股票代码
+   * @param code 股票代码
    */
   async getStock(code: string): Promise<Stock> {
     const transform = (new NeteaseCommonCodeTransform).transform(code);
@@ -47,8 +40,8 @@ class Netease extends Base {
   }
 
   /**
-   * 获取股票组数据
-   * @param codes 需要获取的股票组代码
+   * 获取股票数据组
+   * @param codes 股票代码组
    */
   async getStocks(codes: string[]): Promise<Stock[]> {
     const transforms = (new NeteaseCommonCodeTransform).transforms(codes);

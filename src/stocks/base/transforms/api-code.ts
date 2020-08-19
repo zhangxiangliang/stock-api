@@ -6,12 +6,7 @@ import ApiCodeTransform from "types/stocks/transforms/api-code";
  */
 class BaseApiCodeTransform implements ApiCodeTransform {
   /**
-  * 构造函数
-  */
-  constructor() { }
-
-  /**
-   * 交易所股票代码转换统一代码
+   * 股票代码转换统一代码
    * @param code 股票代码
    */
   public transform(code: string): string {
@@ -19,8 +14,8 @@ class BaseApiCodeTransform implements ApiCodeTransform {
   }
 
   /**
-   * 交易所股票组代码转换统一代码组
-   * @param codes 股票代码
+   * 股票代码组转换统一代码组
+   * @param codes 股票代码组
    */
   public transforms(codes: string[]): string[] {
     return codes.map((code) => this.transform(code));

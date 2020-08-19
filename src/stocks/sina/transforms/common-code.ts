@@ -26,7 +26,7 @@ class SinaCommonCodeTransform extends BaseCommonCodeTransform {
 
   /**
    * 交易所统一代码组转换股票代码组
-   * @param codes 股票代码
+   * @param codes 统一代码组
    */
   public transforms(codes: string[]): string[] {
     return super.transforms(codes);

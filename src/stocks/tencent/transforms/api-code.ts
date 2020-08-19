@@ -10,13 +10,6 @@ import { TENCENT_SZ, TENCENT_SH, TENCENT_HK, TENCENT_US } from "@stocks/tencent/
  */
 class TencentApiCodeTransform extends BaseApiCodeTransform {
   /**
-   * 构造函数
-   */
-  constructor() {
-    super();
-  }
-
-  /**
    * 交易所股票代码转换统一代码
    * @param code 股票代码
    */
