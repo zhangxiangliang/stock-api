@@ -1,7 +1,7 @@
 // Stocks
 import Base from "@stocks/base";
 import XueqiuStockTransform from "@stocks/xueqiu/transforms/stock";
-import XueqiuExchangeTransform from "@stocks/xueqiu/transforms/exchange";
+import XueqiuApiCodeTransform from "@stocks/xueqiu/transforms/api-code";
 
 // Utils
 import fetch from "@utils/fetch";
@@ -43,7 +43,7 @@ class Xueqiu extends Base {
    */
   async getStock(code: string): Promise<Stock> {
     const token = await this.getToken();
-    const transform = (new XueqiuExchangeTransform).transform(code);
+    const transform = (new XueqiuApiCodeTransform).transform(code);
 
     // 数据获取
     const url = `https://stock.xueqiu.com/v5/stock/quote.json?symbol=${transform}`;
@@ -65,7 +65,7 @@ class Xueqiu extends Base {
    */
   async getStocks(codes: string[]): Promise<Stock[]> {
     const token = await this.getToken();
-    const transforms = (new XueqiuExchangeTransform).transforms(codes);
+    const transforms = (new XueqiuApiCodeTransform).transforms(codes);
 
     // 数据获取
     const url = `https://stock.xueqiu.com/v5/stock/batch/quote.json?symbol=${transforms.join(',')}`;
@@ -76,7 +76,7 @@ class Xueqiu extends Base {
 
     return codes.map(code => {
       // 数据深解析
-      const transform = (new XueqiuExchangeTransform).transform(code);
+      const transform = (new XueqiuApiCodeTransform).transform(code);
       const params = rows.find(i => i.quote.symbol === transform) || {};
 
       const data = (new XueqiuStockTransform(code, params.quote));
