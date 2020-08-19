@@ -1,11 +1,6 @@
 import Stock from '../utils/stock';
 
-export interface StockApi {
-  /**
-   * 构造函数
-   */
-  new(): StockApi;
-
+declare class StockApi {
   /**
    * 构造函数
    */

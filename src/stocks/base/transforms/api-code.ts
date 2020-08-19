@@ -2,12 +2,12 @@
 import { SZ, SH, HK, US } from "@utils/constant";
 
 // Types
-import ExchangeTransform from "types/stocks/transforms/exchange";
+import ApiCodeTransform from "types/stocks/transforms/api-code";
 
 /**
  * 基础股票代码转换
  */
-class BaseExchangeTransform implements ExchangeTransform {
+class BaseApiCodeTransform implements ApiCodeTransform {
   /**
    * 构造函数
    */
@@ -19,19 +19,19 @@ class BaseExchangeTransform implements ExchangeTransform {
    */
   public transform(code: string): string {
     if (code.includes(SH)) {
-      return this.SHExchangeTransform(code);
+      return this.SHTransform(code);
     }
 
     if (code.includes(SZ)) {
-      return this.SZExchangeTransform(code);
+      return this.SZTransform(code);
     }
 
     if (code.includes(HK)) {
-      return this.HKExchangeTransform(code);
+      return this.HKTransform(code);
     }
 
-    if (code.search(US) !== -1) {
-      return this.USExchangeTransform(code);
+    if (code.includes(US)) {
+      return this.USTransform(code);
     }
 
     throw new Error("请检查股票代码是否正确");
@@ -49,7 +49,7 @@ class BaseExchangeTransform implements ExchangeTransform {
    * 深交所股票代码转换
    * @param code 股票代码
    */
-  public SZExchangeTransform(code: string): string {
+  public SZTransform(code: string): string {
     if (!code.includes(SZ)) {
       throw new Error("请检查股票代码是否正确");
     }
@@ -61,7 +61,7 @@ class BaseExchangeTransform implements ExchangeTransform {
    * 上交所股票代码转换
    * @param code 股票代码
    */
-  public SHExchangeTransform(code: string): string {
+  public SHTransform(code: string): string {
     if (!code.includes(SH)) {
       throw new Error("请检查股票代码是否正确");
     }
@@ -73,7 +73,7 @@ class BaseExchangeTransform implements ExchangeTransform {
    * 港交所股票代码转换
    * @param code 股票代码
    */
-  public HKExchangeTransform(code: string): string {
+  public HKTransform(code: string): string {
     if (!code.includes(HK)) {
       throw new Error("请检查股票代码是否正确");
     }
@@ -85,7 +85,7 @@ class BaseExchangeTransform implements ExchangeTransform {
    * 美交所股票代码转换
    * @param code 股票代码
    */
-  public USExchangeTransform(code: string): string {
+  public USTransform(code: string): string {
     if (!code.includes(US)) {
       throw new Error("请检查股票代码是否正确");
     }
@@ -94,4 +94,4 @@ class BaseExchangeTransform implements ExchangeTransform {
   }
 }
 
-export default BaseExchangeTransform;
+export default BaseApiCodeTransform;

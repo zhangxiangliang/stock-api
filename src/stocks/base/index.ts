@@ -1,10 +1,11 @@
 // Types
 import Stock from "types/utils/stock";
+import StockApi from "types/stocks/index";
 
 /**
  * 基础股票代码接口
  */
-class Base {
+class Base implements StockApi {
   /**
    * 构造函数
    */
