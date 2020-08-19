@@ -1,5 +1,5 @@
 // Stocks
-import BaseExchangeTransform from "@stocks/base/transforms/exchange";
+import BaseApiCodeTransform from "@stocks/base/transforms/api-code";
 
 // Utils
 import { SZ, HK, US, SH } from "@utils/constant";
@@ -7,7 +7,7 @@ import { SZ, HK, US, SH } from "@utils/constant";
 /**
  * 网易股票代码转换
  */
-class NeteaseExchangeTransform extends BaseExchangeTransform {
+class NeteaseApiCodeTransform extends BaseApiCodeTransform {
   /**
    * 构造函数
    */
@@ -35,7 +35,7 @@ class NeteaseExchangeTransform extends BaseExchangeTransform {
    * 深交所股票代码转换
    * @param code 股票代码
    */
-  public SZExchangeTransform(code: string): string {
+  public SZTransform(code: string): string {
     if (!code.includes(SZ)) {
       throw new Error("请检查股票代码是否正确");
     }
@@ -47,7 +47,7 @@ class NeteaseExchangeTransform extends BaseExchangeTransform {
    * 上交所股票代码转换
    * @param code 股票代码
    */
-  public SHExchangeTransform(code: string): string {
+  public SHTransform(code: string): string {
     if (!code.includes(SH)) {
       throw new Error("请检查股票代码是否正确");
     }
@@ -59,7 +59,7 @@ class NeteaseExchangeTransform extends BaseExchangeTransform {
    * 港交所股票代码转换
    * @param code 股票代码
    */
-  public HKExchangeTransform(code: string): string {
+  public HKTransform(code: string): string {
     if (!code.includes(HK)) {
       throw new Error("请检查股票代码是否正确");
     }
@@ -71,7 +71,7 @@ class NeteaseExchangeTransform extends BaseExchangeTransform {
    * 美交所股票代码转换
    * @param code 股票代码
    */
-  public USExchangeTransform(code: string): string {
+  public USTransform(code: string): string {
     if (!code.includes(US)) {
       throw new Error("请检查股票代码是否正确");
     }
@@ -80,4 +80,4 @@ class NeteaseExchangeTransform extends BaseExchangeTransform {
   }
 }
 
-export default NeteaseExchangeTransform;
+export default NeteaseApiCodeTransform;
