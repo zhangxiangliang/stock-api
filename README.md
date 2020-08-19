@@ -52,20 +52,11 @@ yarn install stock-api
 ```typescript
 import { stocks } from "stock-api";
 
-// 省略 async 相关内容
-const sina = stocks["sina"];
-const netease = stocks["netease"];
-const tencent = stocks["tencent"];
-const xueqiu = stocks["xueqiu"];
-```
-
-##### 直接导入
-
-```typescript
-import Sina from "stock-api/stocks/sina";
-import Netease from "stock-api/stocks/netease";
-import Tencent from "stock-api/stocks/tencent";
-import Xueqiu from "stock-api/stocks/xuiqiu";
+// 数据源
+const sina = stocks.sina;
+const xueqiu = stocks.xueqiu;
+const netease = stocks.netease;
+const tencent = stocks.tencent;
 ```
 
 ### 获取股票实时数据
@@ -75,11 +66,8 @@ import Xueqiu from "stock-api/stocks/xuiqiu";
 ```typescript
 import { stocks } from "stock-api";
 
-// 选择数据源
-const api = new stocks["sina"];
-
-// 获取数据
-api.getStock("SH510500").then(console.log);
+// 获取股票实时数据
+stocks.sina.getStock("SH510500").then(console.log);
 ```
 
 ##### 输出
@@ -103,11 +91,8 @@ api.getStock("SH510500").then(console.log);
 ```typescript
 import { stocks } from "stock-api";
 
-// 选择数据源
-const api = new stocks["sina"];
-
-// 获取数据
-api.getStocks(["SH510500"]).then(console.log);
+// 获取股票组实时数据
+stocks.sina.getStocks(["SH510500"]).then(console.log);
 ```
 
 ##### 输出
@@ -123,8 +108,6 @@ api.getStocks(["SH510500"]).then(console.log);
     yesterday: 6.976
   }]
 ```
-
-
 
 ## 一起成长
 
