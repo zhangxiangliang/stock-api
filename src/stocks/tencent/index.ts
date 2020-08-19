@@ -1,7 +1,7 @@
 // Stocks
 import Base from "@stocks/base";
 import TencentStockTransform from "@stocks/tencent/transforms/stock";
-import TencentApiCodeTransform from "@stocks/tencent/transforms/api-code";
+import TencentCommonCodeTransform from "@stocks/tencent/transforms/common-code";
 
 // Utils
 import fetch from "@utils/fetch";
@@ -26,7 +26,7 @@ class Tencent extends Base {
    * @param code 需要获取的股票代码
    */
   async getStock(code: string): Promise<Stock> {
-    const transform = (new TencentApiCodeTransform).transform(code);
+    const transform = (new TencentCommonCodeTransform).transform(code);
 
     // 数据获取
     const url = `https://qt.gtimg.cn/q=${transform}`;
@@ -46,10 +46,10 @@ class Tencent extends Base {
 
   /**
    * 获取股票组数据
-   * @param codes 需要获取的股票组代码
+   * @param codes 需要获取的股票代码组
    */
   async getStocks(codes: string[]): Promise<Stock[]> {
-    const transforms = (new TencentApiCodeTransform).transforms(codes);
+    const transforms = (new TencentCommonCodeTransform).transforms(codes);
 
     // 数据获取
     const url = `https://qt.gtimg.cn/q=${transforms.join(',')}`;

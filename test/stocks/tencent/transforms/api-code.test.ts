@@ -1,70 +1,70 @@
 // Stock
 const TencentApiCodeTransform = require("stocks/tencent/transforms/api-code").default;
 
-describe("【腾讯】股票代码转换测试", () => {
-  it("深交所股票代码转换", async () => {
-    expect(() => (new TencentApiCodeTransform()).SZTransform("000000"))
+describe("【腾讯】股票代码转换统一代码", () => {
+  it("深交所股票代码转换统一代码", async () => {
+    expect(() => (new TencentApiCodeTransform()).SZTransform("STOCKAPI"))
       .toThrow(new Error("请检查股票代码是否正确"));
 
-    expect((new TencentApiCodeTransform()).SZTransform("SZ000000"))
-      .toBe("sz000000");
+    expect((new TencentApiCodeTransform()).SZTransform("sz000000"))
+      .toBe("SZ000000");
   });
 
-  it("上交所股票代码转换", async () => {
-    expect(() => (new TencentApiCodeTransform()).SHTransform("000000"))
+  it("上交所股票代码转换统一代码", async () => {
+    expect(() => (new TencentApiCodeTransform()).SHTransform("STOCKAPI"))
       .toThrow(new Error("请检查股票代码是否正确"));
 
-    expect((new TencentApiCodeTransform()).SHTransform("SH000000"))
-      .toBe("sh000000");
+    expect((new TencentApiCodeTransform()).SHTransform("sh000000"))
+      .toBe("SH000000");
   });
 
-  it("港交所股票代码转换", async () => {
-    expect(() => (new TencentApiCodeTransform()).HKTransform("000000"))
+  it("港交所股票代码转换统一代码", async () => {
+    expect(() => (new TencentApiCodeTransform()).HKTransform("STOCKAPI"))
       .toThrow(new Error("请检查股票代码是否正确"));
 
-    expect((new TencentApiCodeTransform()).HKTransform("HK000000"))
-      .toBe("hk000000");
+    expect((new TencentApiCodeTransform()).HKTransform("hk000000"))
+      .toBe("HK000000");
   });
 
-  it("美交所股票代码转换", async () => {
-    expect(() => (new TencentApiCodeTransform()).USTransform("000000"))
+  it("美交所股票代码转换统一代码", async () => {
+    expect(() => (new TencentApiCodeTransform()).USTransform("STOCKAPI"))
       .toThrow(new Error("请检查股票代码是否正确"));
 
-    expect((new TencentApiCodeTransform()).USTransform("US000000"))
-      .toBe("us000000");
+    expect((new TencentApiCodeTransform()).USTransform("us000000"))
+      .toBe("US000000");
   });
 
-  it("交易所股票代码转换", async () => {
-    expect((new TencentApiCodeTransform()).transform("SZ000000"))
-      .toBe("sz000000");
+  it("交易所股票代码转换统一代码", async () => {
+    expect((new TencentApiCodeTransform()).transform("sz000000"))
+      .toBe("SZ000000");
 
-    expect((new TencentApiCodeTransform()).transform("SH000000"))
-      .toBe("sh000000");
+    expect((new TencentApiCodeTransform()).transform("sh000000"))
+      .toBe("SH000000");
 
-    expect((new TencentApiCodeTransform()).transform("HK000000"))
-      .toBe("hk000000");
+    expect((new TencentApiCodeTransform()).transform("hk000000"))
+      .toBe("HK000000");
 
-    expect((new TencentApiCodeTransform()).transform("US000000"))
-      .toBe("us000000");
+    expect((new TencentApiCodeTransform()).transform("us000000"))
+      .toBe("US000000");
 
-    expect(() => (new TencentApiCodeTransform()).transform("000000"))
+    expect(() => (new TencentApiCodeTransform()).transform("STOCKAPI"))
       .toThrow(new Error("请检查股票代码是否正确"));
   });
 
-  it("交易所股票组代码转换", async () => {
-    expect((new TencentApiCodeTransform()).transforms(["SZ000000"]))
-      .toStrictEqual(["sz000000"]);
+  it("交易所股票代码组转换统一代码组", async () => {
+    expect((new TencentApiCodeTransform()).transforms(["sz000000"]))
+      .toStrictEqual(["SZ000000"]);
 
-    expect((new TencentApiCodeTransform()).transforms(["SH000000"]))
-      .toStrictEqual(["sh000000"]);
+    expect((new TencentApiCodeTransform()).transforms(["sh000000"]))
+      .toStrictEqual(["SH000000"]);
 
-    expect((new TencentApiCodeTransform()).transforms(["HK000000"]))
-      .toStrictEqual(["hk000000"]);
+    expect((new TencentApiCodeTransform()).transforms(["hk000000"]))
+      .toStrictEqual(["HK000000"]);
 
-    expect((new TencentApiCodeTransform()).transforms(["US000000"]))
-      .toStrictEqual(["us000000"]);
+    expect((new TencentApiCodeTransform()).transforms(["us000000"]))
+      .toStrictEqual(["US000000"]);
 
-    expect(() => (new TencentApiCodeTransform()).transforms(["000000"]))
+    expect(() => (new TencentApiCodeTransform()).transforms(["STOCKAPI"]))
       .toThrow(new Error("请检查股票代码是否正确"));
   });
 });
