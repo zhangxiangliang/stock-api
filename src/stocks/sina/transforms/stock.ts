@@ -2,7 +2,7 @@
 import BaseStockTransform from "@stocks/base/transforms/stock";
 
 // Utils
-import { SZ, HK, US, SH } from "@utils/constant";
+import { COMMON_SH, COMMON_SZ, COMMON_HK, COMMON_US } from "@stocks/base/utils/constant";
 
 // Types
 import Stock from "types/utils/stock";
@@ -30,13 +30,13 @@ class SinaStockTransform extends BaseStockTransform {
    */
   getName(): string {
     switch (this.code.slice(0, 2)) {
-      case SH:
+      case COMMON_SH:
         return String(this.params[0]);
-      case SZ:
+      case COMMON_SZ:
         return String(this.params[0]);
-      case HK:
+      case COMMON_HK:
         return String(this.params[1]);
-      case US:
+      case COMMON_US:
         return String(this.params[0]);
       default:
         throw new Error('不支持当前交易所');
@@ -48,13 +48,13 @@ class SinaStockTransform extends BaseStockTransform {
    */
   getNow(): number {
     switch (this.code.slice(0, 2)) {
-      case SH:
+      case COMMON_SH:
         return Number(this.params[3]);
-      case SZ:
+      case COMMON_SZ:
         return Number(this.params[3]);
-      case HK:
+      case COMMON_HK:
         return Number(this.params[6]);
-      case US:
+      case COMMON_US:
         return Number(this.params[1]);
       default:
         throw new Error('不支持当前交易所');
@@ -66,13 +66,13 @@ class SinaStockTransform extends BaseStockTransform {
    */
   getLow(): number {
     switch (this.code.slice(0, 2)) {
-      case SH:
+      case COMMON_SH:
         return Number(this.params[5]);
-      case SZ:
+      case COMMON_SZ:
         return Number(this.params[5]);
-      case HK:
+      case COMMON_HK:
         return Number(this.params[5]);
-      case US:
+      case COMMON_US:
         return Number(this.params[7]);
       default:
         throw new Error('不支持当前交易所');
@@ -84,13 +84,13 @@ class SinaStockTransform extends BaseStockTransform {
    */
   getHigh(): number {
     switch (this.code.slice(0, 2)) {
-      case SH:
+      case COMMON_SH:
         return Number(this.params[4]);
-      case SZ:
+      case COMMON_SZ:
         return Number(this.params[4]);
-      case HK:
+      case COMMON_HK:
         return Number(this.params[4]);
-      case US:
+      case COMMON_US:
         return Number(this.params[6]);
       default:
         throw new Error('不支持当前交易所');
@@ -102,13 +102,13 @@ class SinaStockTransform extends BaseStockTransform {
    */
   getYesterday(): number {
     switch (this.code.slice(0, 2)) {
-      case SH:
+      case COMMON_SH:
         return Number(this.params[2]);
-      case SZ:
+      case COMMON_SZ:
         return Number(this.params[2]);
-      case HK:
+      case COMMON_HK:
         return Number(this.params[3]);
-      case US:
+      case COMMON_US:
         return Number(this.params[26]);
       default:
         throw new Error('不支持当前交易所');

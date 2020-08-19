@@ -1,7 +1,7 @@
 // Stocks
 import Base from "@stocks/base";
 import SinaStockTransform from "@stocks/sina/transforms/stock";
-import SinaApiCodeTransform from "@stocks/sina/transforms/api-code";
+import SinaCommonCodeTransform from "@stocks/sina/transforms/common-code";
 
 // Utils
 import fetch from "@utils/fetch";
@@ -26,7 +26,7 @@ class Sina extends Base {
    * @param code 需要获取的股票代码
    */
   async getStock(code: string): Promise<Stock> {
-    const transform = (new SinaApiCodeTransform).transform(code);
+    const transform = (new SinaCommonCodeTransform).transform(code);
 
     // 数据获取
     const url = `https://hq.sinajs.cn/list=${transform}`;
@@ -49,7 +49,7 @@ class Sina extends Base {
    * @param codes 需要获取的股票组代码
    */
   async getStocks(codes: string[]): Promise<Stock[]> {
-    const transforms = (new SinaApiCodeTransform).transforms(codes);
+    const transforms = (new SinaCommonCodeTransform).transforms(codes);
 
     // 数据获取
     const url = `https://hq.sinajs.cn/list=${transforms.join(',')}`;

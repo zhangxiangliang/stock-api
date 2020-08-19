@@ -1,13 +1,14 @@
 // Stocks
-import BaseApiCodeTransform from "@stocks/base/transforms/api-code";
+import BaseCommonCodeTransform from "@stocks/base/transforms/common-code";
 
 // Utils
-import { SZ, HK, US, SH } from "@utils/constant";
+import { COMMON_SH, COMMON_SZ, COMMON_HK, COMMON_US } from "@stocks/base/utils/constant";
+import { SINA_SZ, SINA_SH, SINA_HK, SINA_US } from "@stocks/sina/utils/constant";
 
 /**
- * 新浪股票代码转换
+ * 【新浪】股票代码转换统一代码
  */
-class SinaApiCodeTransform extends BaseApiCodeTransform {
+class SinaCommonCodeTransform extends BaseCommonCodeTransform {
   /**
    * 构造函数
    */
@@ -16,15 +17,31 @@ class SinaApiCodeTransform extends BaseApiCodeTransform {
   }
 
   /**
-   * 交易所股票代码转换
+   * 交易所股票代码转换统一代码
    * @param code 股票代码
    */
   public transform(code: string): string {
-    return super.transform(code);
+    if (code.indexOf(SINA_SZ) === 0) {
+      return this.SZTransform(code);
+    }
+
+    if (code.indexOf(SINA_SH) === 0) {
+      return this.SHTransform(code);
+    }
+
+    if (code.indexOf(SINA_HK) === 0) {
+      return this.HKTransform(code);
+    }
+
+    if (code.indexOf(SINA_US) === 0) {
+      return this.USTransform(code);
+    }
+
+    throw new Error("请检查股票代码是否正确");
   }
 
   /**
-   * 交易所股票组代码转换
+   * 交易所股票代码组转换统一代码组
    * @param codes 股票代码
    */
   public transforms(codes: string[]): string[] {
@@ -32,52 +49,52 @@ class SinaApiCodeTransform extends BaseApiCodeTransform {
   }
 
   /**
-   * 深交所股票代码转换
+   * 深交所股票代码转换统一代码
    * @param code 股票代码
    */
   public SZTransform(code: string): string {
-    if (!code.includes(SZ)) {
+    if (!code.includes(SINA_SZ)) {
       throw new Error("请检查股票代码是否正确");
     }
 
-    return "sz" + code.replace(SZ, "");
+    return COMMON_SZ + code.replace(SINA_SZ, "");
   }
 
   /**
-   * 上交所股票代码转换
+   * 上交所股票代码转换统一代码
    * @param code 股票代码
    */
   public SHTransform(code: string): string {
-    if (!code.includes(SH)) {
+    if (!code.includes(SINA_SH)) {
       throw new Error("请检查股票代码是否正确");
     }
 
-    return "sh" + code.replace(SH, "");
+    return COMMON_SH + code.replace(SINA_SH, "");
   }
 
   /**
-   * 港交所股票代码转换
+   * 港交所股票代码转换统一代码
    * @param code 股票代码
    */
   public HKTransform(code: string): string {
-    if (!code.includes(HK)) {
+    if (!code.includes(SINA_HK)) {
       throw new Error("请检查股票代码是否正确");
     }
 
-    return "hk" + code.replace(HK, "");
+    return COMMON_HK + code.replace(SINA_HK, "");
   }
 
   /**
-   * 美交所股票代码转换
+   * 美交所股票代码转换统一代码
    * @param code 股票代码
    */
   public USTransform(code: string): string {
-    if (!code.includes(US)) {
+    if (!code.includes(SINA_US)) {
       throw new Error("请检查股票代码是否正确");
     }
 
-    return "gb_" + code.replace(US, "").toLowerCase();
+    return COMMON_US + code.replace(SINA_US, "").toLowerCase();
   }
 }
 
-export default SinaApiCodeTransform;
+export default SinaCommonCodeTransform;
