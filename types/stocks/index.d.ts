@@ -12,6 +12,12 @@ export interface StockApi {
    * @param codes 股票代码组
    */
   getStocks(codes: string[]): Promise<Stock[]>;
+
+  /**
+   * 搜索股票代码
+   * @param key 关键字
+   */
+  searchStocks(key: string): Promise<Stock[]>;
 }
 
 export default StockApi;

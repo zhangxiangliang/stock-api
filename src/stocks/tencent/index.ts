@@ -60,6 +60,14 @@ const Tencent: StockApi = {
 
       return data.getStock();
     })
+  },
+
+  /**
+   * 搜索股票代码
+   * @param key 关键字
+   */
+  async searchStocks(key: string): Promise<Stock[]> {
+    throw new Error("未实现搜索股票代码");
   }
 }
 
