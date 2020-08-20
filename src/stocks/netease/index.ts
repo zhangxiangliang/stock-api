@@ -27,18 +27,13 @@ const Netease: StockApi = {
 
     const items = JSON.parse(res.body.toString().replace(/\(|\)|;|(topstock)|\s/g, '').replace('{{', '{').replace('}}}', "}}"));
     const params = items[transform];
+
+    if (!params) {
+      return { ...DEFAULT_STOCK, code };
+    }
+
     const data = (new NeteaseStockTransform(code, params));
-
-    return params ? data.getStock() : {
-      code: code,
-      name: '---',
-      percent: 0,
-
-      now: 0,
-      low: 0,
-      high: 0,
-      yesterday: 0,
-    };
+    return data.getStock();
   },
 
   /**
@@ -62,9 +57,14 @@ const Netease: StockApi = {
     return codes.map(code => {
       const transform = (new NeteaseCommonCodeTransform).transform(code);
       const params = items[transform];
+
+      if (!params) {
+        return { ...DEFAULT_STOCK, code };
+      }
+
       const data = (new NeteaseStockTransform(code, params));
 
-      return params ? data.getStock() : { ...DEFAULT_STOCK, code };
+      return data.getStock();
     });
   },
 
