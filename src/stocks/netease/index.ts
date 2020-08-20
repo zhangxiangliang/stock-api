@@ -1,14 +1,15 @@
 // Stocks
-import Base from "@stocks/base";
 import NeteaseStockTransform from "@stocks/netease/transforms/stock";
 import NeteaseCommonCodeTransform from "@stocks/netease/transforms/common-code";
 
 // Utils
 import fetch from "@utils/fetch";
+import { COMMON_SZ, COMMON_SH, DEFAULT_STOCK } from "@stocks/base/utils/constant";
 
 // Types
 import Stock from "types/utils/stock";
 import StockApi from "types/stocks/index";
+import Dictionary from "types/utils/dictionary";
 
 /**
  * 网易股票代码接口
@@ -29,7 +30,7 @@ const Netease: StockApi = {
     const data = (new NeteaseStockTransform(code, params));
 
     return params ? data.getStock() : {
-      code: transform,
+      code: code,
       name: '---',
       percent: 0,
 
@@ -45,27 +46,25 @@ const Netease: StockApi = {
    * @param codes 股票代码组
    */
   async getStocks(codes: string[]): Promise<Stock[]> {
+    // 无股票时返回空数组
+    if (codes.length === 0) {
+      return [];
+    }
+
     const transforms = (new NeteaseCommonCodeTransform).transforms(codes);
 
+    // 数据获取
     const url = `https://api.money.126.net/data/feed/${transforms.join(',')},money.api?callback=topstock`;
     const res = await fetch.get(url);
 
+    // 解析数据
     const items = JSON.parse(res.body.toString().replace(/\(|\)|;|(topstock)|\s/g, '').replace('{{', '{').replace('}}}', "}}"));
     return codes.map(code => {
       const transform = (new NeteaseCommonCodeTransform).transform(code);
       const params = items[transform];
       const data = (new NeteaseStockTransform(code, params));
 
-      return params ? data.getStock() : {
-        code: transform,
-        name: '---',
-        percent: 0,
-
-        now: 0,
-        low: 0,
-        high: 0,
-        yesterday: 0,
-      };
+      return params ? data.getStock() : { ...DEFAULT_STOCK, code };
     });
   },
 
@@ -74,7 +73,27 @@ const Netease: StockApi = {
    * @param key 关键字
    */
   async searchStocks(key: string): Promise<Stock[]> {
-    throw new Error("未实现搜索股票代码");
+    // 数据获取
+    const url = `https://quotes.money.163.com/stocksearch/json.do?type=&count=5&word=${key}&callback=topstock`;
+    const res = await fetch.get(url);
+
+    // 解析数据
+    const row = res.body.toString().replace(/\(|\)|;|(topstock)|\s/g, '').replace('{{', '{').replace('}}}', "}}");
+    const items: Dictionary<string>[] = JSON.parse(row);
+
+    const codes: string[] = items.map(i => {
+      if (i.tag.includes(COMMON_SZ)) {
+        return COMMON_SZ + i.symbol;
+      }
+
+      if (i.tag.includes(COMMON_SH)) {
+        return COMMON_SH + i.symbol;
+      }
+
+      return '';
+    }).filter(i => i !== '');
+
+    return await Netease.getStocks(codes);
   }
 }
 
