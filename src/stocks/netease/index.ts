@@ -74,7 +74,7 @@ const Netease: StockApi = {
    */
   async searchStocks(key: string): Promise<Stock[]> {
     // 数据获取
-    const url = `https://quotes.money.163.com/stocksearch/json.do?type=&count=5&word=${key}&callback=topstock`;
+    const url = `https://quotes.money.163.com/stocksearch/json.do?type=&count=5&word=${encodeURIComponent(key)}&callback=topstock`;
     const res = await fetch.get(url);
 
     // 解析数据

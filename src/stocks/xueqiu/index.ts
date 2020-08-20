@@ -93,7 +93,7 @@ const Xueqiu: StockApi & { getToken(): Promise<string> } = {
     const token = await this.getToken();
 
     // 数据获取
-    const url = `https://xueqiu.com/stock/search.json?code=${key}`;
+    const url = `https://xueqiu.com/stock/search.json?code=${encodeURIComponent(key)}`;
     const res = await fetch.get(url).set('Cookie', token);
 
     const body = JSON.parse(res.text);
