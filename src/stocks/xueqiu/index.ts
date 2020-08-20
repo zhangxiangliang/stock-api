@@ -1,16 +1,16 @@
 // Stocks
-import Base from "@stocks/base";
 import XueqiuStockTransform from "@stocks/xueqiu/transforms/stock";
+import XueqiuApiCodeTransform from "@stocks/xueqiu/transforms/api-code";
 import XueqiuCommonCodeTransform from "@stocks/xueqiu/transforms/common-code";
 
 // Utils
 import fetch from "@utils/fetch";
+import { DEFAULT_STOCK } from "@stocks/base/utils/constant";
 
 // Types
 import Stock from "types/utils/stock";
 import StockApi from "types/stocks/index";
 import Dictionary from "types/utils/dictionary";
-import XueqiuApiCodeTransform from "./transforms/api-code";
 
 let token: string = '';
 
@@ -52,7 +52,7 @@ const Xueqiu: StockApi & { getToken(): Promise<string> } = {
     const params = row;
     const data = (new XueqiuStockTransform(code, params));
 
-    return data.getStock();
+    return params ? data.getStock() : { ...DEFAULT_STOCK, code };
   },
 
   /**
@@ -60,6 +60,11 @@ const Xueqiu: StockApi & { getToken(): Promise<string> } = {
    * @param codes 股票代码组
    */
   async getStocks(codes: string[]): Promise<Stock[]> {
+    // 无股票时返回空数组
+    if (codes.length === 0) {
+      return [];
+    }
+
     const token = await this.getToken();
     const transforms = (new XueqiuCommonCodeTransform).transforms(codes);
 
@@ -76,7 +81,7 @@ const Xueqiu: StockApi & { getToken(): Promise<string> } = {
       const params = rows.find(i => i.quote.symbol === transform) || {};
 
       const data = (new XueqiuStockTransform(code, params.quote));
-      return data.getStock();
+      return params ? data.getStock() : { ...DEFAULT_STOCK, code };
     });
   },
 
