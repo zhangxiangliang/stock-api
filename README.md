@@ -33,6 +33,13 @@ yarn install stock-api
 
 ## 使用
 
+### 接口概览
+
+* [选择数据源](#选择数据源)
+* [搜索股票代码](#搜索股票代码)
+* [获取股票实时数据](#获取股票实时数据)
+* [获取股票组实时数据](#获取股票组实时数据)
+
 ### 股票代码
 
 由于每个交易所数据规则不一样，为了能统一规范对代码定义了规则 `交易所+股票代码`。
@@ -57,6 +64,31 @@ const sina = stocks.sina;
 const xueqiu = stocks.xueqiu;
 const netease = stocks.netease;
 const tencent = stocks.tencent;
+```
+
+### 搜索股票代码
+
+##### 示例
+
+```typescript
+import { stocks } from "stock-api";
+
+// 获取股票组实时数据
+stocks.sina.searchStocks(["510500"]).then(console.log);
+```
+
+##### 输出
+
+```typescript
+ [{
+    code: 'SH510500',
+    name: '500ETF',
+    percent: 0.028383,
+    now: 7.174,
+    low: 6.93,
+    high: 7.184,
+    yesterday: 6.976
+  }]
 ```
 
 ### 获取股票实时数据
@@ -108,6 +140,8 @@ stocks.sina.getStocks(["SH510500"]).then(console.log);
     yesterday: 6.976
   }]
 ```
+
+
 
 ## 一起成长
 
