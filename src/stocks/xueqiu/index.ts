@@ -10,6 +10,7 @@ import fetch from "@utils/fetch";
 import Stock from "types/utils/stock";
 import StockApi from "types/stocks/index";
 import Dictionary from "types/utils/dictionary";
+import XueqiuApiCodeTransform from "./transforms/api-code";
 
 let token: string = '';
 
@@ -91,9 +92,8 @@ const Xueqiu: StockApi & { getToken(): Promise<string> } = {
     const res = await fetch.get(url).set('Cookie', token);
 
     const body = JSON.parse(res.text);
-    const rows: Dictionary<Dictionary<string | number>>[] = body.stocks;
-    const codes: string[] = (rows.map(i => String(i.code)));
-
+    const rows: Dictionary<string>[] = body.stocks;
+    const codes: string[] = rows.map(i => (new XueqiuApiCodeTransform).transform(i.code));
     return await Xueqiu.getStocks(codes);
   }
 }
