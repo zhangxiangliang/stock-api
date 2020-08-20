@@ -84,7 +84,17 @@ const Xueqiu: StockApi & { getToken(): Promise<string> } = {
    * @param key 关键字
    */
   async searchStocks(key: string): Promise<Stock[]> {
-    throw new Error("未实现搜索股票代码");
+    const token = await this.getToken();
+
+    // 数据获取
+    const url = `https://xueqiu.com/stock/search.json?code=${key}`;
+    const res = await fetch.get(url).set('Cookie', token);
+
+    const body = JSON.parse(res.text);
+    const rows: Dictionary<Dictionary<string | number>>[] = body.stocks;
+    const codes: string[] = (rows.map(i => String(i.code)));
+
+    return await Xueqiu.getStocks(codes);
   }
 }
 
