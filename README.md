@@ -16,13 +16,12 @@
 
 ## 股票数据
 
-| 名称 | 接口名 | 官网 |
-| --- | --- | --- |
-| 基础示例 | base | 无 |
-| 网易财经 | netease | [传送门](https://money.163.com/) |
-| 新浪股票 | sina | [传送门](https://finance.sina.com.cn/) |
-| 腾讯股票 | tencent | [传送门](http://gu.qq.com/) |
-| 雪球 | xueqiu | [传送门](https://xueqiu.com/) |
+| 名称 | 接口名 | 搜索股票代码 | 获取股票实时数据 | 获取股票组实时数据 | 官网 |
+| --- | --- | --- | --- | --- | --- |
+| 网易财经 | netease | 已实现 | 已实现 | 已实现 | [传送门](https://money.163.com/) |
+| 雪球 | xueqiu | 已实现 | 已实现 | 已实现 | [传送门](https://xueqiu.com/) |
+| 新浪股票 | sina | 已实现 | 已实现 | 未实现 | [传送门](https://finance.sina.com.cn/) |
+| 腾讯股票 | tencent | 已实现 | 已实现 | 未实现 | [传送门](http://gu.qq.com/) |
 
 ## 安装
 
