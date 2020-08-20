@@ -1,11 +1,11 @@
 // Stocks
-import Base from "@stocks/base";
 import SinaStockTransform from "@stocks/sina/transforms/stock";
 import SinaCommonCodeTransform from "@stocks/sina/transforms/common-code";
 
 // Utils
 import fetch from "@utils/fetch";
 import iconv from "@utils/iconv";
+import { DEFAULT_STOCK } from "@stocks/base/utils/constant";
 
 // Types
 import Stock from "types/utils/stock";
@@ -32,6 +32,11 @@ const Sina: StockApi = {
 
     // 数据深解析
     const [_, paramsUnformat] = row.split('=');
+
+    if (paramsUnformat === '') {
+      return { ...DEFAULT_STOCK, code };
+    }
+
     const params = paramsUnformat.replace('"', '').split(",");
     const data = (new SinaStockTransform(code, params));
 
@@ -43,6 +48,11 @@ const Sina: StockApi = {
    * @param codes 股票代码组
    */
   async getStocks(codes: string[]): Promise<Stock[]> {
+    // 无股票时返回空数组
+    if (codes.length === 0) {
+      return [];
+    }
+
     const transforms = (new SinaCommonCodeTransform).transforms(codes);
 
     // 数据获取
@@ -55,6 +65,11 @@ const Sina: StockApi = {
     return codes.map((code, index) => {
       // 数据深解析
       const [_, paramsUnformat] = rows[index].split('=');
+
+      if (paramsUnformat === '') {
+        return { ...DEFAULT_STOCK, code };
+      }
+
       const params = paramsUnformat.replace('"', '').split(",");
       const data = (new SinaStockTransform(code, params));
 
