@@ -39,7 +39,9 @@
     "typescript-transform-paths": "^1.1.14"
   },
   "dependencies": {
+    "@types/lodash": "^4.14.159",
     "iconv-lite": "^0.6.2",
+    "lodash": "^4.17.20",
     "superagent": "^5.3.1"
   }
 }
