@@ -39,7 +39,6 @@ describe("【新浪】股票数据转换测试", () => {
     expect(new SinaStockTransform(SZCode, SZParams).getName()).toBe('深证成指');
     expect(new SinaStockTransform(HKCode, HKParams).getName()).toBe('恒生指数');
     expect(new SinaStockTransform(USCode, USParams).getName()).toBe("道琼斯");
-    expect(() => new SinaStockTransform("000000", []).getName()).toThrow(new Error("不支持当前交易所"));
   });
 
   it("获取股票现价", async () => {
@@ -47,7 +46,6 @@ describe("【新浪】股票数据转换测试", () => {
     expect(new SinaStockTransform(SZCode, SZParams).getNow()).toBe(13637.883);
     expect(new SinaStockTransform(HKCode, HKParams).getNow()).toBe(24595.35);
     expect(new SinaStockTransform(USCode, USParams).getNow()).toBe(26428.3203);
-    expect(() => new SinaStockTransform("000000", []).getNow()).toThrow(new Error("不支持当前交易所"));
   });
 
   it("获取股票最低价", async () => {
@@ -55,7 +53,6 @@ describe("【新浪】股票数据转换测试", () => {
     expect(new SinaStockTransform(SZCode, SZParams).getLow()).toBe(13399.859);
     expect(new SinaStockTransform(HKCode, HKParams).getLow()).toBe(24534.79);
     expect(new SinaStockTransform(USCode, USParams).getLow()).toBe(26013.5898);
-    expect(() => new SinaStockTransform("000000", []).getLow()).toThrow(new Error("不支持当前交易所"));
   });
 
   it("获取股票最高价", async () => {
@@ -63,7 +60,6 @@ describe("【新浪】股票数据转换测试", () => {
     expect(new SinaStockTransform(SZCode, SZParams).getHigh()).toBe(13748.034);
     expect(new SinaStockTransform(HKCode, HKParams).getHigh()).toBe(24938.85);
     expect(new SinaStockTransform(USCode, USParams).getHigh()).toBe(26440.0195);
-    expect(() => new SinaStockTransform("000000", []).getHigh()).toThrow(new Error("不支持当前交易所"));
   });
 
   it("获取股票昨日收盘价", async () => {
@@ -71,7 +67,6 @@ describe("【新浪】股票数据转换测试", () => {
     expect(new SinaStockTransform(SZCode, SZParams).getYesterday()).toBe(13466.854);
     expect(new SinaStockTransform(HKCode, HKParams).getYesterday()).toBe(24710.59);
     expect(new SinaStockTransform(USCode, USParams).getYesterday()).toBe(26313.6504);
-    expect(() => new SinaStockTransform("000000", []).getYesterday()).toThrow(new Error("不支持当前交易所"));
   });
 
   it("获取股票涨跌", async () => {
@@ -79,7 +74,6 @@ describe("【新浪】股票数据转换测试", () => {
     expect(new SinaStockTransform(SZCode, SZParams).getPercent()).toBe(13637.883 / 13466.854 - 1);
     expect(new SinaStockTransform(HKCode, HKParams).getPercent()).toBe(24595.35 / 24710.59 - 1);
     expect(new SinaStockTransform(USCode, USParams).getPercent()).toBe(26428.3203 / 26313.6504 - 1);
-    expect(() => new SinaStockTransform("000000", []).getPercent()).toThrow(new Error("不支持当前交易所"));
   });
 
   it("获取股票数据", async () => {
@@ -87,7 +81,6 @@ describe("【新浪】股票数据转换测试", () => {
     expect(new SinaStockTransform(SZCode, SZParams).getStock()).toStrictEqual({ code: 'SZ399001', name: '深证成指', percent: 13637.883 / 13466.854 - 1, now: 13637.883, low: 13399.859, high: 13748.034, yesterday: 13466.854 });
     expect(new SinaStockTransform(HKCode, HKParams).getStock()).toStrictEqual({ code: 'HKHSI', name: '恒生指数', percent: 24595.35 / 24710.59 - 1, now: 24595.35, low: 24534.79, high: 24938.85, yesterday: 24710.59 });
     expect(new SinaStockTransform(USCode, USParams).getStock()).toStrictEqual({ code: 'USDJI', name: '道琼斯', percent: 26428.3203 / 26313.6504 - 1, now: 26428.3203, low: 26013.5898, high: 26440.0195, yesterday: 26313.6504 });
-    expect(() => new SinaStockTransform("000000", []).getStock()).toThrow(new Error("不支持当前交易所"));
   });
 });
 

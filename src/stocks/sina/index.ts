@@ -5,7 +5,8 @@ import SinaCommonCodeTransform from "@stocks/sina/transforms/common-code";
 // Utils
 import fetch from "@utils/fetch";
 import iconv from "@utils/iconv";
-import { DEFAULT_STOCK } from "@stocks/base/utils/constant";
+import { DEFAULT_STOCK } from "@utils/constant";
+import { COMMON_SZ, COMMON_SH, COMMON_US, COMMON_HK } from "@stocks/base/utils/constant";
 
 // Types
 import Stock from "types/utils/stock";
@@ -66,7 +67,7 @@ const Sina: StockApi = {
       // 数据深解析
       const [_, paramsUnformat] = rows[index].split('=');
 
-      if (paramsUnformat === '') {
+      if (paramsUnformat === '""') {
         return { ...DEFAULT_STOCK, code };
       }
 
@@ -74,7 +75,7 @@ const Sina: StockApi = {
       const data = (new SinaStockTransform(code, params));
 
       return data.getStock();
-    })
+    });
   },
 
   /**
@@ -82,7 +83,44 @@ const Sina: StockApi = {
    * @param key 关键字
    */
   async searchStocks(key: string): Promise<Stock[]> {
-    throw new Error("未实现搜索股票代码");
+    // 数据获取
+    const url = `http://suggest3.sinajs.cn/suggest/type=2&key=${encodeURIComponent(key)}`;
+    const res = await fetch.get(url);
+
+    const body = iconv.decode(res.body, "gb18030");
+    const rows: string[] = body.replace('var suggestvalue="', '').replace('";', '').split(';');
+
+    let codes: string[] = [];
+    for (let i = 0; i < rows.length; i++) {
+      let code: string = rows[i].split(',')[0];
+
+      if (code.indexOf('us') === 0) {
+        code = code.replace('of', '');
+        codes = [...codes, COMMON_US + code];
+      }
+
+      if (code.indexOf('sz') === 0) {
+        code = code.replace('sz', '');
+        codes = [...codes, COMMON_SZ + code];
+      }
+
+      if (code.indexOf('sh') === 0) {
+        code = code.replace('sh', '');
+        codes = [...codes, COMMON_SH + code];
+      }
+
+      if (code.indexOf('hk') === 0) {
+        code = code.replace('hk', '');
+        codes = [...codes, COMMON_HK + code];
+      }
+
+      if (code.indexOf('of') === 0) {
+        code = code.replace('of', '');
+        codes = [...codes, COMMON_SZ + code, COMMON_SH + code];
+      }
+    }
+
+    return await Sina.getStocks(codes);
   }
 }
 

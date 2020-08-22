@@ -2,20 +2,14 @@
 import BaseCommonCodeTransform from "@stocks/base/transforms/common-code";
 
 // Utils
-import { COMMON_SH, COMMON_SZ, COMMON_HK, COMMON_US } from "@stocks/base/utils/constant";
+import { ERROR_COMMON_CODE } from "@utils/constant";
 import { SINA_SZ, SINA_SH, SINA_HK, SINA_US } from "@stocks/sina/utils/constant";
+import { COMMON_SH, COMMON_SZ, COMMON_HK, COMMON_US } from "@stocks/base/utils/constant";
 
 /**
  * 【新浪】统一代码转换股票代码
  */
 class SinaCommonCodeTransform extends BaseCommonCodeTransform {
-  /**
-   * 构造函数
-   */
-  constructor() {
-    super();
-  }
-
   /**
    * 交易所统一代码转换股票代码
    * @param code 统一代码
@@ -37,8 +31,8 @@ class SinaCommonCodeTransform extends BaseCommonCodeTransform {
    * @param code 统一代码
    */
   public SZTransform(code: string): string {
-    if (!code.includes(COMMON_SZ)) {
-      throw new Error("请检查统一代码是否正确");
+    if (code.indexOf(COMMON_SZ) !== 0) {
+      throw new Error(ERROR_COMMON_CODE);
     }
 
     return SINA_SZ + code.replace(COMMON_SZ, "");
@@ -49,8 +43,8 @@ class SinaCommonCodeTransform extends BaseCommonCodeTransform {
    * @param code 统一代码
    */
   public SHTransform(code: string): string {
-    if (!code.includes(COMMON_SH)) {
-      throw new Error("请检查统一代码是否正确");
+    if (code.indexOf(COMMON_SH) !== 0) {
+      throw new Error(ERROR_COMMON_CODE);
     }
 
     return SINA_SH + code.replace(COMMON_SH, "");
@@ -61,8 +55,8 @@ class SinaCommonCodeTransform extends BaseCommonCodeTransform {
    * @param code 统一代码
    */
   public HKTransform(code: string): string {
-    if (!code.includes(COMMON_HK)) {
-      throw new Error("请检查统一代码是否正确");
+    if (code.indexOf(COMMON_HK) !== 0) {
+      throw new Error(ERROR_COMMON_CODE);
     }
 
     return SINA_HK + code.replace(COMMON_HK, "");
@@ -73,8 +67,8 @@ class SinaCommonCodeTransform extends BaseCommonCodeTransform {
    * @param code 统一代码
    */
   public USTransform(code: string): string {
-    if (!code.includes(COMMON_US)) {
-      throw new Error("请检查统一代码是否正确");
+    if (code.indexOf(COMMON_US) !== 0) {
+      throw new Error(ERROR_COMMON_CODE);
     }
 
     return SINA_US + code.replace(COMMON_US, "").toLowerCase();

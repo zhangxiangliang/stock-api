@@ -2,9 +2,13 @@
 const SinaApiCodeTransform = require("stocks/sina/transforms/api-code").default;
 
 describe("【新浪】股票代码转换统一代码", () => {
+  const {
+    ERROR_API_CODE,
+  } = require("utils/constant");
+
   it("深交所股票代码转换统一代码", async () => {
     expect(() => (new SinaApiCodeTransform()).SZTransform("STOCKAPI"))
-      .toThrow(new Error("请检查股票代码是否正确"));
+      .toThrow(new Error(ERROR_API_CODE));
 
     expect((new SinaApiCodeTransform()).SZTransform("sz000000"))
       .toBe("SZ000000");
@@ -12,7 +16,7 @@ describe("【新浪】股票代码转换统一代码", () => {
 
   it("上交所股票代码转换统一代码", async () => {
     expect(() => (new SinaApiCodeTransform()).SHTransform("STOCKAPI"))
-      .toThrow(new Error("请检查股票代码是否正确"));
+      .toThrow(new Error(ERROR_API_CODE));
 
     expect((new SinaApiCodeTransform()).SHTransform("sh000000"))
       .toBe("SH000000");
@@ -20,7 +24,7 @@ describe("【新浪】股票代码转换统一代码", () => {
 
   it("港交所股票代码转换统一代码", async () => {
     expect(() => (new SinaApiCodeTransform()).HKTransform("STOCKAPI"))
-      .toThrow(new Error("请检查股票代码是否正确"));
+      .toThrow(new Error(ERROR_API_CODE));
 
     expect((new SinaApiCodeTransform()).HKTransform("hk000000"))
       .toBe("HK000000");
@@ -28,7 +32,7 @@ describe("【新浪】股票代码转换统一代码", () => {
 
   it("美交所股票代码转换统一代码", async () => {
     expect(() => (new SinaApiCodeTransform()).USTransform("STOCKAPI"))
-      .toThrow(new Error("请检查股票代码是否正确"));
+      .toThrow(new Error(ERROR_API_CODE));
 
     expect((new SinaApiCodeTransform()).USTransform("gb_000000"))
       .toBe("US000000");
@@ -48,7 +52,7 @@ describe("【新浪】股票代码转换统一代码", () => {
       .toBe("US000000");
 
     expect(() => (new SinaApiCodeTransform()).transform("STOCKAPI"))
-      .toThrow(new Error("请检查股票代码是否正确"));
+      .toThrow(new Error(ERROR_API_CODE));
   });
 
   it("交易所股票代码转换统一代码", async () => {
@@ -65,6 +69,6 @@ describe("【新浪】股票代码转换统一代码", () => {
       .toStrictEqual(["US000000"]);
 
     expect(() => (new SinaApiCodeTransform()).transforms(["STOCKAPI"]))
-      .toThrow(new Error("请检查股票代码是否正确"));
+      .toThrow(new Error(ERROR_API_CODE));
   });
 });

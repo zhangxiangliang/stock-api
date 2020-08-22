@@ -2,6 +2,7 @@
 import BaseStockTransform from "@stocks/base/transforms/stock";
 
 // Utils
+import { DEFAULT_STRING, DEFAULT_NUMBER } from "@utils/constant";
 import { COMMON_SH, COMMON_SZ, COMMON_HK, COMMON_US } from "@stocks/base/utils/constant";
 
 // Types
@@ -31,13 +32,13 @@ class SinaStockTransform extends BaseStockTransform {
   getName(): string {
     switch (this.code.slice(0, 2)) {
       case COMMON_SH:
-        return String(this.params[0]);
+        return String(this.params[0] || DEFAULT_STRING);
       case COMMON_SZ:
-        return String(this.params[0]);
+        return String(this.params[0] || DEFAULT_STRING);
       case COMMON_HK:
-        return String(this.params[1]);
+        return String(this.params[1] || DEFAULT_STRING);
       case COMMON_US:
-        return String(this.params[0]);
+        return String(this.params[0] || DEFAULT_STRING);
       default:
         throw new Error('不支持当前交易所');
     }
@@ -49,13 +50,13 @@ class SinaStockTransform extends BaseStockTransform {
   getNow(): number {
     switch (this.code.slice(0, 2)) {
       case COMMON_SH:
-        return Number(this.params[3]);
+        return Number(this.params[3] || DEFAULT_NUMBER);
       case COMMON_SZ:
-        return Number(this.params[3]);
+        return Number(this.params[3] || DEFAULT_NUMBER);
       case COMMON_HK:
-        return Number(this.params[6]);
+        return Number(this.params[6] || DEFAULT_NUMBER);
       case COMMON_US:
-        return Number(this.params[1]);
+        return Number(this.params[1] || DEFAULT_NUMBER);
       default:
         throw new Error('不支持当前交易所');
     }
@@ -67,13 +68,13 @@ class SinaStockTransform extends BaseStockTransform {
   getLow(): number {
     switch (this.code.slice(0, 2)) {
       case COMMON_SH:
-        return Number(this.params[5]);
+        return Number(this.params[5] || DEFAULT_NUMBER);
       case COMMON_SZ:
-        return Number(this.params[5]);
+        return Number(this.params[5] || DEFAULT_NUMBER);
       case COMMON_HK:
-        return Number(this.params[5]);
+        return Number(this.params[5] || DEFAULT_NUMBER);
       case COMMON_US:
-        return Number(this.params[7]);
+        return Number(this.params[7] || DEFAULT_NUMBER);
       default:
         throw new Error('不支持当前交易所');
     }
@@ -85,15 +86,15 @@ class SinaStockTransform extends BaseStockTransform {
   getHigh(): number {
     switch (this.code.slice(0, 2)) {
       case COMMON_SH:
-        return Number(this.params[4]);
+        return Number(this.params[4] || DEFAULT_NUMBER);
       case COMMON_SZ:
-        return Number(this.params[4]);
+        return Number(this.params[4] || DEFAULT_NUMBER);
       case COMMON_HK:
-        return Number(this.params[4]);
+        return Number(this.params[4] || DEFAULT_NUMBER);
       case COMMON_US:
-        return Number(this.params[6]);
+        return Number(this.params[6] || DEFAULT_NUMBER);
       default:
-        throw new Error('不支持当前交易所');
+        return DEFAULT_NUMBER;
     }
   }
 
@@ -103,13 +104,13 @@ class SinaStockTransform extends BaseStockTransform {
   getYesterday(): number {
     switch (this.code.slice(0, 2)) {
       case COMMON_SH:
-        return Number(this.params[2]);
+        return Number(this.params[2] || DEFAULT_NUMBER);
       case COMMON_SZ:
-        return Number(this.params[2]);
+        return Number(this.params[2] || DEFAULT_NUMBER);
       case COMMON_HK:
-        return Number(this.params[3]);
+        return Number(this.params[3] || DEFAULT_NUMBER);
       case COMMON_US:
-        return Number(this.params[26]);
+        return Number(this.params[26] || DEFAULT_NUMBER);
       default:
         throw new Error('不支持当前交易所');
     }
