@@ -4,7 +4,8 @@ import NeteaseCommonCodeTransform from "@stocks/netease/transforms/common-code";
 
 // Utils
 import fetch from "@utils/fetch";
-import { COMMON_SZ, COMMON_SH, DEFAULT_STOCK } from "@stocks/base/utils/constant";
+import { DEFAULT_STOCK } from "@utils/constant";
+import { COMMON_SZ, COMMON_SH } from "@stocks/base/utils/constant";
 
 // Types
 import Stock from "types/utils/stock";

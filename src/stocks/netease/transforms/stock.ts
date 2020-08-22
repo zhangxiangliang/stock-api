@@ -1,6 +1,9 @@
 // Stocks
 import BaseStockTransform from "@stocks/base/transforms/stock";
 
+// Utils
+import { DEFAULT_STRING, DEFAULT_NUMBER } from "@utils/constant";
+
 // Types
 import Stock from "types/utils/stock";
 import Dictionary from "types/utils/dictionary";
@@ -27,35 +30,35 @@ class NeteaseStockTransform extends BaseStockTransform {
    * 获取名称
    */
   getName(): string {
-    return String(this.params.name);
+    return String(this.params.name || DEFAULT_STRING);
   }
 
   /**
    * 获取现价
    */
   getNow(): number {
-    return Number(this.params.price || 0);
+    return Number(this.params.price || DEFAULT_NUMBER);
   }
 
   /**
    * 获取最低价
    */
   getLow(): number {
-    return Number(this.params.low || 0);
+    return Number(this.params.low || DEFAULT_NUMBER);
   }
 
   /**
    * 获取最高价
    */
   getHigh(): number {
-    return Number(this.params.high || 0);
+    return Number(this.params.high || DEFAULT_NUMBER);
   }
 
   /**
    * 获取昨日收盘价
    */
   getYesterday(): number {
-    return Number(this.params.yestclose || 0);
+    return Number(this.params.yestclose || DEFAULT_NUMBER);
   }
 
   /**

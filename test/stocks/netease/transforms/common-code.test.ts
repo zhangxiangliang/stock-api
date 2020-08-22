@@ -2,9 +2,13 @@
 const NeteaseCommonCodeTransform = require("stocks/netease/transforms/common-code").default;
 
 describe("【网易】统一代码转换股票代码", () => {
+  const {
+    ERROR_COMMON_CODE,
+  } = require("utils/constant");
+
   it("深交所统一代码转换股票代码", async () => {
     expect(() => (new NeteaseCommonCodeTransform()).SZTransform("STOCKAPI"))
-      .toThrow(new Error("请检查统一代码是否正确"));
+      .toThrow(new Error(ERROR_COMMON_CODE));
 
     expect((new NeteaseCommonCodeTransform()).SZTransform("SZ000000"))
       .toBe("1000000");
@@ -12,7 +16,7 @@ describe("【网易】统一代码转换股票代码", () => {
 
   it("上交所统一代码转换股票代码", async () => {
     expect(() => (new NeteaseCommonCodeTransform()).SHTransform("STOCKAPI"))
-      .toThrow(new Error("请检查统一代码是否正确"));
+      .toThrow(new Error(ERROR_COMMON_CODE));
 
     expect((new NeteaseCommonCodeTransform()).SHTransform("SH000000"))
       .toBe("0000000");
@@ -20,7 +24,7 @@ describe("【网易】统一代码转换股票代码", () => {
 
   it("港交所统一代码转换股票代码", async () => {
     expect(() => (new NeteaseCommonCodeTransform()).HKTransform("STOCKAPI"))
-      .toThrow(new Error("请检查统一代码是否正确"));
+      .toThrow(new Error(ERROR_COMMON_CODE));
 
     expect((new NeteaseCommonCodeTransform()).HKTransform("HK000000"))
       .toBe("hk000000");
@@ -28,7 +32,7 @@ describe("【网易】统一代码转换股票代码", () => {
 
   it("美交所统一代码转换股票代码", async () => {
     expect(() => (new NeteaseCommonCodeTransform()).USTransform("STOCKAPI"))
-      .toThrow(new Error("请检查统一代码是否正确"));
+      .toThrow(new Error(ERROR_COMMON_CODE));
 
     expect((new NeteaseCommonCodeTransform()).USTransform("US000000"))
       .toBe("US_000000");
@@ -48,7 +52,7 @@ describe("【网易】统一代码转换股票代码", () => {
       .toBe("US_000000");
 
     expect(() => (new NeteaseCommonCodeTransform()).transform("STOCKAPI"))
-      .toThrow(new Error("请检查统一代码是否正确"));
+      .toThrow(new Error(ERROR_COMMON_CODE));
   });
 
   it("交易所统一代码组转换股票代码组", async () => {
@@ -65,6 +69,6 @@ describe("【网易】统一代码转换股票代码", () => {
       .toStrictEqual(["US_000000"]);
 
     expect(() => (new NeteaseCommonCodeTransform()).transforms(["STOCKAPI"]))
-      .toThrow(new Error("请检查统一代码是否正确"));
+      .toThrow(new Error(ERROR_COMMON_CODE));
   });
 });

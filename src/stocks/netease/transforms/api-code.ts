@@ -2,6 +2,7 @@
 import BaseApiCodeTransform from "@stocks/base/transforms/api-code";
 
 // Utils
+import { ERROR_API_CODE } from "@utils/constant";
 import { COMMON_SH, COMMON_SZ, COMMON_HK, COMMON_US } from "@stocks/base/utils/constant";
 import { NETEASE_SZ, NETEASE_SH, NETEASE_HK, NETEASE_US } from "@stocks/netease/utils/constant";
 
@@ -30,7 +31,7 @@ class NeteaseApiCodeTransform extends BaseApiCodeTransform {
       return this.USTransform(code);
     }
 
-    throw new Error("请检查股票代码是否正确");
+    throw new Error(ERROR_API_CODE);
   }
 
   /**
@@ -47,7 +48,7 @@ class NeteaseApiCodeTransform extends BaseApiCodeTransform {
    */
   public SZTransform(code: string): string {
     if (code.indexOf(NETEASE_SZ) !== 0) {
-      throw new Error("请检查股票代码是否正确");
+      throw new Error(ERROR_API_CODE);
     }
 
     return COMMON_SZ + code.replace(NETEASE_SZ, "");
@@ -59,7 +60,7 @@ class NeteaseApiCodeTransform extends BaseApiCodeTransform {
    */
   public SHTransform(code: string): string {
     if (!code.includes(NETEASE_SH)) {
-      throw new Error("请检查股票代码是否正确");
+      throw new Error(ERROR_API_CODE);
     }
 
     return COMMON_SH + code.replace(NETEASE_SH, "");
@@ -71,7 +72,7 @@ class NeteaseApiCodeTransform extends BaseApiCodeTransform {
    */
   public HKTransform(code: string): string {
     if (!code.includes(NETEASE_HK)) {
-      throw new Error("请检查股票代码是否正确");
+      throw new Error(ERROR_API_CODE);
     }
 
     return COMMON_HK + code.replace(NETEASE_HK, "");
@@ -83,7 +84,7 @@ class NeteaseApiCodeTransform extends BaseApiCodeTransform {
    */
   public USTransform(code: string): string {
     if (!code.includes(NETEASE_US)) {
-      throw new Error("请检查股票代码是否正确");
+      throw new Error(ERROR_API_CODE);
     }
 
     return COMMON_US + code.replace(NETEASE_US, "");
