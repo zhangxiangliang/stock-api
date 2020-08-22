@@ -1,3 +1,6 @@
+// NPM
+import { uniqBy } from 'lodash';
+
 // Stocks
 import XueqiuStockTransform from "@stocks/xueqiu/transforms/stock";
 import XueqiuApiCodeTransform from "@stocks/xueqiu/transforms/api-code";
@@ -78,10 +81,14 @@ const Xueqiu: StockApi & { getToken(): Promise<string> } = {
     return codes.map(code => {
       // 数据深解析
       const transform = (new XueqiuCommonCodeTransform).transform(code);
-      const params = rows.find(i => i.quote.symbol === transform) || {};
+      const params = rows.find(i => i.quote && i.quote.symbol === transform) || null;
+
+      if (!params) {
+        return { ...DEFAULT_STOCK, code };
+      }
 
       const data = (new XueqiuStockTransform(code, params.quote));
-      return params ? data.getStock() : { ...DEFAULT_STOCK, code };
+      return data.getStock();
     });
   },
 
@@ -99,7 +106,8 @@ const Xueqiu: StockApi & { getToken(): Promise<string> } = {
     const body = JSON.parse(res.text);
     const rows: Dictionary<string>[] = body.stocks;
     const codes: string[] = rows.map(i => (new XueqiuApiCodeTransform).transform(i.code));
-    return await Xueqiu.getStocks(codes);
+
+    return uniqBy(await Xueqiu.getStocks(codes), (code: Stock) => code.name);
   }
 }
 
