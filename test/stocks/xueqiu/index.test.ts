@@ -12,12 +12,24 @@ describe("【雪球】股票代码接口", () => {
     await expect(Xueqiu.getStock("SH510500"))
       .resolves
       .toMatchObject({ code: "SH510500", name: "中证500ETF" });
+
+    await expect(Xueqiu.getStock("SZ510500"))
+      .resolves
+      .toMatchObject({ code: "SZ510500", name: "---" });
   });
 
   it("需要获取的股票代码组", async () => {
     await expect(Xueqiu.getStocks(["SH510500"]))
       .resolves
       .toMatchObject([{ code: "SH510500", name: "中证500ETF" }]);
+
+    await expect(Xueqiu.getStocks(["SZ510500"]))
+      .resolves
+      .toMatchObject([{ code: "SZ510500", name: "---" }]);
+
+    await expect(Xueqiu.getStocks([]))
+      .resolves
+      .toMatchObject([]);
   });
 
   it("搜索股票代码", async () => {
