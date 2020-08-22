@@ -2,9 +2,13 @@
 const XueqiuApiCodeTransform = require("stocks/xueqiu/transforms/api-code").default;
 
 describe("【雪球】股票代码转换统一代码", () => {
+  const {
+    ERROR_API_CODE,
+  } = require("utils/constant");
+
   it("深交所股票代码转换统一代码", async () => {
     expect(() => (new XueqiuApiCodeTransform()).SZTransform("000000"))
-      .toThrow(new Error("请检查股票代码是否正确"));
+      .toThrow(new Error(ERROR_API_CODE));
 
     expect((new XueqiuApiCodeTransform()).SZTransform("SZ000000"))
       .toBe("SZ000000");
@@ -12,7 +16,7 @@ describe("【雪球】股票代码转换统一代码", () => {
 
   it("上交所股票代码转换统一代码", async () => {
     expect(() => (new XueqiuApiCodeTransform()).SHTransform("000000"))
-      .toThrow(new Error("请检查股票代码是否正确"));
+      .toThrow(new Error(ERROR_API_CODE));
 
     expect((new XueqiuApiCodeTransform()).SHTransform("SH000000"))
       .toBe("SH000000");
@@ -20,7 +24,7 @@ describe("【雪球】股票代码转换统一代码", () => {
 
   it("港交所股票代码转换统一代码", async () => {
     expect(() => (new XueqiuApiCodeTransform()).HKTransform("000000"))
-      .toThrow(new Error("请检查股票代码是否正确"));
+      .toThrow(new Error(ERROR_API_CODE));
 
     expect((new XueqiuApiCodeTransform()).HKTransform("HK000000"))
       .toBe("HK000000");
@@ -28,7 +32,7 @@ describe("【雪球】股票代码转换统一代码", () => {
 
   it("美交所股票代码转换统一代码", async () => {
     expect(() => (new XueqiuApiCodeTransform()).USTransform("SZ000000"))
-      .toThrow(new Error("请检查股票代码是否正确"));
+      .toThrow(new Error(ERROR_API_CODE));
 
     expect((new XueqiuApiCodeTransform()).USTransform("000000"))
       .toBe("US000000");

@@ -2,6 +2,7 @@
 import BaseApiCodeTransform from "@stocks/base/transforms/api-code";
 
 // Utils
+import { ERROR_API_CODE } from "@utils/constant";
 import { COMMON_SH, COMMON_SZ, COMMON_HK, COMMON_US } from "@stocks/base/utils/constant";
 import { XUEQIU_SZ, XUEQIU_SH, XUEQIU_HK, XUEQIU_US } from "@stocks/xueqiu/utils/constant";
 
@@ -43,7 +44,7 @@ class XueqiuApiCodeTransform extends BaseApiCodeTransform {
    */
   public SZTransform(code: string): string {
     if (!code.includes(XUEQIU_SZ)) {
-      throw new Error("请检查股票代码是否正确");
+      throw new Error(ERROR_API_CODE);
     }
 
     return COMMON_SZ + code.replace(XUEQIU_SZ, "");
@@ -55,7 +56,7 @@ class XueqiuApiCodeTransform extends BaseApiCodeTransform {
    */
   public SHTransform(code: string): string {
     if (!code.includes(XUEQIU_SH)) {
-      throw new Error("请检查股票代码是否正确");
+      throw new Error(ERROR_API_CODE);
     }
 
     return COMMON_SH + code.replace(XUEQIU_SH, "");
@@ -67,7 +68,7 @@ class XueqiuApiCodeTransform extends BaseApiCodeTransform {
    */
   public HKTransform(code: string): string {
     if (!code.includes(XUEQIU_HK)) {
-      throw new Error("请检查股票代码是否正确");
+      throw new Error(ERROR_API_CODE);
     }
 
     return COMMON_HK + code.replace(XUEQIU_HK, "");
@@ -79,7 +80,7 @@ class XueqiuApiCodeTransform extends BaseApiCodeTransform {
    */
   public USTransform(code: string): string {
     if (code.includes(XUEQIU_SZ) || code.includes(XUEQIU_SH) || code.includes(XUEQIU_HK)) {
-      throw new Error("请检查股票代码是否正确");
+      throw new Error(ERROR_API_CODE);
     }
 
     return COMMON_US + code.replace(XUEQIU_US, "");

@@ -5,7 +5,7 @@ import XueqiuCommonCodeTransform from "@stocks/xueqiu/transforms/common-code";
 
 // Utils
 import fetch from "@utils/fetch";
-import { DEFAULT_STOCK } from "@stocks/base/utils/constant";
+import { DEFAULT_STOCK } from "@utils/constant";
 
 // Types
 import Stock from "types/utils/stock";
