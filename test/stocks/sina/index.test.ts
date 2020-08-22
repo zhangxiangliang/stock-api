@@ -15,7 +15,7 @@ describe("【新浪】股票代码接口", () => {
   });
 
   it("搜索股票代码", async () => {
-    await expect(Sina.searchStocks(["510500"]))
+    await expect(Sina.searchStocks("510500"))
       .resolves
       .toMatchObject([{ code: "SZ510500", name: "---" }, { code: "SH510500", name: "500ETF" }]);
   });

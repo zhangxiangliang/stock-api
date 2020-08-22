@@ -21,7 +21,7 @@ describe("【雪球】股票代码接口", () => {
   });
 
   it("搜索股票代码", async () => {
-    await expect(Xueqiu.searchStocks(["SH510500"]))
+    await expect(Xueqiu.searchStocks("SH510500"))
       .resolves
       .toMatchObject([{ code: "SH510500", name: "中证500ETF" }]);
   });
