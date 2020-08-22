@@ -1,3 +1,7 @@
+// Utils
+import { COMMON_SH, COMMON_SZ, COMMON_HK, COMMON_US } from "@stocks/base/utils/constant";
+import { ERROR_UNDEFINED_API_CODE, ERROR_UNDEFINED_SZ_API_CODE, ERROR_UNDEFINED_SH_API_CODE, ERROR_UNDEFINED_HK_API_CODE, ERROR_UNDEFINED_US_API_CODE, ERROR_API_CODE } from "@utils/constant";
+
 // Types
 import ApiCodeTransform from "types/stocks/transforms/api-code";
 
@@ -10,7 +14,23 @@ class BaseApiCodeTransform implements ApiCodeTransform {
    * @param code 股票代码
    */
   public transform(code: string): string {
-    throw new Error("未实现股票代码转换统一代码");
+    if (code.indexOf(COMMON_SH) === 0) {
+      return this.SHTransform(code);
+    }
+
+    if (code.indexOf(COMMON_SZ) === 0) {
+      return this.SZTransform(code);
+    }
+
+    if (code.indexOf(COMMON_HK) === 0) {
+      return this.HKTransform(code);
+    }
+
+    if (code.indexOf(COMMON_US) === 0) {
+      return this.USTransform(code);
+    }
+
+    throw new Error(ERROR_API_CODE);
   }
 
   /**
@@ -26,7 +46,7 @@ class BaseApiCodeTransform implements ApiCodeTransform {
    * @param code 股票代码
    */
   public SZTransform(code: string): string {
-    throw new Error("未实现深交所股票代码转换统一代码");
+    throw new Error(ERROR_UNDEFINED_SZ_API_CODE);
   }
 
   /**
@@ -34,7 +54,7 @@ class BaseApiCodeTransform implements ApiCodeTransform {
    * @param code 股票代码
    */
   public SHTransform(code: string): string {
-    throw new Error("未实现上交所股票代码转换统一代码");
+    throw new Error(ERROR_UNDEFINED_SH_API_CODE);
   }
 
   /**
@@ -42,7 +62,7 @@ class BaseApiCodeTransform implements ApiCodeTransform {
    * @param code 股票代码
    */
   public HKTransform(code: string): string {
-    throw new Error("未实现港交所股票代码转换统一代码");
+    throw new Error(ERROR_UNDEFINED_HK_API_CODE);
   }
 
   /**
@@ -50,7 +70,7 @@ class BaseApiCodeTransform implements ApiCodeTransform {
    * @param code 股票代码
    */
   public USTransform(code: string): string {
-    throw new Error("未实现美交所股票代码转换统一代码");
+    throw new Error(ERROR_UNDEFINED_US_API_CODE);
   }
 }
 

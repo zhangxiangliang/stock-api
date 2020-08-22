@@ -1,3 +1,6 @@
+// Utils
+import { ERROR_UNDEFINED_GET_STOCK, ERROR_UNDEFINED_GET_STOCKS, ERROR_UNDEFINED_SEARCH_STOCK } from "@utils/constant";
+
 // Types
 import Stock from "types/utils/stock";
 import StockApi from "types/stocks/index";
@@ -11,7 +14,7 @@ const Base: StockApi = {
    * @param code 股票代码
    */
   async getStock(code: string): Promise<Stock> {
-    throw new Error("未实现获取股票数据");
+    throw new Error(ERROR_UNDEFINED_GET_STOCK);
   },
 
   /**
@@ -19,7 +22,7 @@ const Base: StockApi = {
    * @param codes 股票代码组
    */
   async getStocks(codes: string[]): Promise<Stock[]> {
-    throw new Error("未实现获取股票数据组");
+    throw new Error(ERROR_UNDEFINED_GET_STOCKS);
   },
 
   /**
@@ -27,7 +30,7 @@ const Base: StockApi = {
    * @param key 关键字
    */
   async searchStocks(key: string): Promise<Stock[]> {
-    throw new Error("未实现搜索股票代码");
+    throw new Error(ERROR_UNDEFINED_SEARCH_STOCK);
   }
 };
 
