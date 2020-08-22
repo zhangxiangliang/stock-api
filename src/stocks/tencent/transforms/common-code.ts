@@ -2,6 +2,7 @@
 import BaseCommonCodeTransform from "@stocks/base/transforms/common-code";
 
 // Utils
+import { ERROR_COMMON_CODE } from "@utils/constant";
 import { COMMON_SH, COMMON_SZ, COMMON_HK, COMMON_US } from "@stocks/base/utils/constant";
 import { TENCENT_SZ, TENCENT_SH, TENCENT_HK, TENCENT_US } from "@stocks/tencent/utils/constant";
 
@@ -38,7 +39,7 @@ class TencentCommonCodeTransform extends BaseCommonCodeTransform {
    */
   public SZTransform(code: string): string {
     if (!code.includes(COMMON_SZ)) {
-      throw new Error("请检查统一代码是否正确");
+      throw new Error(ERROR_COMMON_CODE);
     }
 
     return TENCENT_SZ + code.replace(COMMON_SZ, "");
@@ -50,7 +51,7 @@ class TencentCommonCodeTransform extends BaseCommonCodeTransform {
    */
   public SHTransform(code: string): string {
     if (!code.includes(COMMON_SH)) {
-      throw new Error("请检查统一代码是否正确");
+      throw new Error(ERROR_COMMON_CODE);
     }
 
     return TENCENT_SH + code.replace(COMMON_SH, "");
@@ -62,7 +63,7 @@ class TencentCommonCodeTransform extends BaseCommonCodeTransform {
    */
   public HKTransform(code: string): string {
     if (!code.includes(COMMON_HK)) {
-      throw new Error("请检查统一代码是否正确");
+      throw new Error(ERROR_COMMON_CODE);
     }
 
     return TENCENT_HK + code.replace(COMMON_HK, "");
@@ -74,7 +75,7 @@ class TencentCommonCodeTransform extends BaseCommonCodeTransform {
    */
   public USTransform(code: string): string {
     if (!code.includes(COMMON_US)) {
-      throw new Error("请检查统一代码是否正确");
+      throw new Error(ERROR_COMMON_CODE);
     }
 
     return TENCENT_US + code.replace(COMMON_US, "");

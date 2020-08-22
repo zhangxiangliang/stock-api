@@ -5,7 +5,7 @@ import TencentCommonCodeTransform from "@stocks/tencent/transforms/common-code";
 // Utils
 import fetch from "@utils/fetch";
 import iconv from "@utils/iconv";
-import { DEFAULT_STOCK } from "@stocks/base/utils/constant";
+import { DEFAULT_STOCK, ERROR_UNDEFINED_SEARCH_STOCK } from "@utils/constant";
 
 // Types
 import Stock from "types/utils/stock";
@@ -81,7 +81,7 @@ const Tencent: StockApi = {
    * @param key 关键字
    */
   async searchStocks(key: string): Promise<Stock[]> {
-    throw new Error("未实现搜索股票代码");
+    throw new Error(ERROR_UNDEFINED_SEARCH_STOCK);
   }
 }
 

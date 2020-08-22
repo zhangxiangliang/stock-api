@@ -1,6 +1,9 @@
 // Stocks
 import BaseStockTransform from "@stocks/base/transforms/stock";
 
+// Utils
+import { DEFAULT_STRING, DEFAULT_NUMBER } from "@utils/constant";
+
 // Types
 import Stock from "types/utils/stock";
 
@@ -26,35 +29,35 @@ class TencentStockTransform extends BaseStockTransform {
    * 获取名称
    */
   getName(): string {
-    return String(this.params[1]);
+    return String(this.params[1] || DEFAULT_STRING);
   }
 
   /**
    * 获取现价
    */
   getNow(): number {
-    return Number(this.params[3]);
+    return Number(this.params[3] || DEFAULT_NUMBER);
   }
 
   /**
    * 获取最低价
    */
   getLow(): number {
-    return Number(this.params[34]);
+    return Number(this.params[34] || DEFAULT_NUMBER);
   }
 
   /**
    * 获取最高价
    */
   getHigh(): number {
-    return Number(this.params[33]);
+    return Number(this.params[33] || DEFAULT_NUMBER);
   }
 
   /**
    * 获取昨日收盘价
    */
   getYesterday(): number {
-    return Number(this.params[4]);
+    return Number(this.params[4] || DEFAULT_NUMBER);
   }
 
   /**

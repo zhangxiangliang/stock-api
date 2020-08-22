@@ -2,9 +2,13 @@
 const TencentApiCodeTransform = require("stocks/tencent/transforms/api-code").default;
 
 describe("【腾讯】股票代码转换统一代码", () => {
+  const {
+    ERROR_API_CODE,
+  } = require("utils/constant");
+
   it("深交所股票代码转换统一代码", async () => {
     expect(() => (new TencentApiCodeTransform()).SZTransform("STOCKAPI"))
-      .toThrow(new Error("请检查股票代码是否正确"));
+      .toThrow(new Error(ERROR_API_CODE));
 
     expect((new TencentApiCodeTransform()).SZTransform("sz000000"))
       .toBe("SZ000000");
@@ -12,7 +16,7 @@ describe("【腾讯】股票代码转换统一代码", () => {
 
   it("上交所股票代码转换统一代码", async () => {
     expect(() => (new TencentApiCodeTransform()).SHTransform("STOCKAPI"))
-      .toThrow(new Error("请检查股票代码是否正确"));
+      .toThrow(new Error(ERROR_API_CODE));
 
     expect((new TencentApiCodeTransform()).SHTransform("sh000000"))
       .toBe("SH000000");
@@ -20,7 +24,7 @@ describe("【腾讯】股票代码转换统一代码", () => {
 
   it("港交所股票代码转换统一代码", async () => {
     expect(() => (new TencentApiCodeTransform()).HKTransform("STOCKAPI"))
-      .toThrow(new Error("请检查股票代码是否正确"));
+      .toThrow(new Error(ERROR_API_CODE));
 
     expect((new TencentApiCodeTransform()).HKTransform("hk000000"))
       .toBe("HK000000");
@@ -28,7 +32,7 @@ describe("【腾讯】股票代码转换统一代码", () => {
 
   it("美交所股票代码转换统一代码", async () => {
     expect(() => (new TencentApiCodeTransform()).USTransform("STOCKAPI"))
-      .toThrow(new Error("请检查股票代码是否正确"));
+      .toThrow(new Error(ERROR_API_CODE));
 
     expect((new TencentApiCodeTransform()).USTransform("us000000"))
       .toBe("US000000");
@@ -48,7 +52,7 @@ describe("【腾讯】股票代码转换统一代码", () => {
       .toBe("US000000");
 
     expect(() => (new TencentApiCodeTransform()).transform("STOCKAPI"))
-      .toThrow(new Error("请检查股票代码是否正确"));
+      .toThrow(new Error(ERROR_API_CODE));
   });
 
   it("交易所股票代码组转换统一代码组", async () => {
@@ -65,6 +69,6 @@ describe("【腾讯】股票代码转换统一代码", () => {
       .toStrictEqual(["US000000"]);
 
     expect(() => (new TencentApiCodeTransform()).transforms(["STOCKAPI"]))
-      .toThrow(new Error("请检查股票代码是否正确"));
+      .toThrow(new Error(ERROR_API_CODE));
   });
 });
