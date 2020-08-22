@@ -40,7 +40,7 @@ class SinaStockTransform extends BaseStockTransform {
       case COMMON_US:
         return String(this.params[0] || DEFAULT_STRING);
       default:
-        throw new Error('不支持当前交易所');
+        return DEFAULT_STRING;
     }
   }
 
@@ -58,7 +58,7 @@ class SinaStockTransform extends BaseStockTransform {
       case COMMON_US:
         return Number(this.params[1] || DEFAULT_NUMBER);
       default:
-        throw new Error('不支持当前交易所');
+        return DEFAULT_NUMBER;
     }
   }
 
@@ -76,7 +76,7 @@ class SinaStockTransform extends BaseStockTransform {
       case COMMON_US:
         return Number(this.params[7] || DEFAULT_NUMBER);
       default:
-        throw new Error('不支持当前交易所');
+        return DEFAULT_NUMBER;
     }
   }
 
@@ -112,7 +112,7 @@ class SinaStockTransform extends BaseStockTransform {
       case COMMON_US:
         return Number(this.params[26] || DEFAULT_NUMBER);
       default:
-        throw new Error('不支持当前交易所');
+        return DEFAULT_NUMBER;
     }
   }
 
