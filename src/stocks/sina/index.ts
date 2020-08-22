@@ -1,3 +1,6 @@
+// NPM
+import { uniqBy } from 'lodash';
+
 // Stocks
 import SinaStockTransform from "@stocks/sina/transforms/stock";
 import SinaCommonCodeTransform from "@stocks/sina/transforms/common-code";
@@ -34,7 +37,7 @@ const Sina: StockApi = {
     // 数据深解析
     const [_, paramsUnformat] = row.split('=');
 
-    if (paramsUnformat === '') {
+    if (paramsUnformat === '""') {
       return { ...DEFAULT_STOCK, code };
     }
 
@@ -95,7 +98,7 @@ const Sina: StockApi = {
       let code: string = rows[i].split(',')[0];
 
       if (code.indexOf('us') === 0) {
-        code = code.replace('of', '');
+        code = code.replace('us', '');
         codes = [...codes, COMMON_US + code];
       }
 
@@ -120,7 +123,7 @@ const Sina: StockApi = {
       }
     }
 
-    return await Sina.getStocks(codes);
+    return uniqBy(await Sina.getStocks(codes), (code: Stock) => code.name);
   }
 }
 
