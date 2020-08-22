@@ -1,3 +1,7 @@
+
+// NPM
+import { uniqBy } from 'lodash';
+
 // Stocks
 import NeteaseStockTransform from "@stocks/netease/transforms/stock";
 import NeteaseCommonCodeTransform from "@stocks/netease/transforms/common-code";
@@ -94,7 +98,7 @@ const Netease: StockApi = {
       return '';
     }).filter(i => i !== '');
 
-    return await Netease.getStocks(codes);
+    return uniqBy(await Netease.getStocks(codes), (code: Stock) => code.name);
   }
 }
 
