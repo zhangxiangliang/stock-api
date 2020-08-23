@@ -27,12 +27,12 @@ describe("【网易】股票代码接口", () => {
   });
 
   it("搜索股票代码", async () => {
-    await expect(Netease.searchStocks("510500"))
+    await expect(Netease.searchStocks("格力电器"))
       .resolves
-      .toMatchObject([{ code: "SH510500", name: "500ETF" }]);
+      .toEqual(expect.arrayContaining([expect.objectContaining({ code: "SZ000651", name: "格力电器" })]));
 
-    await expect(Netease.searchStocks("399001"))
+    await expect(Netease.searchStocks("贵州茅台"))
       .resolves
-      .toMatchObject([{ code: "SZ399001", name: "深证成指" }]);
+      .toEqual(expect.arrayContaining([expect.objectContaining({ code: "SH600519", name: "贵州茅台" })]));
   });
 });

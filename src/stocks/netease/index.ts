@@ -89,11 +89,11 @@ const Netease: StockApi = {
     const items: Dictionary<string>[] = JSON.parse(row);
 
     const codes: string[] = items.map(i => {
-      if (i.tag.includes(COMMON_SZ)) {
+      if (i.tag.includes(COMMON_SZ) || i.type.includes(COMMON_SZ)) {
         return COMMON_SZ + i.symbol;
       }
 
-      if (i.tag.includes(COMMON_SH)) {
+      if (i.tag.includes(COMMON_SH) || i.type.includes(COMMON_SH)) {
         return COMMON_SH + i.symbol;
       }
 
