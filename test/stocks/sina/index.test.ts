@@ -26,24 +26,19 @@ describe("【新浪】股票代码接口", () => {
   });
 
   it("搜索股票代码", async () => {
-    await expect(Sina.searchStocks("510500"))
+    await expect(Sina.searchStocks("格力电器"))
       .resolves
-      .toMatchObject([{ code: "SZ510500", name: "---" }, { code: "SH510500", name: "500ETF" }]);
+      .toMatchObject([{ code: "SZ000651", name: "格力电器" }]);
 
-    await expect(Sina.searchStocks("苹果"))
+    await expect(Sina.searchStocks("贵州茅台"))
       .resolves
-      .toMatchObject([{ code: "USaapl", name: "苹果" }]);
+      .toMatchObject([{ code: "SH600519", name: "贵州茅台" }]);
 
-    await expect(Sina.searchStocks("腾讯控股"))
-      .resolves
-      .toMatchObject([{ code: "HK00700", name: "腾讯控股" }]);
-
-
-    await expect(Sina.searchStocks("000001"))
+    await expect(Sina.searchStocks("安踏体育"))
       .resolves
       .toMatchObject([
-        { code: expect.stringMatching("000001$"), name: expect.stringMatching("[平安银行|上证指数]") },
-        { code: expect.stringMatching("000001$"), name: expect.stringMatching("[平安银行|上证指数]") },
+        { code: expect.stringMatching(".*[02020|ANPDY].*"), name: expect.stringMatching(".*[安踏体育|\-].*") },
+        { code: expect.stringMatching(".*[02020|ANPDY].*"), name: expect.stringMatching(".*[安踏体育|\-].*") },
       ]);
   });
 });
