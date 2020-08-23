@@ -31,19 +31,20 @@ describe("【腾讯】股票代码接口", () => {
   });
 
   it("搜索股票代码", async () => {
-    await expect(Tencent.searchStocks("510500"))
-      .resolves
-      .toMatchObject([{ code: "SH510500", name: "500ETF" }]);
 
-    await expect(Tencent.searchStocks("苹果"))
+    await expect(Tencent.searchStocks("格力电器"))
       .resolves
-      .toMatchObject([{ code: "USaapl", name: "苹果" }]);
+      .toMatchObject([{ code: "SZ000651", name: "格力电器" }]);
 
-    await expect(Tencent.searchStocks("腾讯控股"))
+    await expect(Tencent.searchStocks("贵州茅台"))
+      .resolves
+      .toMatchObject([{ code: "SH600519", name: "贵州茅台" }]);
+
+    await expect(Tencent.searchStocks("安踏体育"))
       .resolves
       .toMatchObject([
-        { code: expect.stringMatching("[HK00700|UStcehy]"), name: expect.stringMatching("腾讯控股") },
-        { code: expect.stringMatching("[HK00700|UStcehy]"), name: expect.stringMatching("腾讯控股") },
+        { code: expect.stringMatching(".*[02020|ANPDY].*"), name: expect.stringMatching(".*[安踏体育|\-].*") },
+        { code: expect.stringMatching(".*[02020|ANPDY].*"), name: expect.stringMatching(".*[安踏体育|\-].*") },
       ]);
   });
 });

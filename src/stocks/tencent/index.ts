@@ -99,7 +99,7 @@ const Tencent: StockApi = {
         case 'hk':
           return COMMON_HK + code;
         case 'us':
-          return COMMON_US + code.split('.')[0];
+          return COMMON_US + code.split('.')[0].toUpperCase();
         default:
           return '';
       }
