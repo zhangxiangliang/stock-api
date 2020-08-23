@@ -1,14 +1,14 @@
 // NPM
-import { uniqBy } from 'lodash';
+import { uniq } from 'lodash';
 
 // Stocks
 import XueqiuStockTransform from "@stocks/xueqiu/transforms/stock";
-import XueqiuApiCodeTransform from "@stocks/xueqiu/transforms/api-code";
 import XueqiuCommonCodeTransform from "@stocks/xueqiu/transforms/common-code";
 
 // Utils
 import fetch from "@utils/fetch";
 import { DEFAULT_STOCK } from "@utils/constant";
+import { COMMON_SZ, COMMON_SH, COMMON_HK, COMMON_US } from '@stocks/base/utils/constant';
 
 // Types
 import Stock from "types/utils/stock";
@@ -81,7 +81,24 @@ const Xueqiu: StockApi & { getToken(): Promise<string> } = {
     return codes.map(code => {
       // 数据深解析
       const transform = (new XueqiuCommonCodeTransform).transform(code);
-      const params = rows.find(i => i.quote && i.quote.symbol === transform) || null;
+
+      const params = rows.find(i => {
+        if (!i.quote) {
+          return false;
+        }
+
+        if (i.market.region === 'US') {
+          return i.quote.code === transform;
+        }
+
+        if (i.market.region === 'CN') {
+          return i.quote.symbol === transform;
+        }
+
+        if (i.market.region === 'HK') {
+          return i.market.region + i.quote.code === transform;
+        }
+      }) || null;
 
       if (!params) {
         return { ...DEFAULT_STOCK, code };
@@ -105,9 +122,27 @@ const Xueqiu: StockApi & { getToken(): Promise<string> } = {
 
     const body = JSON.parse(res.text);
     const rows: Dictionary<string>[] = body.stocks;
-    const codes: string[] = rows.map(i => (new XueqiuApiCodeTransform).transform(i.code));
 
-    return uniqBy(await Xueqiu.getStocks(codes), (code: Stock) => code.name);
+    let codes: string[] = [];
+    for (let i = 0; i < rows.length; i++) {
+      let code: string = rows[i].code;
+
+      if (code.indexOf('SZ') === 0) {
+        code = code.replace('SZ', '');
+        codes = [...codes, COMMON_SZ + code];
+        continue;
+      }
+
+      if (code.indexOf('SH') === 0) {
+        code = code.replace('SH', '');
+        codes = [...codes, COMMON_SH + code];
+        continue;
+      }
+
+      codes = [...codes, COMMON_HK + code, COMMON_US + code];
+    }
+
+    return await Xueqiu.getStocks(uniq(codes));
   }
 }
 

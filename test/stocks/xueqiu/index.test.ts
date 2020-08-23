@@ -33,8 +33,21 @@ describe("【雪球】股票代码接口", () => {
   });
 
   it("搜索股票代码", async () => {
-    await expect(Xueqiu.searchStocks("SH510500"))
+    await expect(Xueqiu.searchStocks("格力电器"))
       .resolves
-      .toMatchObject([{ code: "SH510500", name: "中证500ETF" }]);
+      .toMatchObject([{ code: "SZ000651", name: "格力电器" }]);
+
+    await expect(Xueqiu.searchStocks("五粮液"))
+      .resolves
+      .toMatchObject([{ code: "SZ000858", name: "五粮液" }]);
+
+    await expect(Xueqiu.searchStocks("安踏体育"))
+      .resolves
+      .toMatchObject([
+        { code: expect.stringMatching(".*[02020|ANPDY].*"), name: expect.stringMatching(".*[安踏体育|\-].*") },
+        { code: expect.stringMatching(".*[02020|ANPDY].*"), name: expect.stringMatching(".*[安踏体育|\-].*") },
+        { code: expect.stringMatching(".*[02020|ANPDY].*"), name: expect.stringMatching(".*[安踏体育|\-].*") },
+        { code: expect.stringMatching(".*[02020|ANPDY].*"), name: expect.stringMatching(".*[安踏体育|\-].*") },
+      ]);
   });
 });
