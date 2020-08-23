@@ -32,7 +32,18 @@ describe("【腾讯】股票代码接口", () => {
 
   it("搜索股票代码", async () => {
     await expect(Tencent.searchStocks("510500"))
-      .rejects
-      .toThrow(new Error(ERROR_UNDEFINED_SEARCH_STOCK));
+      .resolves
+      .toMatchObject([{ code: "SH510500", name: "500ETF" }]);
+
+    await expect(Tencent.searchStocks("苹果"))
+      .resolves
+      .toMatchObject([{ code: "USaapl", name: "苹果" }]);
+
+    await expect(Tencent.searchStocks("腾讯控股"))
+      .resolves
+      .toMatchObject([
+        { code: expect.stringMatching("[HK00700|UStcehy]"), name: expect.stringMatching("腾讯控股") },
+        { code: expect.stringMatching("[HK00700|UStcehy]"), name: expect.stringMatching("腾讯控股") },
+      ]);
   });
 });

@@ -5,7 +5,8 @@ import TencentCommonCodeTransform from "@stocks/tencent/transforms/common-code";
 // Utils
 import fetch from "@utils/fetch";
 import iconv from "@utils/iconv";
-import { DEFAULT_STOCK, ERROR_UNDEFINED_SEARCH_STOCK } from "@utils/constant";
+import { DEFAULT_STOCK } from "@utils/constant";
+import { COMMON_SH, COMMON_SZ, COMMON_US, COMMON_HK } from "@stocks/base/utils/constant";
 
 // Types
 import Stock from "types/utils/stock";
@@ -81,7 +82,30 @@ const Tencent: StockApi = {
    * @param key 关键字
    */
   async searchStocks(key: string): Promise<Stock[]> {
-    throw new Error(ERROR_UNDEFINED_SEARCH_STOCK);
+    const url = `https://smartbox.gtimg.cn/s3/?v=2&t=all&c=1&q=${encodeURIComponent(key)}`;
+    const res = await fetch.get(url).responseType('blob');
+
+    const body = iconv.decode(res.body, "gbk");
+    const rows: string[] = body.replace('v_hint="', '').replace('"', "").split('^');
+
+    const codes: string[] = rows.map(row => {
+      const [type, code] = row.split('~');
+
+      switch (type) {
+        case 'sz':
+          return COMMON_SZ + code;
+        case 'sh':
+          return COMMON_SH + code;
+        case 'hk':
+          return COMMON_HK + code;
+        case 'us':
+          return COMMON_US + code.split('.')[0];
+        default:
+          return '';
+      }
+    }).filter(code => code !== '');
+
+    return await Tencent.getStocks(codes);
   }
 }
 

@@ -66,7 +66,7 @@ class TencentCommonCodeTransform extends BaseCommonCodeTransform {
       throw new Error(ERROR_COMMON_CODE);
     }
 
-    return TENCENT_HK + code.replace(COMMON_HK, "");
+    return TENCENT_HK + code.replace(COMMON_HK, "").toUpperCase();
   }
 
   /**
@@ -78,7 +78,7 @@ class TencentCommonCodeTransform extends BaseCommonCodeTransform {
       throw new Error(ERROR_COMMON_CODE);
     }
 
-    return TENCENT_US + code.replace(COMMON_US, "");
+    return TENCENT_US + code.replace(COMMON_US, "").toUpperCase();
   }
 }
 
