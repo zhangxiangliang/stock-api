@@ -1,6 +1,6 @@
 
 // NPM
-import { uniqBy } from 'lodash';
+import { uniq } from 'lodash';
 
 // Stocks
 import NeteaseStockTransform from "@stocks/netease/transforms/stock";
@@ -46,6 +46,8 @@ const Netease: StockApi = {
    * @param codes 股票代码组
    */
   async getStocks(codes: string[]): Promise<Stock[]> {
+    codes = uniq(codes.filter(i => i !== ''));
+
     // 无股票时返回空数组
     if (codes.length === 0) {
       return [];
@@ -96,9 +98,9 @@ const Netease: StockApi = {
       }
 
       return '';
-    }).filter(i => i !== '');
+    });
 
-    return uniqBy(await Netease.getStocks(codes), (code: Stock) => code.name);
+    return await Netease.getStocks(uniq(codes.filter(i => i !== '')));
   }
 }
 

@@ -1,5 +1,5 @@
 // NPM
-import { uniqBy } from 'lodash';
+import { uniq } from 'lodash';
 
 // Stocks
 import SinaStockTransform from "@stocks/sina/transforms/stock";
@@ -52,6 +52,8 @@ const Sina: StockApi = {
    * @param codes 股票代码组
    */
   async getStocks(codes: string[]): Promise<Stock[]> {
+    codes = uniq(codes.filter(i => i !== ''));
+
     // 无股票时返回空数组
     if (codes.length === 0) {
       return [];
@@ -123,7 +125,7 @@ const Sina: StockApi = {
       }
     }
 
-    return uniqBy(await Sina.getStocks(codes), (code: Stock) => code.name);
+    return await Sina.getStocks(uniq(codes.filter(i => i !== '')));
   }
 }
 

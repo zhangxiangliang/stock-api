@@ -1,3 +1,6 @@
+// NPM
+import { uniq } from "lodash";
+
 // Stocks
 import TencentStockTransform from "@stocks/tencent/transforms/stock";
 import TencentCommonCodeTransform from "@stocks/tencent/transforms/common-code";
@@ -48,6 +51,8 @@ const Tencent: StockApi = {
    * @param codes 股票代码组
    */
   async getStocks(codes: string[]): Promise<Stock[]> {
+    codes = uniq(codes.filter(i => i !== ''));
+
     // 无股票时返回空数组
     if (codes.length === 0) {
       return [];
@@ -103,9 +108,9 @@ const Tencent: StockApi = {
         default:
           return '';
       }
-    }).filter(code => code !== '');
+    });
 
-    return await Tencent.getStocks(codes);
+    return await Tencent.getStocks(uniq(codes.filter(i => i !== '')));
   }
 }
 
