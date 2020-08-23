@@ -23,7 +23,7 @@ class XueqiuStockTransform extends BaseStockTransform {
    * 获取代码
    */
   getCode(): string {
-    return String(this.code);
+    return String(this.code).toUpperCase();
   }
 
   /**
