@@ -15,15 +15,15 @@ describe("【网易】股票代码接口", () => {
   it("需要获取的股票代码组", async () => {
     await expect(Netease.getStocks(["SH510500"]))
       .resolves
-      .toMatchObject([{ code: "SH510500", name: "500ETF" }]);
-
-    await expect(Netease.getStocks([]))
-      .resolves
-      .toMatchObject([]);
+      .toEqual(expect.arrayContaining([expect.objectContaining({ code: "SH510500", name: "500ETF" })]));
 
     await expect(Netease.getStocks(["SZ510500"]))
       .resolves
-      .toMatchObject([{ code: "SZ510500", name: "---" }]);
+      .toEqual(expect.arrayContaining([expect.objectContaining({ code: "SZ510500", name: "---" })]));
+
+    await expect(Netease.getStocks([]))
+      .resolves
+      .toEqual([]);
   });
 
   it("搜索股票代码", async () => {

@@ -21,33 +21,31 @@ describe("【雪球】股票代码接口", () => {
   it("需要获取的股票代码组", async () => {
     await expect(Xueqiu.getStocks(["SH510500"]))
       .resolves
-      .toMatchObject([{ code: "SH510500", name: "中证500ETF" }]);
+      .toEqual(expect.arrayContaining([expect.objectContaining({ code: "SH510500", name: "中证500ETF" })]));
 
     await expect(Xueqiu.getStocks(["SZ510500"]))
       .resolves
-      .toMatchObject([{ code: "SZ510500", name: "---" }]);
+      .toEqual(expect.arrayContaining([expect.objectContaining({ code: "SZ510500", name: "---" })]));
 
     await expect(Xueqiu.getStocks([]))
       .resolves
-      .toMatchObject([]);
+      .toEqual([]);
   });
 
   it("搜索股票代码", async () => {
     await expect(Xueqiu.searchStocks("格力电器"))
       .resolves
-      .toMatchObject([{ code: "SZ000651", name: "格力电器" }]);
+      .toEqual(expect.arrayContaining([expect.objectContaining({ code: "SZ000651", name: "格力电器" })]));
 
     await expect(Xueqiu.searchStocks("贵州茅台"))
       .resolves
-      .toMatchObject([{ code: "SH600519", name: "贵州茅台" }]);
+      .toEqual(expect.arrayContaining([expect.objectContaining({ code: "SH600519", name: "贵州茅台" })]));
 
     await expect(Xueqiu.searchStocks("安踏体育"))
       .resolves
-      .toMatchObject([
-        { code: expect.stringMatching(".*[02020|ANPDY].*"), name: expect.stringMatching(".*[安踏体育|\-].*") },
-        { code: expect.stringMatching(".*[02020|ANPDY].*"), name: expect.stringMatching(".*[安踏体育|\-].*") },
-        { code: expect.stringMatching(".*[02020|ANPDY].*"), name: expect.stringMatching(".*[安踏体育|\-].*") },
-        { code: expect.stringMatching(".*[02020|ANPDY].*"), name: expect.stringMatching(".*[安踏体育|\-].*") },
-      ]);
+      .toEqual(expect.arrayContaining([
+        expect.objectContaining({ code: "HK02020", name: "安踏体育" }),
+        expect.objectContaining({ code: "USANPDY", name: "安踏体育ADR" }),
+      ]));
   });
 });
