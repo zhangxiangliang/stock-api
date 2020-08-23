@@ -37,9 +37,9 @@ describe("【雪球】股票代码接口", () => {
       .resolves
       .toMatchObject([{ code: "SZ000651", name: "格力电器" }]);
 
-    await expect(Xueqiu.searchStocks("五粮液"))
+    await expect(Xueqiu.searchStocks("贵州茅台"))
       .resolves
-      .toMatchObject([{ code: "SZ000858", name: "五粮液" }]);
+      .toMatchObject([{ code: "SH600519", name: "贵州茅台" }]);
 
     await expect(Xueqiu.searchStocks("安踏体育"))
       .resolves
