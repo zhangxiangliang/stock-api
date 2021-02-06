@@ -27,7 +27,7 @@
 
 ```shell
 npm install stock-api
-yarn install stock-api
+yarn add stock-api
 ```
 
 ## 使用
