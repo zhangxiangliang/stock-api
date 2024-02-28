@@ -1,8 +1,14 @@
 // Utils
-import { ERROR_COMMON_CODE, ERROR_UNDEFINED_SZ_COMMON_CODE, ERROR_UNDEFINED_SH_COMMON_CODE, ERROR_UNDEFINED_HK_COMMON_CODE, ERROR_UNDEFINED_US_COMMON_CODE } from "@utils/constant";
+import {
+  ERROR_COMMON_CODE,
+  ERROR_UNDEFINED_SZ_COMMON_CODE,
+  ERROR_UNDEFINED_SH_COMMON_CODE,
+  ERROR_UNDEFINED_HK_COMMON_CODE,
+  ERROR_UNDEFINED_US_COMMON_CODE,
+} from "../../../utils/constant";
 
 // Types
-import CommonCodeTransform from "types/stocks/transforms/common-code";
+import CommonCodeTransform from "../../../types/stocks/transforms/common-code";
 import { COMMON_SH, COMMON_SZ, COMMON_HK, COMMON_US } from "../utils/constant";
 
 /**

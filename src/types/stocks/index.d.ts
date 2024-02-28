@@ -1,4 +1,4 @@
-import Stock from '../utils/stock';
+import Stock from "../utils/stock";
 
 export interface StockApi {
   /**

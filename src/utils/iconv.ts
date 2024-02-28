@@ -1,3 +1,3 @@
-const iconv = require("iconv-lite");
+import iconv from "iconv-lite";
 
 export default iconv;

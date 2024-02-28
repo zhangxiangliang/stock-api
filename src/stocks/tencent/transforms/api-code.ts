@@ -1,10 +1,20 @@
 // Stocks
-import BaseApiCodeTransform from "@stocks/base/transforms/api-code";
+import BaseApiCodeTransform from "../../../stocks/base/transforms/api-code";
 
 // Utils
-import { ERROR_API_CODE } from "@utils/constant";
-import { COMMON_SH, COMMON_SZ, COMMON_HK, COMMON_US } from "@stocks/base/utils/constant";
-import { TENCENT_SZ, TENCENT_SH, TENCENT_HK, TENCENT_US } from "@stocks/tencent/utils/constant";
+import { ERROR_API_CODE } from "../../../utils/constant";
+import {
+  COMMON_SH,
+  COMMON_SZ,
+  COMMON_HK,
+  COMMON_US,
+} from "../../../stocks/base/utils/constant";
+import {
+  TENCENT_SZ,
+  TENCENT_SH,
+  TENCENT_HK,
+  TENCENT_US,
+} from "../../../stocks/tencent/utils/constant";
 
 /**
  * 【腾讯】股票代码转换统一代码

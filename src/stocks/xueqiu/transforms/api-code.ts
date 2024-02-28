@@ -1,10 +1,20 @@
 // Stocks
-import BaseApiCodeTransform from "@stocks/base/transforms/api-code";
+import BaseApiCodeTransform from "../../../stocks/base/transforms/api-code";
 
 // Utils
-import { ERROR_API_CODE } from "@utils/constant";
-import { COMMON_SH, COMMON_SZ, COMMON_HK, COMMON_US } from "@stocks/base/utils/constant";
-import { XUEQIU_SZ, XUEQIU_SH, XUEQIU_HK, XUEQIU_US } from "@stocks/xueqiu/utils/constant";
+import { ERROR_API_CODE } from "../../../utils/constant";
+import {
+  COMMON_SH,
+  COMMON_SZ,
+  COMMON_HK,
+  COMMON_US,
+} from "../../../stocks/base/utils/constant";
+import {
+  XUEQIU_SZ,
+  XUEQIU_SH,
+  XUEQIU_HK,
+  XUEQIU_US,
+} from "../../../stocks/xueqiu/utils/constant";
 
 /**
  * 【雪球】股票代码转换统一代码
@@ -79,7 +89,11 @@ class XueqiuApiCodeTransform extends BaseApiCodeTransform {
    * @param code 股票代码
    */
   public USTransform(code: string): string {
-    if (code.includes(XUEQIU_SZ) || code.includes(XUEQIU_SH) || code.includes(XUEQIU_HK)) {
+    if (
+      code.includes(XUEQIU_SZ) ||
+      code.includes(XUEQIU_SH) ||
+      code.includes(XUEQIU_HK)
+    ) {
       throw new Error(ERROR_API_CODE);
     }
 

@@ -1,9 +1,13 @@
 // Utils
-import { ERROR_UNDEFINED_GET_STOCK, ERROR_UNDEFINED_GET_STOCKS, ERROR_UNDEFINED_SEARCH_STOCK } from "@utils/constant";
+import {
+  ERROR_UNDEFINED_GET_STOCK,
+  ERROR_UNDEFINED_GET_STOCKS,
+  ERROR_UNDEFINED_SEARCH_STOCK,
+} from "../../utils/constant";
 
 // Types
-import Stock from "types/utils/stock";
-import StockApi from "types/stocks/index";
+import Stock from "../../types/utils/stock";
+import StockApi from "../../types/stocks/index";
 
 /**
  * 基础股票代码接口
@@ -31,7 +35,7 @@ const Base: StockApi = {
    */
   async searchStocks(key: string): Promise<Stock[]> {
     throw new Error(ERROR_UNDEFINED_SEARCH_STOCK);
-  }
+  },
 };
 
 export default Base;

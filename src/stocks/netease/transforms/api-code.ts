@@ -1,10 +1,20 @@
 // Stocks
-import BaseApiCodeTransform from "@stocks/base/transforms/api-code";
+import BaseApiCodeTransform from "../../../stocks/base/transforms/api-code";
 
 // Utils
-import { ERROR_API_CODE } from "@utils/constant";
-import { COMMON_SH, COMMON_SZ, COMMON_HK, COMMON_US } from "@stocks/base/utils/constant";
-import { NETEASE_SZ, NETEASE_SH, NETEASE_HK, NETEASE_US } from "@stocks/netease/utils/constant";
+import { ERROR_API_CODE } from "../../../utils/constant";
+import {
+  COMMON_SH,
+  COMMON_SZ,
+  COMMON_HK,
+  COMMON_US,
+} from "../../../stocks/base/utils/constant";
+import {
+  NETEASE_SZ,
+  NETEASE_SH,
+  NETEASE_HK,
+  NETEASE_US,
+} from "../../../stocks/netease/utils/constant";
 
 /**
  * 网易股票代码转统一代码

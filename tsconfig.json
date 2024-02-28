@@ -1,39 +1,21 @@
 {
   "compilerOptions": {
-    "baseUrl": "src",
-    "rootDir": "src",
     "target": "es5",
-    "outDir": "dist",
     "module": "commonjs",
+    "lib": [
+      "es6"
+    ],
+    "declaration": true,
+    "outDir": "./dist",
     "strict": true,
     "esModuleInterop": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "paths": {
-      "types/*": [
-        "../types/*"
-      ],
-      "@stocks/*": [
-        "stocks/*"
-      ],
-      "@utils/*": [
-        "utils/*"
-      ],
-      "@interfaces/*": [
-        "interfaces/*"
-      ]
-    },
-    "plugins": [
-      {
-        "transform": "typescript-transform-paths"
-      }
-    ]
+    "skipLibCheck": true
   },
   "include": [
-    "src/**/*.ts"
+    "src"
   ],
   "exclude": [
-    "node_modules/**",
-    "dist/**"
+    "node_modules",
+    "**/__tests__/*"
   ]
 }

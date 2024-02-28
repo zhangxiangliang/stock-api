@@ -1,10 +1,20 @@
 // Stocks
-import BaseCommonCodeTransform from "@stocks/base/transforms/common-code";
+import BaseCommonCodeTransform from "../../../stocks/base/transforms/common-code";
 
 // Utils
-import { ERROR_API_CODE } from "@utils/constant";
-import { SINA_SZ, SINA_SH, SINA_HK, SINA_US } from "@stocks/sina/utils/constant";
-import { COMMON_SH, COMMON_SZ, COMMON_HK, COMMON_US } from "@stocks/base/utils/constant";
+import { ERROR_API_CODE } from "../../../utils/constant";
+import {
+  SINA_SZ,
+  SINA_SH,
+  SINA_HK,
+  SINA_US,
+} from "../../../stocks/sina/utils/constant";
+import {
+  COMMON_SH,
+  COMMON_SZ,
+  COMMON_HK,
+  COMMON_US,
+} from "../../../stocks/base/utils/constant";
 
 /**
  * 【新浪】股票代码转换统一代码

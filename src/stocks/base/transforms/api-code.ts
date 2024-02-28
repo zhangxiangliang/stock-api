@@ -1,9 +1,21 @@
 // Utils
-import { COMMON_SH, COMMON_SZ, COMMON_HK, COMMON_US } from "@stocks/base/utils/constant";
-import { ERROR_UNDEFINED_API_CODE, ERROR_UNDEFINED_SZ_API_CODE, ERROR_UNDEFINED_SH_API_CODE, ERROR_UNDEFINED_HK_API_CODE, ERROR_UNDEFINED_US_API_CODE, ERROR_API_CODE } from "@utils/constant";
+import {
+  COMMON_SH,
+  COMMON_SZ,
+  COMMON_HK,
+  COMMON_US,
+} from "../../../stocks/base/utils/constant";
+import {
+  ERROR_UNDEFINED_API_CODE,
+  ERROR_UNDEFINED_SZ_API_CODE,
+  ERROR_UNDEFINED_SH_API_CODE,
+  ERROR_UNDEFINED_HK_API_CODE,
+  ERROR_UNDEFINED_US_API_CODE,
+  ERROR_API_CODE,
+} from "../../../utils/constant";
 
 // Types
-import ApiCodeTransform from "types/stocks/transforms/api-code";
+import ApiCodeTransform from "../../../types/stocks/transforms/api-code";
 
 /**
  * 【基础】股票代码转换统一代码

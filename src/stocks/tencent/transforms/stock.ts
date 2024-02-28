@@ -1,11 +1,11 @@
 // Stocks
-import BaseStockTransform from "@stocks/base/transforms/stock";
+import BaseStockTransform from "../../../stocks/base/transforms/stock";
 
 // Utils
-import { DEFAULT_STRING, DEFAULT_NUMBER } from "@utils/constant";
+import { DEFAULT_STRING, DEFAULT_NUMBER } from "../../../utils/constant";
 
 // Types
-import Stock from "types/utils/stock";
+import Stock from "../../../types/utils/stock";
 
 /**
  * 腾讯股票数据解析

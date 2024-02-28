@@ -1,10 +1,20 @@
 // Stocks
-import BaseCommonCodeTransform from "@stocks/base/transforms/common-code";
+import BaseCommonCodeTransform from "../../../stocks/base/transforms/common-code";
 
 // Utils
-import { ERROR_COMMON_CODE } from "@utils/constant";
-import { COMMON_SH, COMMON_SZ, COMMON_HK, COMMON_US } from "@stocks/base/utils/constant";
-import { XUEQIU_SZ, XUEQIU_SH, XUEQIU_HK, XUEQIU_US } from "@stocks/xueqiu/utils/constant";
+import { ERROR_COMMON_CODE } from "../../../utils/constant";
+import {
+  COMMON_SH,
+  COMMON_SZ,
+  COMMON_HK,
+  COMMON_US,
+} from "../../../stocks/base/utils/constant";
+import {
+  XUEQIU_SZ,
+  XUEQIU_SH,
+  XUEQIU_HK,
+  XUEQIU_US,
+} from "../../../stocks/xueqiu/utils/constant";
 
 /**
  * 【雪球】统一代码转换股票代码
