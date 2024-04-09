@@ -1,7 +1,7 @@
 {
   "name": "stock-api",
-  "version": "2.0.7",
-  "description": "【韭菜小猪】免费股票数据分析相关接口",
+  "version": "2.0.8",
+  "description": "免费股票数据分析相关接口",
   "repository": "https://github.com/zhangxiangliang/stock-api",
   "author": "zhangxiangliang",
   "keywords": [
