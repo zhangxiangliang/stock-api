@@ -4,7 +4,8 @@ import { fileURLToPath } from "node:url";
 
 const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const outputDir = path.join(rootDir, "status");
-const timeoutMs = 60_000;
+const attemptTimeoutMs = 30_000;
+const maxAttempts = 3;
 
 const { stocks } = await import(path.join(rootDir, "dist/index.js"));
 
@@ -50,7 +51,7 @@ const results = [];
 for (const check of checks) {
   const startedAt = Date.now();
   try {
-    await withTimeout(check.run(), timeoutMs);
+    await retryCheck(() => withTimeout(check.run(), attemptTimeoutMs), maxAttempts);
     results.push({
       id: check.id,
       label: check.label,
@@ -142,6 +143,29 @@ function withTimeout(promise, ms) {
 
   return Promise.race([promise, timeout]).finally(() => {
     clearTimeout(timer);
+  });
+}
+
+async function retryCheck(run, attempts) {
+  let lastError;
+
+  for (let attempt = 1; attempt <= attempts; attempt++) {
+    try {
+      return await run();
+    } catch (error) {
+      lastError = error;
+      if (attempt < attempts) {
+        await sleep(1_000 * attempt);
+      }
+    }
+  }
+
+  throw lastError;
+}
+
+function sleep(ms) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
   });
 }
 
