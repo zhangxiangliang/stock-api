@@ -1,0 +1,27 @@
+{
+  "checkedAt": "2026-04-24T09:11:32.640Z",
+  "results": [
+    {
+      "id": "tencent",
+      "label": "tencent",
+      "ok": true,
+      "message": "up",
+      "durationMs": 2680
+    },
+    {
+      "id": "sina",
+      "label": "sina",
+      "ok": true,
+      "message": "up",
+      "durationMs": 2539
+    },
+    {
+      "id": "eastmoney",
+      "label": "eastmoney",
+      "ok": false,
+      "message": "down",
+      "durationMs": 60002,
+      "error": "Timed out after 60000ms"
+    }
+  ]
+}
