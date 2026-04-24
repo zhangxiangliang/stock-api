@@ -16,6 +16,13 @@
   <a href="https://www.npmjs.com/package/stock-api"><img src="https://img.shields.io/badge/language-typescript-blue" alt="TypeScript"></a>
 </p>
 
+<p align="center">
+  <img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fzhangxiangliang%2Fstock-api%2Fapi-status%2Findex.json" alt="API Status">
+  <img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fzhangxiangliang%2Fstock-api%2Fapi-status%2Ftencent.json" alt="Tencent Status">
+  <img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fzhangxiangliang%2Fstock-api%2Fapi-status%2Fsina.json" alt="Sina Status">
+  <img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fzhangxiangliang%2Fstock-api%2Fapi-status%2Feastmoney.json" alt="Eastmoney Status">
+</p>
+
 `stock-api` is a zero-runtime-dependency stock market data toolkit for Node.js. It provides a TypeScript API and CLI for retrieving stock quotes and searching symbols from public market data sources.
 
 > Market data comes from third-party public endpoints. This package keeps provider responses transparent and does not silently fall back across data sources.
@@ -111,6 +118,7 @@ type Stock = {
 | [CLI usage](docs/cli.md) | Commands, options, output, exit codes, and local `npx` simulation |
 | [Architecture](docs/architecture.md) | Directory layout, provider flow, parsing, and error model |
 | [Development guide](docs/development.md) | Local development, tests, CI, release checks, and adding providers |
+| [API monitoring](docs/monitoring.md) | Scheduled third-party API checks and README status badges |
 
 ## Browser Usage
 

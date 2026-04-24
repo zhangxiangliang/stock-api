@@ -1,0 +1,57 @@
+name: API Monitor
+
+on:
+  schedule:
+    - cron: "0 1 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: api-monitor
+  cancel-in-progress: false
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Check APIs
+        run: node scripts/check-api-status.mjs
+
+      - name: Publish status
+        run: |
+          set -euo pipefail
+          cp -R status /tmp/stock-api-status
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          if git ls-remote --exit-code --heads origin api-status >/dev/null 2>&1; then
+            git fetch origin api-status
+            git switch --detach origin/api-status
+            rm -rf ./*
+          else
+            git switch --orphan api-status
+            git rm -rf . >/dev/null 2>&1 || true
+          fi
+
+          cp -R /tmp/stock-api-status/* .
+          git add .
+          git commit -m "chore: update api status" || exit 0
+          git push origin HEAD:api-status
