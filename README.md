@@ -108,6 +108,20 @@ node dist/cli.js --help
 node dist/cli.js get-stock SH510500
 ```
 
+## 发布
+
+项目使用 semantic-release 自动发布到 npm。合并或推送到 `main` 后，GitHub Actions 会根据 commit message 自动计算版本号、更新 changelog、创建 GitHub Release，并发布 npm 包。
+
+commit message 需要遵循 Conventional Commits：
+
+```shell
+fix: 修复问题      # patch，例如 2.0.8 -> 2.0.9
+feat: 增加功能     # minor，例如 2.0.8 -> 2.1.0
+feat!: 不兼容变更  # major，例如 2.0.8 -> 3.0.0
+```
+
+普通维护类改动可以使用 `chore:`，不会触发 npm 新版本发布。
+
 ## License
 
 MIT
