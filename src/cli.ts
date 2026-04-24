@@ -3,7 +3,7 @@
 import { stocks } from "./index";
 import StockApi from "./types/stocks";
 
-type SourceName = "sina" | "tencent";
+type SourceName = "eastmoney" | "sina" | "tencent";
 
 type ParsedArgs = {
   command?: string;
@@ -11,7 +11,7 @@ type ParsedArgs = {
   source: SourceName;
 };
 
-const sourceNames: SourceName[] = ["tencent", "sina"];
+const sourceNames: SourceName[] = ["tencent", "sina", "eastmoney"];
 
 run(process.argv.slice(2)).catch((error: unknown) => {
   const message = error instanceof Error ? error.message : String(error);
@@ -101,12 +101,12 @@ function printJson(value: unknown): void {
 
 function printHelp(): void {
   console.log(`Usage:
-  stock-api get-stock <code> [--source tencent|sina]
-  stock-api get-stocks <code...> [--source tencent|sina]
-  stock-api search <keyword> [--source tencent|sina]
+  stock-api get-stock <code> [--source tencent|sina|eastmoney]
+  stock-api get-stocks <code...> [--source tencent|sina|eastmoney]
+  stock-api search <keyword> [--source tencent|sina|eastmoney]
 
 Examples:
   stock-api get-stock SH510500
   stock-api get-stocks SH510500 SZ000651
-  stock-api search 格力电器 --source sina`);
+  stock-api search 格力电器 --source eastmoney`);
 }
