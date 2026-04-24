@@ -1,3 +1,10 @@
+## [2.0.9](https://github.com/zhangxiangliang/stock-api/compare/v2.0.8...v2.0.9) (2026-04-24)
+
+
+### Bug Fixes
+
+* make cli executable ([b2564b9](https://github.com/zhangxiangliang/stock-api/commit/b2564b94abc6e9e55b760e3ebf6bde1945cee8a0))
+
 ## [2.0.8](https://github.com/zhangxiangliang/stock-api/compare/v2.0.7...v2.0.8) (2026-04-24)
 
 
