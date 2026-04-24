@@ -28,6 +28,7 @@
     "clean": "node -e \"require('fs').rmSync('dist', { recursive: true, force: true })\"",
     "prebuild": "npm run clean",
     "build": "tsc -p tsconfig.build.json",
+    "postbuild": "node -e \"require('fs').chmodSync('dist/cli.js', 0o755)\"",
     "prepack": "npm run build",
     "test": "jest --config jest.config.js --coverage",
     "test:unit": "npm test -- --runInBand",
