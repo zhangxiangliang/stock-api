@@ -1,0 +1,51 @@
+{
+  "name": "stock-api",
+  "version": "2.0.8",
+  "description": "免费股票数据分析相关接口",
+  "repository": "https://github.com/zhangxiangliang/stock-api",
+  "author": "zhangxiangliang",
+  "keywords": [
+    "股票",
+    "数据分析",
+    "接口"
+  ],
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "stock-api": "dist/cli.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
+    }
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "clean": "node -e \"require('fs').rmSync('dist', { recursive: true, force: true })\"",
+    "prebuild": "npm run clean",
+    "build": "tsc -p tsconfig.build.json",
+    "prepack": "npm run build",
+    "test": "jest --config jest.config.js --coverage",
+    "test:unit": "npm test -- --runInBand",
+    "test:integration": "jest --config jest.integration.config.js --runInBand",
+    "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.test.json",
+    "validate": "npm run build && npm run typecheck && npm run test:unit"
+  },
+  "license": "MIT",
+  "files": [
+    "dist/**/*",
+    "docs/**/*"
+  ],
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "@types/node": "^24.0.0",
+    "jest": "^30.3.0",
+    "ts-jest": "^29.4.9",
+    "typescript": "^6.0.3"
+  },
+  "dependencies": {}
+}

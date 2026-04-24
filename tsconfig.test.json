@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": "./src",
+    "ignoreDeprecations": "6.0",
+    "noEmit": true,
+    "types": ["jest", "node"],
+    "paths": {
+      "stocks/*": ["stocks/*"],
+      "utils/*": ["utils/*"],
+      "types/*": ["types/*"]
+    }
+  },
+  "include": ["test/**/*.ts"]
+}
