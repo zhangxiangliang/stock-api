@@ -1,7 +1,7 @@
 <h1 align="center">stock-api</h1>
 
 <p align="center">
-  Stock market data API for Node.js and TypeScript.
+  支持 A 股、港股、美股行情查询的 Node.js 股票数据工具。
 </p>
 
 <p align="center">
@@ -16,27 +16,27 @@
   <a href="https://www.npmjs.com/package/stock-api"><img src="https://img.shields.io/badge/language-typescript-blue" alt="TypeScript"></a>
 </p>
 
-`stock-api` is a zero-runtime-dependency stock market data toolkit for Node.js. It provides a TypeScript API and CLI for retrieving stock quotes and searching symbols from public market data sources.
+`stock-api` 是一个零运行时依赖的股票行情数据工具，支持 Node.js API 和命令行查询，可用于 A 股、港股、美股行情查询和股票搜索。
 
-> Market data comes from third-party public endpoints. This package keeps provider responses transparent and does not silently fall back across data sources.
+> 行情数据来自第三方公开接口。库会尽量保留数据源真实返回，不做跨源兜底。
 
-## Features
+## 功能特性
 
-- Node.js stock market data API with TypeScript types
-- CLI commands for quick stock quote lookup and symbol search
-- Tencent and Sina market data sources
-- A-share, Hong Kong, and US market code formats
-- Zero runtime dependencies
+- 提供带 TypeScript 类型的 Node.js 股票行情 API
+- 支持 CLI 快速查询股票行情和搜索股票代码
+- 支持腾讯股票、新浪股票数据源
+- 支持 A 股、港股、美股代码格式
+- 零运行时依赖
 
-## Installation
+## 安装
 
 ```shell
 npm install stock-api
 ```
 
-Requires Node.js `>=18`.
+要求 Node.js `>=18`。
 
-## Quick Start
+## 快速使用
 
 ### JavaScript
 
@@ -45,7 +45,7 @@ import { stocks } from "stock-api";
 
 const stock = await stocks.tencent.getStock("SH510500");
 const list = await stocks.tencent.getStocks(["SH510500", "SZ000651"]);
-const results = await stocks.tencent.searchStocks("Gree Electric");
+const results = await stocks.tencent.searchStocks("格力电器");
 ```
 
 CommonJS:
@@ -59,35 +59,35 @@ const { stocks } = require("stock-api");
 ```shell
 npx stock-api get-stock SH510500
 npx stock-api get-stocks SH510500 SZ000651
-npx stock-api search Gree
+npx stock-api search 格力电器
 ```
 
-Use a specific data source:
+指定数据源：
 
 ```shell
 npx stock-api get-stock SH510500 --source sina
-npx stock-api search Gree -s sina
+npx stock-api search 格力电器 -s sina
 ```
 
-## Data Sources
+## 数据源
 
-| Name | source | Status |
+| 名称 | source | 状态 |
 | --- | --- | --- |
-| Tencent | `tencent` | Search, single quote, batch quotes |
-| Sina | `sina` | Search, single quote, batch quotes |
+| 腾讯股票 | `tencent` | 支持搜索、单只行情、批量行情 |
+| 新浪股票 | `sina` | 支持搜索、单只行情、批量行情 |
 
-## Stock Code Format
+## 股票代码
 
-Use `exchange prefix + stock code`:
+统一使用 `交易所 + 股票代码`：
 
-| Market | Prefix | Example |
+| 交易所 | 前缀 | 示例 |
 | --- | --- | --- |
-| Shanghai Stock Exchange | `SH` | `SH510500` |
-| Shenzhen Stock Exchange | `SZ` | `SZ000651` |
-| Hong Kong market | `HK` | `HK02020` |
-| US market | `US` | `USDJI` |
+| 上海交易所 | `SH` | `SH510500` |
+| 深圳交易所 | `SZ` | `SZ000651` |
+| 香港交易所 | `HK` | `HK02020` |
+| 美国市场 | `US` | `USDJI` |
 
-Return shape:
+返回结构：
 
 ```typescript
 type Stock = {
@@ -101,25 +101,25 @@ type Stock = {
 };
 ```
 
-## Documentation
+## 文档
 
-| Document | Description |
+| 文档 | 内容 |
 | --- | --- |
-| [CLI usage](docs/cli.md) | Commands, options, output, exit codes, and local `npx` simulation |
-| [Architecture](docs/architecture.md) | Directory layout, provider flow, parsing, and error model |
-| [Development guide](docs/development.md) | Local development, tests, CI, release checks, and adding providers |
+| [CLI 使用](docs/cli.md) | 命令、参数、输出、退出码、本地模拟 `npx` |
+| [项目架构](docs/architecture.md) | 目录结构、数据流、provider 工厂、解析和错误模型 |
+| [开发指南](docs/development.md) | 本地开发、测试策略、CI、发布前检查、新增数据源 |
 
-## Browser Usage
+## 浏览器使用
 
-`stock-api` is designed for Node.js, backend services, serverless functions, and CLI usage. Direct browser usage is not recommended because third-party market data endpoints may block cross-origin requests or return non-UTF-8 encoded responses.
+`stock-api` 主要面向 Node.js、后端服务、Serverless 函数和 CLI 场景。不建议在浏览器前端直接请求第三方行情接口，因为数据源可能存在 CORS 限制和非 UTF-8 编码问题。
 
-Recommended architecture:
+推荐架构：
 
 ```text
 frontend -> your backend API -> stock-api -> market data source
 ```
 
-## Development
+## 开发
 
 ```shell
 npm install
@@ -127,7 +127,7 @@ npm run validate
 npm run test:integration
 ```
 
-Test the CLI locally:
+本地测试 CLI：
 
 ```shell
 npm run build
@@ -135,19 +135,19 @@ node dist/cli.js --help
 node dist/cli.js get-stock SH510500
 ```
 
-## Release
+## 发布
 
-This project uses semantic-release to publish to npm automatically. After changes are merged or pushed to `main`, GitHub Actions analyzes commit messages, calculates the next version, updates the changelog, creates a GitHub Release, and publishes the npm package.
+项目使用 semantic-release 自动发布到 npm。合并或推送到 `main` 后，GitHub Actions 会根据 commit message 自动计算版本号、更新 changelog、创建 GitHub Release，并发布 npm 包。
 
-Commit messages should follow Conventional Commits:
+commit message 需要遵循 Conventional Commits：
 
 ```shell
-fix: fix a bug                # patch, for example 2.0.8 -> 2.0.9
-feat: add a feature           # minor, for example 2.0.8 -> 2.1.0
-feat!: introduce breaking API # major, for example 2.0.8 -> 3.0.0
+fix: 修复问题      # patch，例如 2.0.8 -> 2.0.9
+feat: 增加功能     # minor，例如 2.0.8 -> 2.1.0
+feat!: 不兼容变更  # major，例如 2.0.8 -> 3.0.0
 ```
 
-Maintenance commits such as `chore:` do not publish a new npm version.
+普通维护类改动可以使用 `chore:`，不会触发 npm 新版本发布。
 
 ## License
 
