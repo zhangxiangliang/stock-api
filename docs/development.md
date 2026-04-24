@@ -20,7 +20,7 @@ npm install
 | `npm run build` | 编译 TypeScript 到 `dist` |
 | `npm run typecheck` | 检查源码和测试类型 |
 | `npm run test:unit` | 运行单元测试，不访问外网 |
-| `npm run test:integration` | 访问真实腾讯/新浪接口 |
+| `npm run test:integration` | 访问真实腾讯/新浪/东方财富接口 |
 | `npm run validate` | CI 验证命令：build + typecheck + unit |
 | `npm pack --dry-run` | 检查 npm 发布产物 |
 

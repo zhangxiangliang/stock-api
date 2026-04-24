@@ -5,7 +5,7 @@
 ## 基本用法
 
 ```shell
-npx stock-api <command> [...args] [--source tencent|sina]
+npx stock-api <command> [...args] [--source tencent|sina|eastmoney]
 ```
 
 默认数据源是 `tencent`。
@@ -30,7 +30,7 @@ npx stock-api --help
 
 | 参数 | 简写 | 说明 | 默认值 |
 | --- | --- | --- | --- |
-| `--source` | `-s` | 指定数据源，可选 `tencent` / `sina` | `tencent` |
+| `--source` | `-s` | 指定数据源，可选 `tencent` / `sina` / `eastmoney` | `tencent` |
 
 ## get-stock
 
@@ -44,6 +44,12 @@ npx stock-api get-stock SH510500
 
 ```shell
 npx stock-api get-stock SH510500 --source sina
+```
+
+指定东方财富：
+
+```shell
+npx stock-api get-stock SH600519 --source eastmoney
 ```
 
 输出：
@@ -111,6 +117,7 @@ npx stock-api search 中证 500
 
 ```shell
 npx stock-api search 格力电器 -s sina
+npx stock-api search 贵州茅台 -s eastmoney
 ```
 
 ## 输出格式
