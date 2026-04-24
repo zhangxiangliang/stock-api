@@ -1,3 +1,10 @@
+# [2.1.0](https://github.com/zhangxiangliang/stock-api/compare/v2.0.9...v2.1.0) (2026-04-24)
+
+
+### Features
+
+* add eastmoney provider ([f668e0e](https://github.com/zhangxiangliang/stock-api/commit/f668e0ec1844ee67984e688669372ab9660345cf))
+
 ## [2.0.9](https://github.com/zhangxiangliang/stock-api/compare/v2.0.8...v2.0.9) (2026-04-24)
 
 
