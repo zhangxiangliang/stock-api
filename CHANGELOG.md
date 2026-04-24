@@ -1,3 +1,10 @@
+## [2.0.8](https://github.com/zhangxiangliang/stock-api/compare/v2.0.7...v2.0.8) (2026-04-24)
+
+
+### Bug Fixes
+
+* use node 24 for release ([ac6fe3d](https://github.com/zhangxiangliang/stock-api/commit/ac6fe3dc308d6acfa47587097c9b5540dca54a5d))
+
 # 1.0.0 (2026-04-24)
 
 
