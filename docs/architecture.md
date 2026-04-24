@@ -29,6 +29,7 @@ src/
     shared/
       code-mapper.ts           # 统一代码映射工厂
       provider.ts              # 股票数据源 provider 工厂
+    eastmoney/                 # 东方财富数据源配置和解析
     sina/                      # 新浪数据源配置和解析
     tencent/                   # 腾讯数据源配置和解析
   types/                       # 公共类型
@@ -53,6 +54,7 @@ import { stocks } from "stock-api";
 ```typescript
 stocks.tencent
 stocks.sina
+stocks.eastmoney
 ```
 
 每个数据源都实现同一个接口：
@@ -138,6 +140,7 @@ USDJI
 | 统一代码 | `SH510500` | `SZ000651` | `HK02020` | `USDJI` |
 | 腾讯 | `sh510500` | `sz000651` | `hk02020` | `usDji` 类似格式 |
 | 新浪 | `sh510500` | `sz000651` | `hk02020` | `gb_dji` 类似格式 |
+| 东方财富 | `1.510500` | `0.000651` | 暂不支持 | 暂不支持 |
 
 `src/stocks/shared/code-mapper.ts` 用配置生成转换器，避免每个数据源重复写一套 `SZTransform` / `SHTransform`。
 
@@ -148,6 +151,7 @@ USDJI
 ```typescript
 parseTencentStock(code, params)
 parseSinaStock(code, params)
+parseEastmoneyStock(code, quote)
 ```
 
 这样做的好处：

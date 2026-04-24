@@ -5,8 +5,8 @@
 </p>
 
 <p align="center">
-  <a href="./README.md">English</a> |
-  <a href="./README.zh-CN.md">简体中文</a>
+  <a href="./README.EN.md">English</a> |
+  <a href="./README.md">简体中文</a>
 </p>
 
 <p align="center">
@@ -46,6 +46,7 @@ import { stocks } from "stock-api";
 const stock = await stocks.tencent.getStock("SH510500");
 const list = await stocks.tencent.getStocks(["SH510500", "SZ000651"]);
 const results = await stocks.tencent.searchStocks("格力电器");
+const eastmoneyStock = await stocks.eastmoney.getStock("SH600519");
 ```
 
 CommonJS:
@@ -66,6 +67,7 @@ npx stock-api search 格力电器
 
 ```shell
 npx stock-api get-stock SH510500 --source sina
+npx stock-api get-stock SH600519 --source eastmoney
 npx stock-api search 格力电器 -s sina
 ```
 
@@ -75,6 +77,7 @@ npx stock-api search 格力电器 -s sina
 | --- | --- | --- |
 | 腾讯股票 | `tencent` | 支持搜索、单只行情、批量行情 |
 | 新浪股票 | `sina` | 支持搜索、单只行情、批量行情 |
+| 东方财富 | `eastmoney` | 支持 A 股搜索、单只行情、批量行情 |
 
 ## 股票代码
 

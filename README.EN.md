@@ -46,6 +46,7 @@ import { stocks } from "stock-api";
 const stock = await stocks.tencent.getStock("SH510500");
 const list = await stocks.tencent.getStocks(["SH510500", "SZ000651"]);
 const results = await stocks.tencent.searchStocks("Gree Electric");
+const eastmoneyStock = await stocks.eastmoney.getStock("SH600519");
 ```
 
 CommonJS:
@@ -66,6 +67,7 @@ Use a specific data source:
 
 ```shell
 npx stock-api get-stock SH510500 --source sina
+npx stock-api get-stock SH600519 --source eastmoney
 npx stock-api search Gree -s sina
 ```
 
@@ -75,6 +77,7 @@ npx stock-api search Gree -s sina
 | --- | --- | --- |
 | Tencent | `tencent` | Search, single quote, batch quotes |
 | Sina | `sina` | Search, single quote, batch quotes |
+| Eastmoney | `eastmoney` | A-share search, single quote, batch quotes |
 
 ## Stock Code Format
 
