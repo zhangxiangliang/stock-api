@@ -1,4 +1,9 @@
-<h1 align="center">股票数据小助手</h1>
+<h1 align="center">stock-api</h1>
+
+<p align="center">
+  Stock market data API for Node.js and TypeScript.<br>
+  支持 A 股、港股、美股行情查询的 Node.js 股票数据工具。
+</p>
 
 <p align="center">
   <a href="https://npmcharts.com/compare/stock-api?minimal=true"><img src="https://img.shields.io/npm/dm/stock-api.svg?sanitize=true" alt="Downloads"></a>
@@ -7,9 +12,29 @@
   <a href="https://www.npmjs.com/package/stock-api"><img src="https://img.shields.io/badge/language-typescript-blue" alt="TypeScript"></a>
 </p>
 
-`stock-api` 是一个零运行时依赖的股票行情数据工具，支持 Node.js API 和命令行查询。
+`stock-api` is a zero-runtime-dependency stock market data toolkit for Node.js. It provides a TypeScript API and CLI for retrieving stock quotes and searching symbols from public market data sources.
+
+`stock-api` 是一个零运行时依赖的股票行情数据工具，支持 Node.js API 和命令行查询，可用于 A 股、港股、美股行情查询和股票搜索。
 
 > 行情数据来自第三方公开接口。库会尽量保留数据源真实返回，不做跨源兜底。
+>
+> Market data comes from third-party public endpoints. This package keeps provider responses transparent and does not silently fall back across data sources.
+
+## Features
+
+- Node.js stock market data API with TypeScript types
+- CLI commands for quick stock quote lookup and symbol search
+- Supports Tencent and Sina data sources
+- Supports A-share, Hong Kong, and US market code formats
+- Zero runtime dependencies
+
+## 功能特性
+
+- 提供带 TypeScript 类型的 Node.js 股票行情 API
+- 支持 CLI 快速查询股票行情和搜索股票代码
+- 支持腾讯股票、新浪股票数据源
+- 支持 A 股、港股、美股代码格式
+- 零运行时依赖
 
 ## 安装
 
@@ -19,7 +44,7 @@ npm install stock-api
 
 要求 Node.js `>=18`。
 
-## 快速使用
+## Quick Start / 快速使用
 
 ### JavaScript
 
@@ -52,14 +77,14 @@ npx stock-api get-stock SH510500 --source sina
 npx stock-api search 格力电器 -s sina
 ```
 
-## 数据源
+## Data Sources / 数据源
 
 | 名称 | source | 状态 |
 | --- | --- | --- |
 | 腾讯股票 | `tencent` | 支持搜索、单只行情、批量行情 |
 | 新浪股票 | `sina` | 支持搜索、单只行情、批量行情 |
 
-## 股票代码
+## Stock Code Format / 股票代码
 
 统一使用 `交易所 + 股票代码`：
 
@@ -70,7 +95,7 @@ npx stock-api search 格力电器 -s sina
 | 香港交易所 | `HK` | `HK02020` |
 | 美国市场 | `US` | `USDJI` |
 
-返回结构：
+Return shape / 返回结构：
 
 ```typescript
 type Stock = {
@@ -92,7 +117,19 @@ type Stock = {
 | [项目架构](docs/architecture.md) | 目录结构、数据流、provider 工厂、解析和错误模型 |
 | [开发指南](docs/development.md) | 本地开发、测试策略、CI、发布前检查、新增数据源 |
 
-## 开发
+## Browser Usage / 浏览器使用
+
+`stock-api` is designed for Node.js, backend services, serverless functions, and CLI usage. Direct browser usage is not recommended because third-party market data endpoints may block cross-origin requests or return non-UTF-8 encoded responses.
+
+`stock-api` 主要面向 Node.js、后端服务、Serverless 函数和 CLI 场景。不建议在浏览器前端直接请求第三方行情接口，因为数据源可能存在 CORS 限制和非 UTF-8 编码问题。
+
+Recommended architecture / 推荐架构：
+
+```text
+frontend -> your backend API -> stock-api -> market data source
+```
+
+## Development / 开发
 
 ```shell
 npm install
@@ -108,7 +145,7 @@ node dist/cli.js --help
 node dist/cli.js get-stock SH510500
 ```
 
-## 发布
+## Release / 发布
 
 项目使用 semantic-release 自动发布到 npm。合并或推送到 `main` 后，GitHub Actions 会根据 commit message 自动计算版本号、更新 changelog、创建 GitHub Release，并发布 npm 包。
 
