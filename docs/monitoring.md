@@ -24,6 +24,12 @@ README badges read these files through shields.io endpoint badges:
 https://raw.githubusercontent.com/zhangxiangliang/stock-api/api-status/{source}.json
 ```
 
+Chinese README badges use:
+
+```text
+https://raw.githubusercontent.com/zhangxiangliang/stock-api/api-status/{source}.zh-CN.json
+```
+
 Run locally:
 
 ```shell

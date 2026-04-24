@@ -78,6 +78,12 @@ for (const result of results) {
     message: result.message,
     color: result.ok ? "brightgreen" : "red",
   });
+  await writeBadge(`${result.id}.zh-CN.json`, {
+    schemaVersion: 1,
+    label: getChineseLabel(result.id),
+    message: result.ok ? "可用" : "不可用",
+    color: result.ok ? "brightgreen" : "red",
+  });
 }
 
 const upCount = results.filter((result) => result.ok).length;
@@ -85,6 +91,12 @@ await writeBadge("index.json", {
   schemaVersion: 1,
   label: "api status",
   message: `${upCount}/${results.length} up`,
+  color: upCount === results.length ? "brightgreen" : upCount > 0 ? "yellow" : "red",
+});
+await writeBadge("index.zh-CN.json", {
+  schemaVersion: 1,
+  label: "接口状态",
+  message: `${upCount}/${results.length} 可用`,
   color: upCount === results.length ? "brightgreen" : upCount > 0 ? "yellow" : "red",
 });
 
@@ -175,4 +187,14 @@ async function writeBadge(name, payload) {
 
 function escapeMarkdown(value) {
   return value.replace(/\|/g, "\\|").replace(/\n/g, " ");
+}
+
+function getChineseLabel(id) {
+  const labels = {
+    tencent: "腾讯",
+    sina: "新浪",
+    eastmoney: "东方财富",
+  };
+
+  return labels[id] || id;
 }
