@@ -16,6 +16,13 @@
   <a href="https://www.npmjs.com/package/stock-api"><img src="https://img.shields.io/badge/language-typescript-blue" alt="TypeScript"></a>
 </p>
 
+<p align="center">
+  <img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fzhangxiangliang%2Fstock-api%2Fapi-status%2Findex.json" alt="API Status">
+  <img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fzhangxiangliang%2Fstock-api%2Fapi-status%2Ftencent.json" alt="Tencent Status">
+  <img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fzhangxiangliang%2Fstock-api%2Fapi-status%2Fsina.json" alt="Sina Status">
+  <img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fzhangxiangliang%2Fstock-api%2Fapi-status%2Feastmoney.json" alt="Eastmoney Status">
+</p>
+
 `stock-api` 是一个零运行时依赖的股票行情数据工具，支持 Node.js API 和命令行查询，可用于 A 股、港股、美股行情查询和股票搜索。
 
 > 行情数据来自第三方公开接口。库会尽量保留数据源真实返回，不做跨源兜底。
@@ -111,6 +118,7 @@ type Stock = {
 | [CLI 使用](docs/cli.md) | 命令、参数、输出、退出码、本地模拟 `npx` |
 | [项目架构](docs/architecture.md) | 目录结构、数据流、provider 工厂、解析和错误模型 |
 | [开发指南](docs/development.md) | 本地开发、测试策略、CI、发布前检查、新增数据源 |
+| [API 监控](docs/monitoring.md) | 定时检查第三方数据源并更新 README 状态徽章 |
 
 ## 浏览器使用
 

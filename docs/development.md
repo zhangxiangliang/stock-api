@@ -23,6 +23,7 @@ npm install
 | `npm run test:integration` | 访问真实腾讯/新浪/东方财富接口 |
 | `npm run validate` | CI 验证命令：build + typecheck + unit |
 | `npm pack --dry-run` | 检查 npm 发布产物 |
+| `node scripts/check-api-status.mjs` | 检查真实数据源并生成本地状态文件 |
 
 推荐开发循环：
 
@@ -102,6 +103,19 @@ CI 执行：
 ```shell
 npm ci
 npm run validate
+```
+
+## API Monitor
+
+GitHub Actions 里的 `API Monitor` 工作流每天定时运行一次，也支持手动触发。它会访问真实腾讯、新浪、东方财富接口，并把 shields.io endpoint JSON 发布到 `api-status` 分支。
+
+README 里的状态徽章读取 `api-status` 分支，因此监控更新不会推送到 `main`，也不会触发 npm 发布流程。
+
+本地调试：
+
+```shell
+npm run build
+node scripts/check-api-status.mjs
 ```
 
 ## 新增数据源流程
