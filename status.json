@@ -1,27 +1,26 @@
 {
-  "checkedAt": "2026-04-24T09:11:32.640Z",
+  "checkedAt": "2026-04-24T09:14:49.572Z",
   "results": [
     {
       "id": "tencent",
       "label": "tencent",
       "ok": true,
       "message": "up",
-      "durationMs": 2680
+      "durationMs": 3087
     },
     {
       "id": "sina",
       "label": "sina",
       "ok": true,
       "message": "up",
-      "durationMs": 2539
+      "durationMs": 2866
     },
     {
       "id": "eastmoney",
       "label": "eastmoney",
-      "ok": false,
-      "message": "down",
-      "durationMs": 60002,
-      "error": "Timed out after 60000ms"
+      "ok": true,
+      "message": "up",
+      "durationMs": 4256
     }
   ]
 }
