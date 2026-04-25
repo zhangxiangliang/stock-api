@@ -1,9 +1,9 @@
 # stock-api status
 
-Checked at: 2026-04-24T09:19:20.278Z
+Checked at: 2026-04-25T03:50:59.239Z
 
 | Source | Status | Duration | Error |
 | --- | --- | ---: | --- |
-tencent | up | 2771ms | 
-sina | up | 2309ms | 
-eastmoney | up | 4262ms | 
+tencent | up | 3147ms | 
+sina | up | 4377ms | 
+eastmoney | up | 5911ms | 
