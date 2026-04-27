@@ -107,7 +107,7 @@ npm run validate
 
 ## API Monitor
 
-GitHub Actions 里的 `API Monitor` 工作流每天定时运行一次，也支持手动触发。它会访问真实腾讯、新浪、东方财富接口，并把 shields.io endpoint JSON 发布到 `api-status` 分支。
+GitHub Actions 里的 `API Monitor` 工作流每小时定时运行一次，也支持手动触发。它会访问真实腾讯、新浪、东方财富接口，并把状态文件发布到 `api-status` 分支。
 
 README 里的状态徽章读取 `api-status` 分支，因此监控更新不会推送到 `main`，也不会触发 npm 发布流程。
 

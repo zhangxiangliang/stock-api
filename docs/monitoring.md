@@ -3,7 +3,7 @@
 `stock-api` uses a scheduled GitHub Actions workflow to check whether third-party
 market data sources are still reachable.
 
-The workflow runs daily and can also be started manually from GitHub Actions:
+The workflow runs hourly and can also be started manually from GitHub Actions:
 
 ```text
 API Monitor
