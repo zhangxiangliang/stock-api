@@ -33,7 +33,9 @@ jobs:
         run: npm run build
 
       - name: Check APIs
-        run: node scripts/check-api-status.mjs
+        run: |
+          node scripts/check-api-status.mjs
+          echo "BADGE_VERSION=$(date -u +%Y%m%d%H%M)" >> "$GITHUB_ENV"
 
       - name: Publish status
         run: |
@@ -55,3 +57,14 @@ jobs:
           git add .
           git commit -m "chore: update api status" || exit 0
           git push origin HEAD:api-status
+
+      - name: Refresh README badge URLs
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          git switch main
+          git reset --hard origin/main
+          node scripts/update-readme-badge-versions.mjs "$BADGE_VERSION"
+          git add README.md README.EN.md
+          git commit -m "chore: refresh api status badges" || exit 0
+          git push origin main
