@@ -218,10 +218,10 @@ function createSvgBadge(payload) {
     <rect width="${width}" height="20" fill="url(#s)"/>
   </g>
   <g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision" font-size="110">
-    <text aria-hidden="true" x="${labelWidth * 5}" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="${(labelWidth - 10) * 10}">${escapeXml(payload.label)}</text>
-    <text x="${labelWidth * 5}" y="140" transform="scale(.1)" fill="#fff" textLength="${(labelWidth - 10) * 10}">${escapeXml(payload.label)}</text>
-    <text aria-hidden="true" x="${labelWidth * 10 + messageWidth * 5}" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="${(messageWidth - 10) * 10}">${escapeXml(payload.message)}</text>
-    <text x="${labelWidth * 10 + messageWidth * 5}" y="140" transform="scale(.1)" fill="#fff" textLength="${(messageWidth - 10) * 10}">${escapeXml(payload.message)}</text>
+    <text aria-hidden="true" x="${labelWidth * 5}" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)">${escapeXml(payload.label)}</text>
+    <text x="${labelWidth * 5}" y="140" transform="scale(.1)" fill="#fff">${escapeXml(payload.label)}</text>
+    <text aria-hidden="true" x="${labelWidth * 10 + messageWidth * 5}" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)">${escapeXml(payload.message)}</text>
+    <text x="${labelWidth * 10 + messageWidth * 5}" y="140" transform="scale(.1)" fill="#fff">${escapeXml(payload.message)}</text>
   </g>
 </svg>
 `;
