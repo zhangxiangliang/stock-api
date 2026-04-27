@@ -72,33 +72,43 @@ for (const check of checks) {
 }
 
 for (const result of results) {
-  await writeBadge(`${result.id}.json`, {
+  const badge = {
     schemaVersion: 1,
     label: result.label,
     message: result.message,
     color: result.ok ? "brightgreen" : "red",
-  });
-  await writeBadge(`${result.id}.zh-CN.json`, {
+  };
+  const zhBadge = {
     schemaVersion: 1,
     label: getChineseLabel(result.id),
     message: result.ok ? "可用" : "不可用",
     color: result.ok ? "brightgreen" : "red",
-  });
+  };
+
+  await writeBadge(`${result.id}.json`, badge);
+  await writeBadge(`${result.id}.zh-CN.json`, zhBadge);
+  await writeSvgBadge(`${result.id}.svg`, badge);
+  await writeSvgBadge(`${result.id}.zh-CN.svg`, zhBadge);
 }
 
 const upCount = results.filter((result) => result.ok).length;
-await writeBadge("index.json", {
+const statusBadge = {
   schemaVersion: 1,
   label: "api status",
   message: `${upCount}/${results.length} up`,
   color: upCount === results.length ? "brightgreen" : upCount > 0 ? "yellow" : "red",
-});
-await writeBadge("index.zh-CN.json", {
+};
+const zhStatusBadge = {
   schemaVersion: 1,
   label: "接口状态",
   message: `${upCount}/${results.length} 可用`,
   color: upCount === results.length ? "brightgreen" : upCount > 0 ? "yellow" : "red",
-});
+};
+
+await writeBadge("index.json", statusBadge);
+await writeBadge("index.zh-CN.json", zhStatusBadge);
+await writeSvgBadge("index.svg", statusBadge);
+await writeSvgBadge("index.zh-CN.svg", zhStatusBadge);
 
 await fs.writeFile(
   path.join(outputDir, "status.json"),
@@ -183,6 +193,65 @@ function sleep(ms) {
 
 async function writeBadge(name, payload) {
   await fs.writeFile(path.join(outputDir, name), `${JSON.stringify(payload)}\n`);
+}
+
+async function writeSvgBadge(name, payload) {
+  await fs.writeFile(path.join(outputDir, name), createSvgBadge(payload));
+}
+
+function createSvgBadge(payload) {
+  const labelWidth = calcTextWidth(payload.label);
+  const messageWidth = calcTextWidth(payload.message);
+  const width = labelWidth + messageWidth;
+  const color = getBadgeColor(payload.color);
+
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="20" role="img" aria-label="${escapeXml(payload.label)}: ${escapeXml(payload.message)}">
+  <title>${escapeXml(payload.label)}: ${escapeXml(payload.message)}</title>
+  <linearGradient id="s" x2="0" y2="100%">
+    <stop offset="0" stop-color="#bbb" stop-opacity=".1"/>
+    <stop offset="1" stop-opacity=".1"/>
+  </linearGradient>
+  <clipPath id="r"><rect width="${width}" height="20" rx="3" fill="#fff"/></clipPath>
+  <g clip-path="url(#r)">
+    <rect width="${labelWidth}" height="20" fill="#555"/>
+    <rect x="${labelWidth}" width="${messageWidth}" height="20" fill="${color}"/>
+    <rect width="${width}" height="20" fill="url(#s)"/>
+  </g>
+  <g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision" font-size="110">
+    <text aria-hidden="true" x="${labelWidth * 5}" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="${(labelWidth - 10) * 10}">${escapeXml(payload.label)}</text>
+    <text x="${labelWidth * 5}" y="140" transform="scale(.1)" fill="#fff" textLength="${(labelWidth - 10) * 10}">${escapeXml(payload.label)}</text>
+    <text aria-hidden="true" x="${labelWidth * 10 + messageWidth * 5}" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="${(messageWidth - 10) * 10}">${escapeXml(payload.message)}</text>
+    <text x="${labelWidth * 10 + messageWidth * 5}" y="140" transform="scale(.1)" fill="#fff" textLength="${(messageWidth - 10) * 10}">${escapeXml(payload.message)}</text>
+  </g>
+</svg>
+`;
+}
+
+function calcTextWidth(text) {
+  const asciiCount = Array.from(text).filter((char) => char.charCodeAt(0) <= 0x7f).length;
+  const wideCount = Array.from(text).length - asciiCount;
+
+  return Math.max(40, asciiCount * 7 + wideCount * 13 + 10);
+}
+
+function getBadgeColor(color) {
+  const colors = {
+    brightgreen: "#4c1",
+    green: "#97ca00",
+    yellow: "#dfb317",
+    orange: "#fe7d37",
+    red: "#e05d44",
+  };
+
+  return colors[color] || color || "#9f9f9f";
+}
+
+function escapeXml(value) {
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
 }
 
 function escapeMarkdown(value) {

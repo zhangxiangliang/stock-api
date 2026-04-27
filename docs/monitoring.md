@@ -18,15 +18,16 @@ It checks:
 The generated status files are published to the `api-status` branch instead of
 `main`, so scheduled monitoring does not trigger npm releases.
 
-README badges read these files through shields.io endpoint badges:
+README badges read generated SVG files directly from the `api-status` branch:
+
+```text
+https://raw.githubusercontent.com/zhangxiangliang/stock-api/api-status/{source}.svg
+```
+
+The workflow also keeps shields.io-compatible JSON files for debugging or reuse:
 
 ```text
 https://raw.githubusercontent.com/zhangxiangliang/stock-api/api-status/{source}.json
-```
-
-Chinese README badges use:
-
-```text
 https://raw.githubusercontent.com/zhangxiangliang/stock-api/api-status/{source}.zh-CN.json
 ```
 
