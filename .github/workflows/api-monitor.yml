@@ -2,7 +2,7 @@ name: API Monitor
 
 on:
   schedule:
-    - cron: "12 * * * *"
+    - cron: "33 * * * *"
   workflow_dispatch:
 
 permissions:
