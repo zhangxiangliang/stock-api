@@ -24,6 +24,10 @@ README badges read generated SVG files directly from the `api-status` branch:
 https://raw.githubusercontent.com/zhangxiangliang/stock-api/api-status/{source}.svg
 ```
 
+After every monitor run, the workflow also updates the README badge URLs with a
+new `?v=YYYYMMDDHHMM` query string. This gives GitHub a fresh image URL and
+reduces stale badge caching.
+
 The workflow also keeps shields.io-compatible JSON files for debugging or reuse:
 
 ```text

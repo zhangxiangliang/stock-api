@@ -17,10 +17,10 @@
 </p>
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/zhangxiangliang/stock-api/api-status/index.svg" alt="API Status">
-  <img src="https://raw.githubusercontent.com/zhangxiangliang/stock-api/api-status/tencent.svg" alt="Tencent Status">
-  <img src="https://raw.githubusercontent.com/zhangxiangliang/stock-api/api-status/sina.svg" alt="Sina Status">
-  <img src="https://raw.githubusercontent.com/zhangxiangliang/stock-api/api-status/eastmoney.svg" alt="Eastmoney Status">
+  <img src="https://raw.githubusercontent.com/zhangxiangliang/stock-api/api-status/index.svg?v=202604270050" alt="API Status">
+  <img src="https://raw.githubusercontent.com/zhangxiangliang/stock-api/api-status/tencent.svg?v=202604270050" alt="Tencent Status">
+  <img src="https://raw.githubusercontent.com/zhangxiangliang/stock-api/api-status/sina.svg?v=202604270050" alt="Sina Status">
+  <img src="https://raw.githubusercontent.com/zhangxiangliang/stock-api/api-status/eastmoney.svg?v=202604270050" alt="Eastmoney Status">
 </p>
 
 `stock-api` is a zero-runtime-dependency stock market data toolkit for Node.js. It provides a TypeScript API and CLI for retrieving stock quotes and searching symbols from public market data sources.
