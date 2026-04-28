@@ -1,6 +1,6 @@
 {
   "name": "stock-api",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "Stock market data API for Node.js and TypeScript",
   "repository": "https://github.com/zhangxiangliang/stock-api",
   "author": "zhangxiangliang",

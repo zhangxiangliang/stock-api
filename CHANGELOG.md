@@ -1,3 +1,10 @@
+# [2.3.0](https://github.com/zhangxiangliang/stock-api/compare/v2.2.0...v2.3.0) (2026-04-28)
+
+
+### Features
+
+* add stock source inspection ([24e55d3](https://github.com/zhangxiangliang/stock-api/commit/24e55d34fc64f72d20d9ea30f7296c109fa0d95c))
+
 # [2.2.0](https://github.com/zhangxiangliang/stock-api/compare/v2.1.0...v2.2.0) (2026-04-28)
 
 
