@@ -1,1 +1,2 @@
-npm run validate
+npm run lint
+npm run ci
