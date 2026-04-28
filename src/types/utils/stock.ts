@@ -1,3 +1,5 @@
+export type StockSource = "base" | "eastmoney" | "sina" | "tencent";
+
 export interface Stock {
   name: string;
   code: string;
@@ -6,6 +8,7 @@ export interface Stock {
   high: number;
   percent: number;
   yesterday: number;
+  source?: StockSource;
 }
 
 export default Stock;
