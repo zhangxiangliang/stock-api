@@ -37,6 +37,8 @@ npm run lint
 npm run test:unit
 ```
 
+`npm install` 会安装 Husky pre-commit hook。提交前会自动运行 `npm run validate`，确保 build、lint、typecheck 和单元测试都通过，再允许生成 commit。
+
 发布前检查：
 
 ```shell

@@ -37,6 +37,8 @@ npm run lint
 npm run test:unit
 ```
 
+`npm install` installs the Husky pre-commit hook. Before each commit, it runs `npm run validate` and only allows the commit when build, lint, typecheck, and unit tests pass.
+
 Before release:
 
 ```shell
