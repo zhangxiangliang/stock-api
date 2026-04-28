@@ -21,6 +21,7 @@ const refererHeader = [["Referer", "https://finance.sina.com.cn/"]] as const;
  * 新浪股票代码接口
  */
 const Sina = createStockProvider({
+  source: "sina",
   quote: {
     codeTransform: SinaCommonCodeTransform,
     delimiter: ",",

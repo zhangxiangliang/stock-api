@@ -1,5 +1,7 @@
 # 开发指南
 
+[English](development.EN.md) | [简体中文](development.md)
+
 这份文档面向维护者，说明如何开发、测试、扩展和发布前检查。
 
 ## 环境要求
@@ -72,7 +74,7 @@ fixture 的目标是把真实数据源返回固化下来，避免解析逻辑改
 
 ### Integration
 
-`test/integration` 会访问真实腾讯和新浪接口。
+`test/integration` 会访问真实腾讯、新浪和东方财富接口。
 
 这些测试适合：
 
@@ -109,7 +111,7 @@ npm run validate
 
 GitHub Actions 里的 `API Monitor` 工作流每小时定时运行一次，也支持手动触发。它会访问真实腾讯、新浪、东方财富接口，并把状态文件发布到 `api-status` 分支。
 
-README 里的状态徽章读取 `api-status` 分支，因此监控更新不会推送到 `main`，也不会触发 npm 发布流程。
+README 里的状态徽章读取 `api-status` 分支。工作流还会把 README 徽章 URL 里的 `v=YYYYMMDDHHMM` 刷新到 `main`，用于减少 GitHub 图片缓存。这个提交使用 `chore:`，不会触发 npm 新版本发布。
 
 本地调试：
 
@@ -185,6 +187,7 @@ import ExampleCommonCodeTransform from "./transforms/common-code";
 import { parseExampleStock } from "./transforms/stock";
 
 const Example = createStockProvider({
+  source: "example",
   quote: {
     codeTransform: ExampleCommonCodeTransform,
     delimiter: ",",
@@ -221,6 +224,13 @@ export default Example;
 src/stocks/index.ts
 ```
 
+同时把新数据源加入：
+
+- `StockProviderName`
+- `StockSource`
+- `sourceNames`
+- `stocks.auto` 的 provider 顺序
+
 ### 6. 补测试
 
 至少补：
@@ -239,9 +249,11 @@ src/stocks/index.ts
 }
 ```
 
-发布前确认：
+发布前建议确认：
 
 ```shell
+npm run validate
+npm run test:integration
 npm pack --dry-run
 ```
 

@@ -1,49 +1,50 @@
-# API Monitoring
+# API 监控
 
-`stock-api` uses a scheduled GitHub Actions workflow to check whether third-party
-market data sources are still reachable.
+[English](monitoring.EN.md) | [简体中文](monitoring.md)
 
-The workflow runs hourly and can also be started manually from GitHub Actions:
+`stock-api` 使用 GitHub Actions 定时检查第三方行情接口是否可用。
+
+## 运行时间
+
+`API Monitor` 工作流每小时第 33 分钟运行一次，也可以在 GitHub Actions 页面手动触发。
 
 ```text
 API Monitor
 ```
 
-It checks:
+## 检查内容
 
-- Tencent quote and search
-- Sina quote and search
-- Eastmoney quote and search
+- 腾讯行情和搜索
+- 新浪行情和搜索
+- 东方财富行情和搜索
 
-The generated status files are published to the `api-status` branch instead of
-`main`, so scheduled monitoring does not trigger npm releases.
+## 状态文件
 
-README badges use shields.io endpoint badges backed by JSON files on the
-`api-status` branch:
+检查结果会发布到 `api-status` 分支。README 徽章通过 shields.io endpoint 读取这些 JSON 文件：
 
 ```text
 https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fzhangxiangliang%2Fstock-api%2Fapi-status%2F{source}.json
 ```
 
-After every monitor run, the workflow also updates the README badge URLs with a
-new `?v=YYYYMMDDHHMM` query string. This gives GitHub a fresh image URL and
-reduces stale badge caching.
+工作流还会把 README 徽章 URL 中的 `v=YYYYMMDDHHMM` 更新到 `main`，减少 GitHub 图片缓存导致的状态滞后。这个提交使用 `chore:`，不会发布新的 npm 版本。
 
-The workflow also keeps generated SVG files for debugging or fallback use:
+## SVG 备用文件
+
+工作流也会保留生成的 SVG 文件，方便调试或备用：
 
 ```text
 https://raw.githubusercontent.com/zhangxiangliang/stock-api/api-status/{source}.svg
 https://raw.githubusercontent.com/zhangxiangliang/stock-api/api-status/{source}.zh-CN.svg
 ```
 
-Run locally:
+## 本地运行
 
 ```shell
 npm run build
 node scripts/check-api-status.mjs
 ```
 
-Generated local files are written to:
+本地生成文件会写入：
 
 ```text
 status/

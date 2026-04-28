@@ -3,7 +3,8 @@ import fetch from "../../utils/fetch";
 import iconv from "../../utils/iconv";
 import { DEFAULT_STOCK } from "../../utils/constant";
 import StockApi from "../../types/stocks";
-import Stock from "../../types/utils/stock";
+import Stock, { StockSource } from "../../types/utils/stock";
+import { normalizeStock } from "./normalize";
 
 type CodeTransform = {
   transform(code: string): string;
@@ -30,9 +31,24 @@ type SearchConfig = {
 };
 
 export type StockProviderConfig = {
+  source: Exclude<StockSource, "base">;
   quote: QuoteConfig;
   search: SearchConfig;
 };
+
+export type StockInspectionStatus = "empty" | "error" | "success";
+
+export type StockProviderInspection = {
+  code: string;
+  source: Exclude<StockSource, "base">;
+  status: StockInspectionStatus;
+  stock?: Stock;
+  error?: string;
+};
+
+export interface StockProviderApi extends StockApi {
+  inspectStock(code: string): Promise<StockProviderInspection>;
+}
 
 export function normalizeCodes(codes: string[]): string[] {
   return uniq(codes.filter((code) => code !== ""));
@@ -55,7 +71,7 @@ export function getDelimitedParams(row: string, delimiter: string): string[] {
   return getAssignedValue(row).replace('"', "").split(delimiter);
 }
 
-export function createStockProvider(config: StockProviderConfig): StockApi {
+export function createStockProvider(config: StockProviderConfig): StockProviderApi {
   async function getStocks(codes: string[]): Promise<Stock[]> {
     const normalizedCodes = normalizeCodes(codes);
 
@@ -84,7 +100,7 @@ export function createStockProvider(config: StockProviderConfig): StockApi {
     });
   }
 
-  return {
+  const api: StockProviderApi = {
     async getStock(code: string): Promise<Stock> {
       const [stock] = await getStocks([code]);
       return stock || createMissingStock(code);
@@ -100,7 +116,45 @@ export function createStockProvider(config: StockProviderConfig): StockApi {
       });
       return getStocks(config.search.parseCodes(body));
     },
+
+    async inspectStock(code: string): Promise<StockProviderInspection> {
+      return createStockInspection(config.source, code, api.getStock);
+    },
   };
+
+  return api;
+}
+
+export async function createStockInspection(
+  source: Exclude<StockSource, "base">,
+  code: string,
+  getStock: (code: string) => Promise<Stock>
+): Promise<StockProviderInspection> {
+  try {
+    const stock = normalizeStock(await getStock(code), source);
+
+    return {
+      code,
+      source,
+      status: isAvailableStock(stock) ? "success" : "empty",
+      stock,
+    };
+  } catch (error) {
+    return {
+      code,
+      source,
+      status: "error",
+      error: getErrorMessage(error),
+    };
+  }
+}
+
+function isAvailableStock(stock: Stock | undefined): stock is Stock {
+  return Boolean(stock && stock.name !== DEFAULT_STOCK.name);
+}
+
+function getErrorMessage(error: unknown): string {
+  return error instanceof Error ? error.message : String(error);
 }
 
 async function requestText(options: {

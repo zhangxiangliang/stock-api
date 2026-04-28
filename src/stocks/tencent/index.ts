@@ -15,6 +15,7 @@ import { createStockProvider, normalizeCodes } from "../shared/provider";
  * 腾讯股票代码接口
  */
 const Tencent = createStockProvider({
+  source: "tencent",
   quote: {
     codeTransform: TencentCommonCodeTransform,
     delimiter: "~",

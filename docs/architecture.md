@@ -1,5 +1,7 @@
 # 项目架构
 
+[English](architecture.EN.md) | [简体中文](architecture.md)
+
 这份文档说明 `stock-api` 的代码结构、核心数据流和后续扩展方式。
 
 ## 目标
@@ -29,7 +31,7 @@ src/
     base/                      # 基础 provider 和默认错误行为
     shared/
       code-mapper.ts           # 统一代码映射工厂
-      normalize.ts             # 自动模式的标准字段补充
+      normalize.ts             # 给自动模式和诊断结果补充 source
       provider.ts              # 股票数据源 provider 工厂
     eastmoney/                 # 东方财富数据源配置和解析
     sina/                      # 新浪数据源配置和解析
@@ -58,6 +60,7 @@ stocks.tencent
 stocks.sina
 stocks.eastmoney
 stocks.auto
+stocks.getSources()
 ```
 
 每个数据源都实现同一个接口：
@@ -67,10 +70,29 @@ type StockApi = {
   getStock(code: string): Promise<Stock>;
   getStocks(codes: string[]): Promise<Stock[]>;
   searchStocks(key: string): Promise<Stock[]>;
+  inspectStock(code: string): Promise<AutoStockInspection | StockProviderInspection>;
 };
 ```
 
+`stocks.getSources()` 返回当前可直接指定的数据源：
+
+```typescript
+["tencent", "sina", "eastmoney"]
+```
+
 `stocks.auto` 同样实现 `StockApi`，但会按 `tencent -> sina -> eastmoney` 顺序尝试。返回结果会补充 `source`，用于标记实际返回数据的数据源。
+
+自动模式还提供诊断方法：
+
+```typescript
+const inspection = await stocks.auto.inspectStock("SH510500");
+```
+
+`inspection.sources` 会记录全部数据源，以及每个数据源的 `success`、`empty` 或 `error` 状态。具体数据源也提供同名诊断方法：
+
+```typescript
+const inspection = await stocks.sina.inspectStock("SH510500");
+```
 
 ## 数据流
 
@@ -93,6 +115,7 @@ type StockApi = {
 - `getStock`
 - `getStocks`
 - `searchStocks`
+- `inspectStock`
 - 请求和解码
 - 缺失股票默认数据
 - 原始行切分和参数切分
@@ -101,6 +124,7 @@ type StockApi = {
 
 ```typescript
 const Tencent = createStockProvider({
+  source: "tencent",
   quote: {
     codeTransform,
     delimiter: "~",
