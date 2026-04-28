@@ -111,7 +111,7 @@ npm run validate
 
 GitHub Actions 里的 `API Monitor` 工作流每小时定时运行一次，也支持手动触发。它会访问真实腾讯、新浪、东方财富接口，并把状态文件发布到 `api-status` 分支。
 
-README 里的状态徽章读取 `api-status` 分支。工作流还会把 README 徽章 URL 里的 `v=YYYYMMDDHHMM` 刷新到 `main`，用于减少 GitHub 图片缓存。这个提交使用 `chore:`，不会触发 npm 新版本发布。
+README 里的状态徽章读取 `api-status` 分支。监控工作流不会修改 `main`；`api-status` 只保留最新状态快照，不堆积历史提交；徽章由 shields.io 根据 `cacheSeconds=300` 自动刷新。
 
 本地调试：
 

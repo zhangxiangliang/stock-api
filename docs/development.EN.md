@@ -74,7 +74,7 @@ npm run validate
 
 The `API Monitor` workflow runs hourly and can be triggered manually. It checks real Tencent, Sina, and Eastmoney endpoints and publishes status files to the `api-status` branch.
 
-README badges read from `api-status`. The workflow also refreshes README badge URLs on `main` with `v=YYYYMMDDHHMM` to reduce GitHub image caching. That commit uses `chore:` and does not publish a new npm version.
+README badges read from `api-status`. The monitor workflow does not modify `main`; `api-status` only keeps the latest status snapshot instead of accumulating historical commits; shields.io refreshes badges according to `cacheSeconds=300`.
 
 Run locally:
 

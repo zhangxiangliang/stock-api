@@ -26,7 +26,7 @@ Generated status files are published to the `api-status` branch. README badges u
 https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fzhangxiangliang%2Fstock-api%2Fapi-status%2F{source}.json
 ```
 
-The workflow also refreshes README badge URLs on `main` with `v=YYYYMMDDHHMM`, which reduces stale GitHub image caching. That commit uses `chore:` and does not publish a new npm version.
+README badge URLs are stable and are not changed by monitor runs. `api-status` is a snapshot branch: each run overwrites it with the latest status instead of keeping historical commits. shields.io refreshes status according to `cacheSeconds=300`. If check time needs to be displayed, it should be represented in the status files on the `api-status` branch instead of changing README URLs.
 
 ## SVG Fallback
 
