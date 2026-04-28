@@ -1,8 +1,11 @@
-import StockApi from "../../types/stocks";
 import Stock from "../../types/utils/stock";
 import { DEFAULT_STOCK } from "../../utils/constant";
 import fetch from "../../utils/fetch";
-import { normalizeCodes } from "../shared/provider";
+import {
+  createStockInspection,
+  normalizeCodes,
+  StockProviderApi,
+} from "../shared/provider";
 import EastmoneyCommonCodeTransform from "./transforms/common-code";
 import {
   EastmoneyQuote,
@@ -41,7 +44,7 @@ async function getStocks(codes: string[]): Promise<Stock[]> {
   return Promise.all(normalizedCodes.map(fetchOneStock));
 }
 
-const Eastmoney: StockApi = {
+const Eastmoney: StockProviderApi = {
   async getStock(code: string): Promise<Stock> {
     const [stock] = await getStocks([code]);
     return stock || createMissingStock(code);
@@ -60,6 +63,10 @@ const Eastmoney: StockApi = {
       .filter(Boolean) as string[];
 
     return getStocks(codes);
+  },
+
+  async inspectStock(code: string) {
+    return createStockInspection("eastmoney", code, Eastmoney.getStock);
   },
 };
 

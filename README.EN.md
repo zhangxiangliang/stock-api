@@ -23,16 +23,14 @@
   <img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fzhangxiangliang%2Fstock-api%2Fapi-status%2Feastmoney.json&cacheSeconds=300&v=202604270050" alt="Eastmoney Status">
 </p>
 
-`stock-api` is a zero-runtime-dependency stock market data toolkit for Node.js. It provides a TypeScript API and CLI for retrieving stock quotes and searching symbols from public market data sources.
-
-> Market data comes from third-party public endpoints. `stocks.auto` and the default CLI mode fall back across providers; explicit providers keep their raw provider behavior.
+`stock-api` is a zero-runtime-dependency stock market data toolkit with a Node.js API and CLI. Use `stocks.auto` by default for provider fallback, or call Tencent, Sina, or Eastmoney directly.
 
 ## Features
 
-- Node.js stock market data API with TypeScript types
-- CLI commands for quick stock quote lookup and symbol search
-- Automatic provider fallback with the actual source included in the result
-- Tencent, Sina, and Eastmoney market data sources
+- Node.js API with TypeScript types
+- CLI for quote lookup and symbol search
+- Default fallback order: `tencent -> sina -> eastmoney`
+- Direct providers: `stocks.tencent` / `stocks.sina` / `stocks.eastmoney`
 - A-share, Hong Kong, and US market code formats
 - Zero runtime dependencies
 
@@ -46,16 +44,14 @@ Requires Node.js `>=18`.
 
 ## Quick Start
 
-### JavaScript
+Use `stocks.auto` by default:
 
 ```typescript
 import { stocks } from "stock-api";
 
 const stock = await stocks.auto.getStock("SH510500");
-const tencentStock = await stocks.tencent.getStock("SH510500");
-const list = await stocks.tencent.getStocks(["SH510500", "SZ000651"]);
-const results = await stocks.tencent.searchStocks("Gree Electric");
-const eastmoneyStock = await stocks.eastmoney.getStock("SH600519");
+const list = await stocks.auto.getStocks(["SH510500", "SZ000651"]);
+const results = await stocks.auto.searchStocks("格力电器");
 ```
 
 CommonJS:
@@ -64,35 +60,57 @@ CommonJS:
 const { stocks } = require("stock-api");
 ```
 
-### CLI
+To use one provider directly, replace `auto` with the provider name:
+
+```typescript
+const stock = await stocks.tencent.getStock("SH510500");
+const list = await stocks.sina.getStocks(["SH510500", "SZ000651"]);
+const results = await stocks.eastmoney.searchStocks("贵州茅台");
+```
+
+Inspect provider status:
+
+```typescript
+const autoInspection = await stocks.auto.inspectStock("SH510500");
+const sinaInspection = await stocks.sina.inspectStock("SH510500");
+```
+
+## CLI
+
+The CLI uses `auto` mode by default:
 
 ```shell
 npx stock-api get-stock SH510500
 npx stock-api get-stocks SH510500 SZ000651
-npx stock-api search Gree
+npx stock-api search 格力电器
 ```
 
-Use a specific data source:
+Use one provider directly:
 
 ```shell
 npx stock-api get-stock SH510500 --source sina
-npx stock-api get-stock SH600519 --source eastmoney
-npx stock-api search Gree -s sina
+npx stock-api search 贵州茅台 --source eastmoney
 ```
 
-## Data Sources
+## Providers
 
-| Name | source | Status |
+| Provider | API | Features |
 | --- | --- | --- |
-| Tencent | `tencent` | Search, single quote, batch quotes |
-| Sina | `sina` | Search, single quote, batch quotes |
-| Eastmoney | `eastmoney` | A-share search, single quote, batch quotes |
+| Auto fallback | `stocks.auto` | Single quote, batch quotes, search, inspection |
+| Tencent | `stocks.tencent` | Single quote, batch quotes, search, inspection |
+| Sina | `stocks.sina` | Single quote, batch quotes, search, inspection |
+| Eastmoney | `stocks.eastmoney` | A-share single quote, batch quotes, search, inspection |
 
-The default `auto` source tries `tencent -> sina -> eastmoney`. If one provider fails or returns an empty quote, the next provider is tried.
+Available direct providers:
 
-## Stock Code Format
+```typescript
+const sources = stocks.getSources();
+// ["tencent", "sina", "eastmoney"]
+```
 
-Use `exchange prefix + stock code`:
+## Stock Codes
+
+Use `market prefix + symbol`:
 
 | Market | Prefix | Example |
 | --- | --- | --- |
@@ -101,7 +119,7 @@ Use `exchange prefix + stock code`:
 | Hong Kong market | `HK` | `HK02020` |
 | US market | `US` | `USDJI` |
 
-Return shape:
+## Return Shape
 
 ```typescript
 type Stock = {
@@ -116,56 +134,25 @@ type Stock = {
 };
 ```
 
-`stocks.auto` results include `source`, indicating the provider that returned the quote.
+`source` identifies the provider that returned the quote. `stocks.auto` and `inspectStock` include `source`; direct calls such as `stocks.tencent.getStock`, `stocks.sina.getStock`, and `stocks.eastmoney.getStock` do not fall back and keep that provider's response shape.
 
 ## Documentation
 
 | Document | Description |
 | --- | --- |
-| [CLI usage](docs/cli.md) | Commands, options, output, exit codes, and local `npx` simulation |
-| [Architecture](docs/architecture.md) | Directory layout, provider flow, parsing, and error model |
-| [Development guide](docs/development.md) | Local development, tests, CI, release checks, and adding providers |
-| [API monitoring](docs/monitoring.md) | Scheduled third-party API checks and README status badges |
+| [API usage](docs/api.EN.md) | Node.js API, automatic fallback, inspection output |
+| [CLI usage](docs/cli.EN.md) | Commands, options, output, and exit codes |
+| [Architecture](docs/architecture.EN.md) | Directory layout, provider factory, parsing, and errors |
+| [Development guide](docs/development.EN.md) | Local development, tests, release checks, and adding providers |
+| [API monitoring](docs/monitoring.EN.md) | Scheduled third-party API checks and status badges |
 
 ## Browser Usage
 
-`stock-api` is designed for Node.js, backend services, serverless functions, and CLI usage. Direct browser usage is not recommended because third-party market data endpoints may block cross-origin requests or return non-UTF-8 encoded responses.
-
-Recommended architecture:
+`stock-api` is designed for Node.js, backend services, serverless functions, and CLI usage. Direct browser usage is not recommended because third-party endpoints may block CORS or return non-UTF-8 encoded responses.
 
 ```text
 frontend -> your backend API -> stock-api -> market data source
 ```
-
-## Development
-
-```shell
-npm install
-npm run validate
-npm run test:integration
-```
-
-Test the CLI locally:
-
-```shell
-npm run build
-node dist/cli.js --help
-node dist/cli.js get-stock SH510500
-```
-
-## Release
-
-This project uses semantic-release to publish to npm automatically. After changes are merged or pushed to `main`, GitHub Actions analyzes commit messages, calculates the next version, updates the changelog, creates a GitHub Release, and publishes the npm package.
-
-Commit messages should follow Conventional Commits:
-
-```shell
-fix: fix a bug                # patch, for example 2.0.8 -> 2.0.9
-feat: add a feature           # minor, for example 2.0.8 -> 2.1.0
-feat!: introduce breaking API # major, for example 2.0.8 -> 3.0.0
-```
-
-Maintenance commits such as `chore:` do not publish a new npm version.
 
 ## License
 

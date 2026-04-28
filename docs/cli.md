@@ -1,5 +1,7 @@
 # CLI 使用
 
+[English](cli.EN.md) | [简体中文](cli.md)
+
 `stock-api` 提供命令行入口，适合临时查询、shell 脚本、CI 检查或快速验证数据源。
 
 ## 基本用法
@@ -34,7 +36,7 @@ npx stock-api --help
 
 ## get-stock
 
-获取单只股票行情。
+获取单只股票行情。默认使用 `auto`：
 
 ```shell
 npx stock-api get-stock SH510500
@@ -67,6 +69,8 @@ npx stock-api get-stock SH600519 --source eastmoney
 }
 ```
 
+`source` 表示最终返回数据的数据源。
+
 ## get-stocks
 
 批量获取股票行情。
@@ -86,7 +90,8 @@ npx stock-api get-stocks SH510500 SZ000651
     "now": 8.293,
     "low": 8.242,
     "high": 8.365,
-    "yesterday": 8.375
+    "yesterday": 8.375,
+    "source": "tencent"
   },
   {
     "code": "SZ000651",
@@ -95,14 +100,15 @@ npx stock-api get-stocks SH510500 SZ000651
     "now": 37,
     "low": 36.71,
     "high": 37.11,
-    "yesterday": 36.96
+    "yesterday": 36.96,
+    "source": "tencent"
   }
 ]
 ```
 
 ## search
 
-搜索股票，并返回匹配股票的行情数据。
+搜索股票，并返回匹配股票的行情数据。默认使用 `auto`：
 
 ```shell
 npx stock-api search 格力电器
@@ -120,6 +126,15 @@ npx stock-api search 中证 500
 npx stock-api search 格力电器 -s sina
 npx stock-api search 贵州茅台 -s eastmoney
 ```
+
+## 数据源选择
+
+| 用法 | 行为 |
+| --- | --- |
+| 不传 `--source` | 使用 `auto`，按 `tencent -> sina -> eastmoney` 自动兜底 |
+| `--source tencent` | 只使用腾讯 |
+| `--source sina` | 只使用新浪 |
+| `--source eastmoney` | 只使用东方财富 |
 
 ## 输出格式
 
@@ -161,6 +176,6 @@ npm pack --pack-destination "$tmpdir"
 mkdir "$tmpdir/app"
 cd "$tmpdir/app"
 npm init -y
-npm install "$tmpdir/stock-api-2.0.8.tgz"
+npm install "$tmpdir"/stock-api-*.tgz
 npx stock-api --help
 ```

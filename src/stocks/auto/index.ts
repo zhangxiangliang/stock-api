@@ -4,13 +4,28 @@ import Stock, { StockSource } from "../../types/utils/stock";
 import eastmoney from "../eastmoney";
 import sina from "../sina";
 import { normalizeStock } from "../shared/normalize";
-import { normalizeCodes } from "../shared/provider";
+import {
+  normalizeCodes,
+  StockProviderApi,
+  StockProviderInspection,
+} from "../shared/provider";
 import tencent from "../tencent";
 
 export type AutoStockProvider = {
   name: Exclude<StockSource, "base">;
-  api: StockApi;
+  api: StockProviderApi;
 };
+
+export type AutoStockInspection = {
+  code: string;
+  source: StockSource;
+  stock: Stock;
+  sources: StockProviderInspection[];
+};
+
+export interface AutoStockApi extends StockApi {
+  inspectStock(code: string): Promise<AutoStockInspection>;
+}
 
 const providers: AutoStockProvider[] = [
   { name: "tencent", api: tencent },
@@ -18,18 +33,10 @@ const providers: AutoStockProvider[] = [
   { name: "eastmoney", api: eastmoney },
 ];
 
-export function createAutoStockApi(autoProviders: AutoStockProvider[]): StockApi {
-  const api: StockApi = {
+export function createAutoStockApi(autoProviders: AutoStockProvider[]): AutoStockApi {
+  const api: AutoStockApi = {
     async getStock(code: string): Promise<Stock> {
-      for (const provider of autoProviders) {
-        const stock = await getProviderStock(provider, code);
-
-        if (isAvailableStock(stock)) {
-          return normalizeStock(stock, provider.name);
-        }
-      }
-
-      return normalizeStock({ ...DEFAULT_STOCK, code }, "base");
+      return (await api.inspectStock(code)).stock;
     },
 
     async getStocks(codes: string[]): Promise<Stock[]> {
@@ -50,23 +57,37 @@ export function createAutoStockApi(autoProviders: AutoStockProvider[]): StockApi
 
       return [];
     },
+
+    async inspectStock(code: string): Promise<AutoStockInspection> {
+      const sources: StockProviderInspection[] = [];
+      let selectedStock: Stock | undefined;
+      let selectedSource: StockSource = "base";
+
+      for (const provider of autoProviders) {
+        const inspection = await provider.api.inspectStock(code);
+        sources.push(inspection);
+
+        if (!selectedStock && inspection.status === "success" && inspection.stock) {
+          selectedStock = inspection.stock;
+          selectedSource = inspection.source;
+        }
+      }
+
+      const stock = selectedStock || normalizeStock({ ...DEFAULT_STOCK, code }, "base");
+
+      return {
+        code,
+        source: selectedSource,
+        stock,
+        sources,
+      };
+    },
   };
 
   return api;
 }
 
 const Auto = createAutoStockApi(providers);
-
-async function getProviderStock(
-  provider: AutoStockProvider,
-  code: string
-): Promise<Stock | undefined> {
-  try {
-    return await provider.api.getStock(code);
-  } catch {
-    return undefined;
-  }
-}
 
 async function searchProviderStocks(
   provider: AutoStockProvider,
