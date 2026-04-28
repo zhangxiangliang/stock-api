@@ -136,6 +136,14 @@ type Stock = {
 
 `source` 用于标记实际返回数据的数据源。`stocks.auto` 和 `inspectStock` 会带上 `source`；直接使用 `stocks.tencent.getStock`、`stocks.sina.getStock`、`stocks.eastmoney.getStock` 时不会自动兜底，返回结构保持该数据源的原始行为。
 
+### 字段契约
+
+`Stock` 是稳定的归一化返回结构。minor 版本不会改变已有字段含义或类型；如果未来新增能力，会优先新增可选字段。第三方数据源的原始 payload 不会混进 `Stock`，避免不同数据源把返回结构撑乱。
+
+## 服务端使用建议
+
+`stock-api` 不内置缓存和限流，保持零运行时依赖。生产环境高频调用时，建议在你的服务层按股票代码和数据源做短 TTL 缓存，并对外部请求做限流，避免频繁打到第三方行情接口。
+
 ## 文档
 
 | 文档 | 内容 |
@@ -148,7 +156,7 @@ type Stock = {
 
 ## 浏览器使用
 
-`stock-api` 面向 Node.js、后端服务、Serverless 函数和 CLI。不建议在浏览器前端直接请求第三方行情接口，因为数据源可能存在 CORS 限制和编码问题。
+`stock-api` 面向 Node.js、后端服务、Serverless 函数和 CLI。不建议在浏览器前端直接使用，因为第三方行情接口可能存在 CORS 限制、编码问题和访问频率限制。前端项目建议通过自己的 API route 或后端服务代理。
 
 ```text
 frontend -> your backend API -> stock-api -> market data source

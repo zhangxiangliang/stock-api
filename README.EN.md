@@ -136,6 +136,14 @@ type Stock = {
 
 `source` identifies the provider that returned the quote. `stocks.auto` and `inspectStock` include `source`; direct calls such as `stocks.tencent.getStock`, `stocks.sina.getStock`, and `stocks.eastmoney.getStock` do not fall back and keep that provider's response shape.
 
+### Field Contract
+
+`Stock` is the stable normalized return shape. Minor releases do not change the meaning or type of existing fields; new capabilities are added as optional fields when possible. Raw third-party payloads are not mixed into `Stock`, so provider-specific data does not make the shared shape unpredictable.
+
+## Server-Side Usage
+
+`stock-api` does not ship built-in caching or rate limiting, keeping zero runtime dependencies. For high-frequency production usage, add short-TTL caching by stock code and source in your own service layer, and rate-limit outbound requests to third-party market data endpoints.
+
 ## Documentation
 
 | Document | Description |
@@ -148,7 +156,7 @@ type Stock = {
 
 ## Browser Usage
 
-`stock-api` is designed for Node.js, backend services, serverless functions, and CLI usage. Direct browser usage is not recommended because third-party endpoints may block CORS or return non-UTF-8 encoded responses.
+`stock-api` is designed for Node.js, backend services, serverless functions, and CLI usage. Direct browser usage is not recommended because third-party endpoints may block CORS, return non-UTF-8 encoded responses, or rate-limit public clients. Frontend apps should call your own API route or backend proxy.
 
 ```text
 frontend -> your backend API -> stock-api -> market data source
