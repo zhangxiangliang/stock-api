@@ -12,9 +12,9 @@
 项目的核心原则：
 
 - 保持运行时零外部依赖
-- 保留数据源真实返回，不跨源兜底
 - 公共流程集中，数据源只描述差异
 - 单元测试不依赖外网，integration 测试才访问真实数据源
+- 指定具体数据源时保留真实返回，默认 `auto` 模式提供跨源兜底
 
 ## 目录结构
 
@@ -25,9 +25,11 @@ src/
   index.ts                     # npm 包根入口
   stocks/
     index.ts                   # 汇总并导出所有数据源
+    auto/                      # 自动数据源兜底
     base/                      # 基础 provider 和默认错误行为
     shared/
       code-mapper.ts           # 统一代码映射工厂
+      normalize.ts             # 自动模式的标准字段补充
       provider.ts              # 股票数据源 provider 工厂
     eastmoney/                 # 东方财富数据源配置和解析
     sina/                      # 新浪数据源配置和解析
@@ -55,6 +57,7 @@ import { stocks } from "stock-api";
 stocks.tencent
 stocks.sina
 stocks.eastmoney
+stocks.auto
 ```
 
 每个数据源都实现同一个接口：
@@ -66,6 +69,8 @@ type StockApi = {
   searchStocks(key: string): Promise<Stock[]>;
 };
 ```
+
+`stocks.auto` 同样实现 `StockApi`，但会按 `tencent -> sina -> eastmoney` 顺序尝试。返回结果会补充 `source`，用于标记实际返回数据的数据源。
 
 ## 数据流
 

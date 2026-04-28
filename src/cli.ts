@@ -4,14 +4,16 @@ import { stocks } from "./index";
 import StockApi from "./types/stocks";
 
 type SourceName = "eastmoney" | "sina" | "tencent";
+type CliSourceName = "auto" | SourceName;
 
 type ParsedArgs = {
   command?: string;
   values: string[];
-  source: SourceName;
+  source: CliSourceName;
 };
 
 const sourceNames: SourceName[] = ["tencent", "sina", "eastmoney"];
+const cliSourceNames: CliSourceName[] = ["auto", ...sourceNames];
 
 run(process.argv.slice(2)).catch((error: unknown) => {
   const message = error instanceof Error ? error.message : String(error);
@@ -53,7 +55,7 @@ async function run(args: string[]): Promise<void> {
 function parseArgs(args: string[]): ParsedArgs {
   const values: string[] = [];
   let command: string | undefined;
-  let source: SourceName = "tencent";
+  let source: CliSourceName = "auto";
 
   for (let index = 0; index < args.length; index++) {
     const arg = args[index];
@@ -61,7 +63,7 @@ function parseArgs(args: string[]): ParsedArgs {
     if (arg === "--source" || arg === "-s") {
       const value = args[index + 1];
 
-      if (!isSourceName(value)) {
+      if (!isCliSourceName(value)) {
         throw new Error(`Invalid source: ${value || ""}`);
       }
 
@@ -81,12 +83,12 @@ function parseArgs(args: string[]): ParsedArgs {
   return { command, source, values };
 }
 
-function getSource(source: SourceName): StockApi {
+function getSource(source: CliSourceName): StockApi {
   return stocks[source];
 }
 
-function isSourceName(value: string | undefined): value is SourceName {
-  return sourceNames.includes(value as SourceName);
+function isCliSourceName(value: string | undefined): value is CliSourceName {
+  return cliSourceNames.includes(value as CliSourceName);
 }
 
 function requireValues(values: string[], usage: string): void {
@@ -101,9 +103,9 @@ function printJson(value: unknown): void {
 
 function printHelp(): void {
   console.log(`Usage:
-  stock-api get-stock <code> [--source tencent|sina|eastmoney]
-  stock-api get-stocks <code...> [--source tencent|sina|eastmoney]
-  stock-api search <keyword> [--source tencent|sina|eastmoney]
+  stock-api get-stock <code> [--source auto|tencent|sina|eastmoney]
+  stock-api get-stocks <code...> [--source auto|tencent|sina|eastmoney]
+  stock-api search <keyword> [--source auto|tencent|sina|eastmoney]
 
 Examples:
   stock-api get-stock SH510500

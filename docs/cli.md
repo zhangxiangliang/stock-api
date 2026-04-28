@@ -5,10 +5,10 @@
 ## 基本用法
 
 ```shell
-npx stock-api <command> [...args] [--source tencent|sina|eastmoney]
+npx stock-api <command> [...args] [--source auto|tencent|sina|eastmoney]
 ```
 
-默认数据源是 `tencent`。
+默认数据源是 `auto`，会按 `tencent -> sina -> eastmoney` 顺序自动兜底。
 
 也可以先全局或本地安装：
 
@@ -30,7 +30,7 @@ npx stock-api --help
 
 | 参数 | 简写 | 说明 | 默认值 |
 | --- | --- | --- | --- |
-| `--source` | `-s` | 指定数据源，可选 `tencent` / `sina` / `eastmoney` | `tencent` |
+| `--source` | `-s` | 指定数据源，可选 `auto` / `tencent` / `sina` / `eastmoney` | `auto` |
 
 ## get-stock
 
@@ -62,7 +62,8 @@ npx stock-api get-stock SH600519 --source eastmoney
   "now": 8.293,
   "low": 8.242,
   "high": 8.365,
-  "yesterday": 8.375
+  "yesterday": 8.375,
+  "source": "tencent"
 }
 ```
 

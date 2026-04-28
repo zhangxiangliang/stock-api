@@ -25,13 +25,14 @@
 
 `stock-api` is a zero-runtime-dependency stock market data toolkit for Node.js. It provides a TypeScript API and CLI for retrieving stock quotes and searching symbols from public market data sources.
 
-> Market data comes from third-party public endpoints. This package keeps provider responses transparent and does not silently fall back across data sources.
+> Market data comes from third-party public endpoints. `stocks.auto` and the default CLI mode fall back across providers; explicit providers keep their raw provider behavior.
 
 ## Features
 
 - Node.js stock market data API with TypeScript types
 - CLI commands for quick stock quote lookup and symbol search
-- Tencent and Sina market data sources
+- Automatic provider fallback with the actual source included in the result
+- Tencent, Sina, and Eastmoney market data sources
 - A-share, Hong Kong, and US market code formats
 - Zero runtime dependencies
 
@@ -50,7 +51,8 @@ Requires Node.js `>=18`.
 ```typescript
 import { stocks } from "stock-api";
 
-const stock = await stocks.tencent.getStock("SH510500");
+const stock = await stocks.auto.getStock("SH510500");
+const tencentStock = await stocks.tencent.getStock("SH510500");
 const list = await stocks.tencent.getStocks(["SH510500", "SZ000651"]);
 const results = await stocks.tencent.searchStocks("Gree Electric");
 const eastmoneyStock = await stocks.eastmoney.getStock("SH600519");
@@ -86,6 +88,8 @@ npx stock-api search Gree -s sina
 | Sina | `sina` | Search, single quote, batch quotes |
 | Eastmoney | `eastmoney` | A-share search, single quote, batch quotes |
 
+The default `auto` source tries `tencent -> sina -> eastmoney`. If one provider fails or returns an empty quote, the next provider is tried.
+
 ## Stock Code Format
 
 Use `exchange prefix + stock code`:
@@ -108,8 +112,11 @@ type Stock = {
   low: number;
   high: number;
   yesterday: number;
+  source?: "base" | "tencent" | "sina" | "eastmoney";
 };
 ```
+
+`stocks.auto` results include `source`, indicating the provider that returned the quote.
 
 ## Documentation
 

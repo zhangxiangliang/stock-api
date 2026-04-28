@@ -25,13 +25,14 @@
 
 `stock-api` 是一个零运行时依赖的股票行情数据工具，支持 Node.js API 和命令行查询，可用于 A 股、港股、美股行情查询和股票搜索。
 
-> 行情数据来自第三方公开接口。库会尽量保留数据源真实返回，不做跨源兜底。
+> 行情数据来自第三方公开接口。使用 `stocks.auto` 或 CLI 默认模式时，会按数据源顺序自动兜底；指定具体数据源时会保留该数据源的真实返回。
 
 ## 功能特性
 
 - 提供带 TypeScript 类型的 Node.js 股票行情 API
 - 支持 CLI 快速查询股票行情和搜索股票代码
-- 支持腾讯股票、新浪股票数据源
+- 支持自动数据源兜底，结果会标记实际使用的数据源
+- 支持腾讯股票、新浪股票、东方财富数据源
 - 支持 A 股、港股、美股代码格式
 - 零运行时依赖
 
@@ -50,7 +51,8 @@ npm install stock-api
 ```typescript
 import { stocks } from "stock-api";
 
-const stock = await stocks.tencent.getStock("SH510500");
+const stock = await stocks.auto.getStock("SH510500");
+const tencentStock = await stocks.tencent.getStock("SH510500");
 const list = await stocks.tencent.getStocks(["SH510500", "SZ000651"]);
 const results = await stocks.tencent.searchStocks("格力电器");
 const eastmoneyStock = await stocks.eastmoney.getStock("SH600519");
@@ -86,6 +88,8 @@ npx stock-api search 格力电器 -s sina
 | 新浪股票 | `sina` | 支持搜索、单只行情、批量行情 |
 | 东方财富 | `eastmoney` | 支持 A 股搜索、单只行情、批量行情 |
 
+默认的 `auto` 会按 `tencent -> sina -> eastmoney` 顺序尝试。某个数据源请求失败或返回空股票时，会继续尝试下一个数据源。
+
 ## 股票代码
 
 统一使用 `交易所 + 股票代码`：
@@ -108,8 +112,11 @@ type Stock = {
   low: number;
   high: number;
   yesterday: number;
+  source?: "base" | "tencent" | "sina" | "eastmoney";
 };
 ```
+
+`stocks.auto` 返回的结果会额外包含 `source`，用于标记实际使用的数据源。
 
 ## 文档
 
