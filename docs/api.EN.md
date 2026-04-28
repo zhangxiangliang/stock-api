@@ -96,6 +96,50 @@ type Stock = {
 
 `source` is guaranteed on `stocks.auto` results and inspection results. Direct provider `getStock` / `getStocks` / `searchStocks` calls do not fall back and keep that provider's response shape.
 
+## Field Contract
+
+`Stock` is the stable public API contract, not a direct copy of third-party payloads.
+
+- Patch and minor releases do not change the meaning or type of existing fields
+- New capabilities are added as optional fields when possible
+- Changing, removing, or redefining existing fields requires a major release
+- Raw third-party payloads are not included in `Stock`
+- If raw provider data is ever exposed, it will be added through a separate capability or clearly separated field instead of changing the default shape
+
+The goal is to let users rely on `code`, `name`, `percent`, `now`, `low`, `high`, and `yesterday` without rewriting business code whenever one provider changes.
+
+## Caching and Rate Limiting
+
+`stock-api` does not include built-in caching, queues, or rate limiting. Those concerns usually depend on your deployment environment, and adding them here would break the zero-runtime-dependency design.
+
+For production usage, handle them in your own service layer:
+
+- Cache by `source + code` with a short TTL
+- Apply stricter limits to search endpoints
+- Coalesce concurrent requests for the same stock
+- Cache short-lived failures to avoid repeatedly hitting a failing third-party endpoint
+
+Example:
+
+```text
+client -> your API/cache/rate limit -> stock-api -> market data source
+```
+
+Use in-memory cache, Redis, backend CDN cache, or your framework's cache layer. The library does not bind you to a specific cache implementation.
+
+## Browser Boundary
+
+Direct browser usage is not recommended.
+
+Reasons:
+
+- Third-party endpoints may not allow browser CORS requests
+- Some providers return non-UTF-8 responses, which are easier to handle in Node.js
+- High-frequency browser requests are more likely to trigger third-party limits
+- A backend layer gives you one place for caching, rate limiting, and fallback behavior
+
+Use `stock-api` from your backend service, serverless function, or API route, and let the frontend call your own endpoint.
+
 ## Inspect Providers
 
 Inspect automatic fallback:
