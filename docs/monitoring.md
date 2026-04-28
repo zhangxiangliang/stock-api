@@ -26,7 +26,7 @@ API Monitor
 https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fzhangxiangliang%2Fstock-api%2Fapi-status%2F{source}.json
 ```
 
-工作流还会把 README 徽章 URL 中的 `v=YYYYMMDDHHMM` 更新到 `main`，减少 GitHub 图片缓存导致的状态滞后。这个提交使用 `chore:`，不会发布新的 npm 版本。
+README 徽章 URL 是固定的，不会因为监控运行而修改 `main`。`api-status` 是状态快照分支，每次运行都会覆盖为最新状态，不保留历史提交。shields.io 会按 `cacheSeconds=300` 缓存配置刷新状态；如果需要显示检查时间，应在 `api-status` 分支的状态文件里表达，而不是改 README URL。
 
 ## SVG 备用文件
 

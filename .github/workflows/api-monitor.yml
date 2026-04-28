@@ -33,9 +33,7 @@ jobs:
         run: npm run build
 
       - name: Check APIs
-        run: |
-          node scripts/check-api-status.mjs
-          echo "BADGE_VERSION=$(date -u +%Y%m%d%H%M)" >> "$GITHUB_ENV"
+        run: node scripts/check-api-status.mjs
 
       - name: Publish status
         run: |
@@ -44,27 +42,10 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          if git ls-remote --exit-code --heads origin api-status >/dev/null 2>&1; then
-            git fetch origin api-status
-            git switch --detach origin/api-status
-            rm -rf ./*
-          else
-            git switch --orphan api-status
-            git rm -rf . >/dev/null 2>&1 || true
-          fi
+          git switch --orphan api-status-snapshot
+          git rm -rf . >/dev/null 2>&1 || true
 
           cp -R /tmp/stock-api-status/* .
           git add .
           git commit -m "chore: update api status" || exit 0
-          git push origin HEAD:api-status
-
-      - name: Refresh README badge URLs
-        run: |
-          set -euo pipefail
-          git fetch origin main
-          git switch main
-          git reset --hard origin/main
-          node scripts/update-readme-badge-versions.mjs "$BADGE_VERSION"
-          git add README.md README.EN.md
-          git commit -m "chore: refresh api status badges" || exit 0
-          git push origin main
+          git push --force origin HEAD:api-status
