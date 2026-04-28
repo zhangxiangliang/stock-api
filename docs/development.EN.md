@@ -20,10 +20,12 @@ npm install
 | Command | Description |
 | --- | --- |
 | `npm run build` | Compile TypeScript to `dist` |
+| `npm run lint` | Run ESLint checks |
+| `npm run lint:fix` | Automatically fix safe lint issues |
 | `npm run typecheck` | Type-check source and tests |
 | `npm run test:unit` | Run unit tests without network access |
 | `npm run test:integration` | Test real Tencent, Sina, and Eastmoney endpoints |
-| `npm run validate` | CI check: build + typecheck + unit tests |
+| `npm run validate` | CI check: build + lint + typecheck + unit tests |
 | `npm pack --dry-run` | Inspect npm package contents |
 | `node scripts/check-api-status.mjs` | Check real providers and generate local status files |
 
@@ -31,6 +33,7 @@ Recommended local loop:
 
 ```shell
 npm run typecheck
+npm run lint
 npm run test:unit
 ```
 

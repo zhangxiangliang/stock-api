@@ -49,11 +49,13 @@
     "build": "tsc -p tsconfig.build.json",
     "postbuild": "node -e \"require('fs').chmodSync('dist/cli.js', 0o755)\"",
     "prepack": "npm run build",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "test": "jest --config jest.config.js --coverage",
     "test:unit": "npm test -- --runInBand",
     "test:integration": "jest --config jest.integration.config.js --runInBand",
     "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.test.json",
-    "validate": "npm run build && npm run typecheck && npm run test:unit"
+    "validate": "npm run build && npm run lint && npm run typecheck && npm run test:unit"
   },
   "license": "MIT",
   "files": [
@@ -61,13 +63,17 @@
     "docs/**/*"
   ],
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
     "@types/jest": "^30.0.0",
     "@types/node": "^24.0.0",
+    "eslint": "^10.2.1",
+    "globals": "^17.5.0",
     "jest": "^30.3.0",
     "semantic-release": "^25.0.3",
     "ts-jest": "^29.4.9",
-    "typescript": "^6.0.3"
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.59.1"
   }
 }

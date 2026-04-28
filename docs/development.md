@@ -20,10 +20,12 @@ npm install
 | 命令 | 说明 |
 | --- | --- |
 | `npm run build` | 编译 TypeScript 到 `dist` |
+| `npm run lint` | 运行 ESLint 代码检查 |
+| `npm run lint:fix` | 自动修复可安全修复的 lint 问题 |
 | `npm run typecheck` | 检查源码和测试类型 |
 | `npm run test:unit` | 运行单元测试，不访问外网 |
 | `npm run test:integration` | 访问真实腾讯/新浪/东方财富接口 |
-| `npm run validate` | CI 验证命令：build + typecheck + unit |
+| `npm run validate` | CI 验证命令：build + lint + typecheck + unit |
 | `npm pack --dry-run` | 检查 npm 发布产物 |
 | `node scripts/check-api-status.mjs` | 检查真实数据源并生成本地状态文件 |
 
@@ -31,6 +33,7 @@ npm install
 
 ```shell
 npm run typecheck
+npm run lint
 npm run test:unit
 ```
 
