@@ -1,3 +1,10 @@
+# [2.2.0](https://github.com/zhangxiangliang/stock-api/compare/v2.1.0...v2.2.0) (2026-04-28)
+
+
+### Features
+
+* add auto stock fallback ([1fefba6](https://github.com/zhangxiangliang/stock-api/commit/1fefba6a9b3d07addf723118b0d1f5f4dc6674b5))
+
 # [2.1.0](https://github.com/zhangxiangliang/stock-api/compare/v2.0.9...v2.1.0) (2026-04-24)
 
 
