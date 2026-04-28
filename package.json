@@ -52,11 +52,12 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "prepare": "husky",
+    "ci": "npm run build && npm run typecheck && npm run test:unit",
     "test": "jest --config jest.config.js --coverage",
     "test:unit": "npm test -- --runInBand",
     "test:integration": "jest --config jest.integration.config.js --runInBand",
     "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.test.json",
-    "validate": "npm run build && npm run lint && npm run typecheck && npm run test:unit"
+    "validate": "npm run lint && npm run ci"
   },
   "license": "MIT",
   "files": [

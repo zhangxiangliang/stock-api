@@ -22,10 +22,11 @@ npm install
 | `npm run build` | 编译 TypeScript 到 `dist` |
 | `npm run lint` | 运行 ESLint 代码检查 |
 | `npm run lint:fix` | 自动修复可安全修复的 lint 问题 |
+| `npm run ci` | 本地 CI 检查：build + typecheck + unit |
 | `npm run typecheck` | 检查源码和测试类型 |
 | `npm run test:unit` | 运行单元测试，不访问外网 |
 | `npm run test:integration` | 访问真实腾讯/新浪/东方财富接口 |
-| `npm run validate` | CI 验证命令：build + lint + typecheck + unit |
+| `npm run validate` | 完整验证命令：lint + ci |
 | `npm pack --dry-run` | 检查 npm 发布产物 |
 | `node scripts/check-api-status.mjs` | 检查真实数据源并生成本地状态文件 |
 
@@ -37,7 +38,7 @@ npm run lint
 npm run test:unit
 ```
 
-`npm install` 会安装 Husky pre-commit hook。提交前会自动运行 `npm run validate`，确保 build、lint、typecheck 和单元测试都通过，再允许生成 commit。
+`npm install` 会安装 Husky pre-commit hook。提交前会先运行 `npm run lint`，再运行 `npm run ci`，确保本地检查和 GitHub CI 等价流程都通过，再允许生成 commit。
 
 发布前检查：
 

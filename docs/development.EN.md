@@ -22,10 +22,11 @@ npm install
 | `npm run build` | Compile TypeScript to `dist` |
 | `npm run lint` | Run ESLint checks |
 | `npm run lint:fix` | Automatically fix safe lint issues |
+| `npm run ci` | Local CI check: build + typecheck + unit tests |
 | `npm run typecheck` | Type-check source and tests |
 | `npm run test:unit` | Run unit tests without network access |
 | `npm run test:integration` | Test real Tencent, Sina, and Eastmoney endpoints |
-| `npm run validate` | CI check: build + lint + typecheck + unit tests |
+| `npm run validate` | Full validation: lint + ci |
 | `npm pack --dry-run` | Inspect npm package contents |
 | `node scripts/check-api-status.mjs` | Check real providers and generate local status files |
 
@@ -37,7 +38,7 @@ npm run lint
 npm run test:unit
 ```
 
-`npm install` installs the Husky pre-commit hook. Before each commit, it runs `npm run validate` and only allows the commit when build, lint, typecheck, and unit tests pass.
+`npm install` installs the Husky pre-commit hook. Before each commit, it runs `npm run lint` and then `npm run ci`, and only allows the commit when the local checks and GitHub CI-equivalent flow pass.
 
 Before release:
 
