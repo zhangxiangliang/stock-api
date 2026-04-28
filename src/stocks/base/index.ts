@@ -17,7 +17,7 @@ const Base: StockApi = {
    * 获取股票数据
    * @param code 股票代码
    */
-  async getStock(code: string): Promise<Stock> {
+  async getStock(_code: string): Promise<Stock> {
     throw new Error(ERROR_UNDEFINED_GET_STOCK);
   },
 
@@ -25,7 +25,7 @@ const Base: StockApi = {
    * 获取股票数据组
    * @param codes 股票代码组
    */
-  async getStocks(codes: string[]): Promise<Stock[]> {
+  async getStocks(_codes: string[]): Promise<Stock[]> {
     throw new Error(ERROR_UNDEFINED_GET_STOCKS);
   },
 
@@ -33,7 +33,7 @@ const Base: StockApi = {
    * 搜索股票代码
    * @param key 关键字
    */
-  async searchStocks(key: string): Promise<Stock[]> {
+  async searchStocks(_key: string): Promise<Stock[]> {
     throw new Error(ERROR_UNDEFINED_SEARCH_STOCK);
   },
 };
