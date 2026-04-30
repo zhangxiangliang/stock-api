@@ -162,6 +162,10 @@ type Stock = {
 frontend -> your backend API -> stock-api -> market data source
 ```
 
+## 免责声明
+
+`stock-api` 使用第三方公开行情接口作为数据来源，不保证数据的准确性、完整性、实时性或持续可用性。本项目不提供投资建议，任何交易或投资决策都应由你自行判断。商业、高频或生产使用前，请自行确认第三方数据源的服务条款、授权范围和合规要求。
+
 ## License
 
 MIT

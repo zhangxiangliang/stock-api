@@ -162,6 +162,10 @@ type Stock = {
 frontend -> your backend API -> stock-api -> market data source
 ```
 
+## Disclaimer
+
+`stock-api` uses third-party public market data endpoints and does not guarantee accuracy, completeness, real-time delivery, or continuous availability. This project does not provide investment advice. Any trading or investment decision is your own responsibility. Before commercial, high-frequency, or production use, verify the terms, authorization scope, and compliance requirements of the third-party data sources.
+
 ## License
 
 MIT
