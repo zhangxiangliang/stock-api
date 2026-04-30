@@ -18,4 +18,19 @@ describe("标准股票数据", () => {
         source: "eastmoney",
       });
   });
+
+  it("锁定标准返回字段契约", () => {
+    const normalized = normalizeStock(stock, "eastmoney");
+
+    expect(Object.keys(normalized).sort()).toEqual([
+      "code",
+      "high",
+      "low",
+      "name",
+      "now",
+      "percent",
+      "source",
+      "yesterday",
+    ]);
+  });
 });
