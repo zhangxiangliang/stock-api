@@ -1,0 +1,21 @@
+import Stock from "../../../types/utils/stock";
+export declare function parseSinaStock(code: string, params: string[]): Stock;
+export declare function getSinaStockCode(code: string): string;
+export declare function getSinaStockName(code: string, params: string[]): string;
+export declare function getSinaStockNow(code: string, params: string[]): number;
+export declare function getSinaStockLow(code: string, params: string[]): number;
+export declare function getSinaStockHigh(code: string, params: string[]): number;
+export declare function getSinaStockYesterday(code: string, params: string[]): number;
+export declare function getSinaStockPercent(code: string, params: string[]): number;
+declare const SinaStockTransform: {
+    parse: typeof parseSinaStock;
+    getCode: typeof getSinaStockCode;
+    getName: typeof getSinaStockName;
+    getNow: typeof getSinaStockNow;
+    getLow: typeof getSinaStockLow;
+    getHigh: typeof getSinaStockHigh;
+    getYesterday: typeof getSinaStockYesterday;
+    getPercent: typeof getSinaStockPercent;
+    getStock: typeof parseSinaStock;
+};
+export default SinaStockTransform;

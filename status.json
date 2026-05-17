@@ -1,0 +1,26 @@
+{
+  "checkedAt": "2026-05-17T05:30:42.327Z",
+  "results": [
+    {
+      "id": "tencent",
+      "label": "tencent",
+      "ok": true,
+      "message": "up",
+      "durationMs": 2744
+    },
+    {
+      "id": "sina",
+      "label": "sina",
+      "ok": true,
+      "message": "up",
+      "durationMs": 2399
+    },
+    {
+      "id": "eastmoney",
+      "label": "eastmoney",
+      "ok": true,
+      "message": "up",
+      "durationMs": 4671
+    }
+  ]
+}
