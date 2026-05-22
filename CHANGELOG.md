@@ -1,3 +1,10 @@
+# [2.4.0](https://github.com/zhangxiangliang/stock-api/compare/v2.3.0...v2.4.0) (2026-05-22)
+
+
+### Features
+
+* add browser support ([339c923](https://github.com/zhangxiangliang/stock-api/commit/339c9239f574633ab3576d2643297c41403bfa98))
+
 # [2.3.0](https://github.com/zhangxiangliang/stock-api/compare/v2.2.0...v2.3.0) (2026-04-28)
 
 
