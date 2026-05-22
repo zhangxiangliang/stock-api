@@ -1,3 +1,10 @@
+## [2.4.1](https://github.com/zhangxiangliang/stock-api/compare/v2.4.0...v2.4.1) (2026-05-22)
+
+
+### Bug Fixes
+
+* support node 18 browser scripts ([a790fc1](https://github.com/zhangxiangliang/stock-api/commit/a790fc1c66076e89e7844574a50fff66d7ff47da))
+
 # [2.4.0](https://github.com/zhangxiangliang/stock-api/compare/v2.3.0...v2.4.0) (2026-05-22)
 
 
