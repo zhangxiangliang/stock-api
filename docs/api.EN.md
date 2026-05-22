@@ -53,6 +53,8 @@ Direct provider calls do not switch to another provider.
 ```typescript
 const sources = stocks.getSources();
 // ["tencent", "sina", "eastmoney"]
+
+const capabilities = stocks.getProviderCapabilities();
 ```
 
 ## Provider Interface
@@ -129,16 +131,59 @@ Use in-memory cache, Redis, backend CDN cache, or your framework's cache layer. 
 
 ## Browser Boundary
 
-Direct browser usage is not recommended.
+`stock-api` can adapt to Node.js and modern browser bundler environments. Regular endpoints use `fetch`; providers with JSONP/script endpoints automatically switch to lower-level browser adapters.
+
+Browser builds are published under:
+
+```text
+dist/browser/stock-api.iife.js
+dist/browser/stock-api.iife.min.js
+dist/browser/stock-api.iife.min.js.map
+dist/browser/stock-api.esm.mjs
+dist/browser/stock-api.esm.min.mjs
+```
+
+The IIFE build exposes a `StockApi` global:
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/stock-api/dist/browser/stock-api.iife.min.js"></script>
+<script>
+  StockApi.stocks.auto.getStock("SH510500").then((stock) => {
+    console.log(stock);
+  });
+</script>
+```
+
+The ESM build can be imported directly:
+
+```html
+<script type="module">
+  import { stocks } from "https://cdn.jsdelivr.net/npm/stock-api/dist/browser/stock-api.esm.mjs";
+
+  const stock = await stocks.auto.getStock("SH510500");
+</script>
+```
+
+Current direct browser status:
+
+| API | Status |
+| --- | --- |
+| `stocks.auto.getStock` | Supported, Tencent first by default |
+| `stocks.tencent.getStock` / `stocks.tencent.searchStocks` | Supported |
+| `stocks.eastmoney.getStock` / `stocks.eastmoney.searchStocks` | Supported |
+| `stocks.auto.searchStocks` | Supported, Tencent first by default |
+| `stocks.sina.*` | Not supported for direct browser usage; Sina requires a valid Referer that browsers cannot spoof, so use Node.js or a backend proxy |
+
+For production apps, it is still recommended to call `stock-api` from your backend service, serverless function, or API route, and let the frontend call your own endpoint.
 
 Reasons:
 
-- Third-party endpoints may not allow browser CORS requests
-- Some providers return non-UTF-8 responses, which are easier to handle in Node.js
+- You can centralize caching, rate limiting, and fallback behavior
 - High-frequency browser requests are more likely to trigger third-party limits
-- A backend layer gives you one place for caching, rate limiting, and fallback behavior
+- Third-party providers may change browser access rules at any time
+- Keeping requests behind your own endpoint makes call volume easier to control
 
-Use `stock-api` from your backend service, serverless function, or API route, and let the frontend call your own endpoint.
+For low-frequency tools, internal pages, or experiments, browser bundler usage can use the same API shape.
 
 ## Inspect Providers
 

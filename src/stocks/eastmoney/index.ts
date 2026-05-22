@@ -1,6 +1,8 @@
 import Stock from "../../types/utils/stock";
+import { isBrowserRuntime, loadBrowserJsonp } from "../../utils/browser-script";
 import { DEFAULT_STOCK } from "../../utils/constant";
 import fetch from "../../utils/fetch";
+import { assertProviderFeatureSupported } from "../shared/capabilities";
 import {
   createStockInspection,
   normalizeCodes,
@@ -34,12 +36,20 @@ type EastmoneySuggestResponse = {
 const quoteFields = "f12,f14,f2,f3,f15,f16,f18";
 const suggestToken = "D43BF722C8E33BDC906FB84D85E326E8";
 
+function getSuggestUrl(key: string): string {
+  return `https://searchapi.eastmoney.com/api/suggest/get?input=${encodeURIComponent(
+    key
+  )}&type=14&token=${suggestToken}`;
+}
+
 async function getStocks(codes: string[]): Promise<Stock[]> {
   const normalizedCodes = normalizeCodes(codes);
 
   if (normalizedCodes.length === 0) {
     return [];
   }
+
+  assertProviderFeatureSupported("eastmoney", "quote");
 
   return Promise.all(normalizedCodes.map(fetchOneStock));
 }
@@ -53,11 +63,9 @@ const Eastmoney: StockProviderApi = {
   getStocks,
 
   async searchStocks(key: string): Promise<Stock[]> {
-    const response = await requestJson<EastmoneySuggestResponse>(
-      `https://searchapi.eastmoney.com/api/suggest/get?input=${encodeURIComponent(
-        key
-      )}&type=14&token=${suggestToken}`
-    );
+    assertProviderFeatureSupported("eastmoney", "search");
+
+    const response = await requestSuggestJson(key);
     const codes = (response.QuotationCodeTable?.Data || [])
       .map(parseSuggestCode)
       .filter(Boolean) as string[];
@@ -73,7 +81,7 @@ const Eastmoney: StockProviderApi = {
 async function fetchOneStock(code: string): Promise<Stock> {
   const apiCode = EastmoneyCommonCodeTransform.transform(code);
   const response = await requestJson<EastmoneyQuoteResponse>(
-    `https://push2.eastmoney.com/api/qt/ulist.np/get?fltt=2&secids=${encodeURIComponent(
+    `https://push2delay.eastmoney.com/api/qt/ulist.np/get?fltt=2&secids=${encodeURIComponent(
       apiCode
     )}&fields=${quoteFields}`
   );
@@ -84,6 +92,19 @@ async function fetchOneStock(code: string): Promise<Stock> {
   }
 
   return parseEastmoneyStock(code, quote);
+}
+
+async function requestSuggestJson(key: string): Promise<EastmoneySuggestResponse> {
+  const url = getSuggestUrl(key);
+
+  if (isBrowserRuntime()) {
+    return loadBrowserJsonp<EastmoneySuggestResponse>({
+      callbackParam: "cb",
+      url,
+    });
+  }
+
+  return requestJson<EastmoneySuggestResponse>(url);
 }
 
 function parseSuggestCode(item: EastmoneySuggestItem): string {

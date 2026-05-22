@@ -10,6 +10,23 @@ import {
   COMMON_US,
 } from "../../stocks/base/utils/constant";
 import { createStockProvider, normalizeCodes } from "../shared/provider";
+import { loadBrowserScriptValue } from "../../utils/browser-script";
+
+function getSearchUrl(key: string): string {
+  return `https://smartbox.gtimg.cn/s3/?v=2&t=all&c=1&q=${encodeURIComponent(
+    key
+  )}`;
+}
+
+async function requestBrowserSearchText(key: string): Promise<string> {
+  const value = await loadBrowserScriptValue({
+    charset: "gbk",
+    url: getSearchUrl(key),
+    variableName: "v_hint",
+  });
+
+  return `v_hint="${value}"`;
+}
 
 /**
  * 腾讯股票代码接口
@@ -31,11 +48,10 @@ const Tencent = createStockProvider({
     },
   },
   search: {
+    browserRequestText: requestBrowserSearchText,
     encoding: "gbk",
     getUrl(key) {
-      return `https://smartbox.gtimg.cn/s3/?v=2&t=all&c=1&q=${encodeURIComponent(
-        key
-      )}`;
+      return getSearchUrl(key);
     },
     parseCodes(body) {
       const rows = body.replace('v_hint="', "").replace('"', "").split("^");

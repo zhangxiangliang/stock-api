@@ -1,9 +1,11 @@
 import { uniq } from "../../utils/array";
+import { isBrowserRuntime } from "../../utils/browser-script";
 import fetch from "../../utils/fetch";
 import iconv from "../../utils/iconv";
 import { DEFAULT_STOCK } from "../../utils/constant";
 import StockApi from "../../types/stocks";
 import Stock, { StockSource } from "../../types/utils/stock";
+import { assertProviderFeatureSupported } from "./capabilities";
 import { normalizeStock } from "./normalize";
 
 type CodeTransform = {
@@ -14,6 +16,7 @@ type CodeTransform = {
 type Header = readonly [name: string, value: string];
 
 type QuoteConfig = {
+  browserRequestText?: (apiCodes: string[]) => Promise<string>;
   codeTransform: CodeTransform;
   delimiter: string;
   encoding: string;
@@ -24,6 +27,7 @@ type QuoteConfig = {
 };
 
 type SearchConfig = {
+  browserRequestText?: (key: string) => Promise<string>;
   encoding: string;
   headers?: readonly Header[];
   getUrl(key: string): string;
@@ -79,12 +83,10 @@ export function createStockProvider(config: StockProviderConfig): StockProviderA
       return [];
     }
 
+    assertProviderFeatureSupported(config.source, "quote");
+
     const apiCodes = config.quote.codeTransform.transforms(normalizedCodes);
-    const body = await requestText({
-      encoding: config.quote.encoding,
-      headers: config.quote.headers,
-      url: config.quote.getUrl(apiCodes),
-    });
+    const body = await requestQuoteText(config.quote, apiCodes);
     const rows = splitRows(body);
 
     return normalizedCodes.map((code, index) => {
@@ -100,6 +102,21 @@ export function createStockProvider(config: StockProviderConfig): StockProviderA
     });
   }
 
+  async function requestQuoteText(
+    quote: QuoteConfig,
+    apiCodes: string[]
+  ): Promise<string> {
+    if (isBrowserRuntime() && quote.browserRequestText) {
+      return quote.browserRequestText(apiCodes);
+    }
+
+    return requestText({
+      encoding: quote.encoding,
+      headers: quote.headers,
+      url: quote.getUrl(apiCodes),
+    });
+  }
+
   const api: StockProviderApi = {
     async getStock(code: string): Promise<Stock> {
       const [stock] = await getStocks([code]);
@@ -109,11 +126,9 @@ export function createStockProvider(config: StockProviderConfig): StockProviderA
     getStocks,
 
     async searchStocks(key: string): Promise<Stock[]> {
-      const body = await requestText({
-        encoding: config.search.encoding,
-        headers: config.search.headers,
-        url: config.search.getUrl(key),
-      });
+      assertProviderFeatureSupported(config.source, "search");
+
+      const body = await requestSearchText(config.search, key);
       return getStocks(config.search.parseCodes(body));
     },
 
@@ -123,6 +138,21 @@ export function createStockProvider(config: StockProviderConfig): StockProviderA
   };
 
   return api;
+}
+
+async function requestSearchText(
+  search: SearchConfig,
+  key: string
+): Promise<string> {
+  if (isBrowserRuntime() && search.browserRequestText) {
+    return search.browserRequestText(key);
+  }
+
+  return requestText({
+    encoding: search.encoding,
+    headers: search.headers,
+    url: search.getUrl(key),
+  });
 }
 
 export async function createStockInspection(

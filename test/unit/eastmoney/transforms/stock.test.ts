@@ -1,16 +1,11 @@
+import fs from "node:fs";
+import path from "node:path";
+
 const EastmoneyStockTransform = require("stocks/eastmoney/transforms/stock").default;
 
 describe("【东方财富】股票数据转换测试", () => {
   const code = "SH600519";
-  const quote = {
-    f43: 1458.49,
-    f44: 1458.88,
-    f45: 1413.1,
-    f57: "600519",
-    f58: "贵州茅台",
-    f60: 1419,
-    f170: 2.78,
-  };
+  const quote = readFixture("sh600519.json");
 
   it("获取股票代码", () => {
     expect(EastmoneyStockTransform.getCode(code)).toBe("SH600519");
@@ -52,3 +47,12 @@ describe("【东方财富】股票数据转换测试", () => {
     });
   });
 });
+
+function readFixture(name: string) {
+  return JSON.parse(
+    fs.readFileSync(
+      path.join(__dirname, "../../../fixtures/eastmoney", name),
+      "utf8"
+    )
+  );
+}

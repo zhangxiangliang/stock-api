@@ -19,14 +19,19 @@ npm install
 
 | 命令 | 说明 |
 | --- | --- |
-| `npm run build` | 编译 TypeScript 到 `dist` |
+| `npm run build` | 编译 Node.js 产物和浏览器产物到 `dist` |
+| `npm run build:node` | 只编译 Node.js / CommonJS 产物 |
+| `npm run build:browser` | 只编译浏览器 IIFE / ESM 产物 |
 | `npm run lint` | 运行 ESLint 代码检查 |
 | `npm run lint:fix` | 自动修复可安全修复的 lint 问题 |
 | `npm run ci` | 本地 CI 检查：build + typecheck + unit |
 | `npm run typecheck` | 检查源码和测试类型 |
+| `npm run test:node` | 运行 Node/Jest 单元测试 |
+| `npm run test:browser` | 打浏览器 bundle，并用 Chromium 做浏览器 smoke test |
 | `npm run test:unit` | 运行单元测试，不访问外网 |
 | `npm run test:integration` | 访问真实腾讯/新浪/东方财富接口 |
-| `npm run validate` | 完整验证命令：lint + ci |
+| `npm run validate` | 日常验证命令：lint + ci |
+| `npm run validate:release` | 发布前验证：validate + browser smoke + integration |
 | `npm pack --dry-run` | 检查 npm 发布产物 |
 | `node scripts/check-api-status.mjs` | 检查真实数据源并生成本地状态文件 |
 
@@ -35,7 +40,8 @@ npm install
 ```shell
 npm run typecheck
 npm run lint
-npm run test:unit
+npm run test:node
+npm run test:browser
 ```
 
 `npm install` 会安装 Husky pre-commit hook。提交前会先运行 `npm run lint`，再运行 `npm run ci`，确保本地检查和 GitHub CI 等价流程都通过，再允许生成 commit。
@@ -43,8 +49,7 @@ npm run test:unit
 发布前检查：
 
 ```shell
-npm run validate
-npm run test:integration
+npm run validate:release
 npm pack --dry-run
 npm audit --omit=dev
 ```
@@ -55,6 +60,7 @@ npm audit --omit=dev
 
 ```text
 test/unit
+test/browser smoke
 test/integration
 ```
 
@@ -89,6 +95,10 @@ fixture 的目标是把真实数据源返回固化下来，避免解析逻辑改
 
 不建议把 integration 放进默认 CI，因为公网接口可能超时、限流或临时波动。
 
+### Browser Smoke
+
+`npm run test:browser` 会先生成正式浏览器产物，然后启动本地页面并用 Chromium 加载 `dist/browser/stock-api.iife.min.js` 和 `dist/browser/stock-api.esm.mjs`。它用于确认 CDN 用户会拿到的文件真的可运行，同时确认 Sina 在浏览器下返回文档化的代理提示错误。
+
 ## CI
 
 GitHub Actions 配置在：
@@ -110,7 +120,16 @@ CI 执行：
 
 ```shell
 npm ci
+npm run ci
+npm run test:browser
+```
+
+发布工作流会额外执行：
+
+```shell
 npm run validate
+npm run test:browser
+npm run test:integration
 ```
 
 ## API Monitor
