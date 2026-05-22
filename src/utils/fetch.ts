@@ -1,12 +1,9 @@
-import http from "node:http";
-import https from "node:https";
-import { URL } from "node:url";
 import { StockRequestError } from "../errors";
 
 type HeaderValue = string | string[] | undefined;
 
 export interface Response {
-  body: Buffer;
+  body: ArrayBuffer;
   headers: Record<string, HeaderValue>;
   status: number;
   text: string;
@@ -14,7 +11,6 @@ export interface Response {
 
 type RequestOptions = {
   headers: Record<string, string>;
-  maxRedirects: number;
   retries: number;
   timeout: number;
 };
@@ -25,7 +21,6 @@ class RequestBuilder implements PromiseLike<Response> {
       Accept: "*/*",
       "User-Agent": "Mozilla/5.0 (compatible; stock-api/2.0)",
     },
-    maxRedirects: 3,
     retries: 2,
     timeout: 15000,
   };
@@ -69,68 +64,84 @@ class RequestBuilder implements PromiseLike<Response> {
   }
 }
 
-function request(
-  url: string,
-  options: RequestOptions,
-  redirectCount = 0
-): Promise<Response> {
-  return new Promise((resolve, reject) => {
-    const parsedUrl = new URL(url);
-    const client = parsedUrl.protocol === "http:" ? http : https;
+async function request(url: string, options: RequestOptions): Promise<Response> {
+  if (typeof globalThis.fetch !== "function") {
+    throw new StockRequestError("globalThis.fetch is not available");
+  }
 
-    const req = client.get(
-      parsedUrl,
-      {
-        headers: options.headers,
-        timeout: options.timeout,
-      },
-      (res) => {
-        const status = res.statusCode || 0;
-        const location = res.headers.location;
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), options.timeout);
 
-        if (
-          location &&
-          status >= 300 &&
-          status < 400 &&
-          redirectCount < options.maxRedirects
-        ) {
-          res.resume();
-          const nextUrl = new URL(location, parsedUrl).toString();
-          request(nextUrl, options, redirectCount + 1)
-            .then(resolve)
-            .catch(reject);
-          return;
-        }
-
-        const chunks: Buffer[] = [];
-        res.on("data", (chunk: Buffer) => chunks.push(chunk));
-        res.on("error", reject);
-        res.on("end", () => {
-          const body = Buffer.concat(chunks);
-          const response = {
-            body,
-            headers: res.headers,
-            status,
-            text: body.toString("utf8"),
-          };
-
-          if (status >= 400) {
-            reject(new StockRequestError(`Request failed with status ${status}`));
-            return;
-          }
-
-          resolve(response);
-        });
-      }
-    );
-
-    req.on("timeout", () => {
-      req.destroy(
-        new StockRequestError(`Request timed out after ${options.timeout}ms`)
-      );
+  try {
+    const response = await globalThis.fetch(url, {
+      headers: createRequestHeaders(options.headers),
+      redirect: "follow",
+      signal: controller.signal,
     });
-    req.on("error", reject);
+
+    const status = response.status;
+    const body = await response.arrayBuffer();
+    const result = {
+      body,
+      headers: getResponseHeaders(response.headers),
+      status,
+      text: new TextDecoder("utf-8").decode(body),
+    };
+
+    if (!response.ok) {
+      throw new StockRequestError(`Request failed with status ${status}`);
+    }
+
+    return result;
+  } catch (error) {
+    if (isAbortError(error)) {
+      throw new StockRequestError(`Request timed out after ${options.timeout}ms`);
+    }
+
+    throw error;
+  } finally {
+    clearTimeout(timeoutId);
+  }
+}
+
+function createRequestHeaders(headers: Record<string, string>): Headers {
+  const result = new Headers();
+
+  for (const [name, value] of Object.entries(headers)) {
+    if (isBrowserForbiddenHeader(name)) {
+      continue;
+    }
+
+    result.set(name, value);
+  }
+
+  return result;
+}
+
+function getResponseHeaders(headers: Headers): Record<string, HeaderValue> {
+  const result: Record<string, HeaderValue> = {};
+
+  headers.forEach((value, name) => {
+    result[name] = value;
   });
+
+  return result;
+}
+
+function isBrowserForbiddenHeader(name: string): boolean {
+  if (!isBrowser()) {
+    return false;
+  }
+
+  return ["referer", "user-agent"].includes(name.toLowerCase());
+}
+
+function isBrowser(): boolean {
+  return "window" in globalThis && "document" in globalThis;
+}
+
+function isAbortError(error: unknown): boolean {
+  return error instanceof DOMException && error.name === "AbortError";
 }
 
 const requestClient = {

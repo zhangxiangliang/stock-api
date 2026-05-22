@@ -19,14 +19,19 @@ npm install
 
 | Command | Description |
 | --- | --- |
-| `npm run build` | Compile TypeScript to `dist` |
+| `npm run build` | Compile Node.js and browser builds to `dist` |
+| `npm run build:node` | Compile only the Node.js / CommonJS build |
+| `npm run build:browser` | Compile only the browser IIFE / ESM builds |
 | `npm run lint` | Run ESLint checks |
 | `npm run lint:fix` | Automatically fix safe lint issues |
 | `npm run ci` | Local CI check: build + typecheck + unit tests |
 | `npm run typecheck` | Type-check source and tests |
+| `npm run test:node` | Run Node/Jest unit tests |
+| `npm run test:browser` | Build a browser bundle and run a Chromium smoke test |
 | `npm run test:unit` | Run unit tests without network access |
 | `npm run test:integration` | Test real Tencent, Sina, and Eastmoney endpoints |
-| `npm run validate` | Full validation: lint + ci |
+| `npm run validate` | Daily validation: lint + ci |
+| `npm run validate:release` | Release validation: validate + browser smoke + integration |
 | `npm pack --dry-run` | Inspect npm package contents |
 | `node scripts/check-api-status.mjs` | Check real providers and generate local status files |
 
@@ -35,7 +40,8 @@ Recommended local loop:
 ```shell
 npm run typecheck
 npm run lint
-npm run test:unit
+npm run test:node
+npm run test:browser
 ```
 
 `npm install` installs the Husky pre-commit hook. Before each commit, it runs `npm run lint` and then `npm run ci`, and only allows the commit when the local checks and GitHub CI-equivalent flow pass.
@@ -43,8 +49,7 @@ npm run test:unit
 Before release:
 
 ```shell
-npm run validate
-npm run test:integration
+npm run validate:release
 npm pack --dry-run
 ```
 
@@ -54,12 +59,15 @@ Tests are split into:
 
 ```text
 test/unit
+test/browser smoke
 test/integration
 ```
 
 Unit tests do not access the network. They cover code transforms, parsing, fixtures, default errors, and custom errors.
 
 Integration tests access real provider endpoints and should be run before publishing or when fixing provider behavior. They are intentionally not part of default CI because public endpoints can be slow, rate-limited, or temporarily unavailable.
+
+Browser smoke tests first generate the official browser builds, then start a local page and load `dist/browser/stock-api.iife.min.js` and `dist/browser/stock-api.esm.mjs` in Chromium. They verify the files CDN users receive and also verify that Sina returns the documented backend-proxy error in browsers.
 
 ## CI
 
@@ -73,7 +81,16 @@ CI runs on pushes to `main` and on pull requests:
 
 ```shell
 npm ci
+npm run ci
+npm run test:browser
+```
+
+The release workflow additionally runs:
+
+```shell
 npm run validate
+npm run test:browser
+npm run test:integration
 ```
 
 ## API Monitor

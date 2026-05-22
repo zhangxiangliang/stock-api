@@ -1,7 +1,7 @@
 <h1 align="center">stock-api</h1>
 
 <p align="center">
-  支持 A 股、港股、美股行情查询的 Node.js 股票数据工具。
+  支持 A 股、港股、美股行情查询的 TypeScript 股票数据工具。
 </p>
 
 <p align="center">
@@ -23,11 +23,11 @@
   <img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fzhangxiangliang%2Fstock-api%2Fapi-status%2Feastmoney.zh-CN.json&cacheSeconds=300" alt="东方财富状态">
 </p>
 
-`stock-api` 是一个零运行时依赖的股票行情工具，提供 Node.js API 和 CLI。默认使用 `stocks.auto` 自动兜底数据源，也可以显式指定腾讯、新浪或东方财富。
+`stock-api` 是一个零运行时依赖的股票行情工具，提供 TypeScript API 和 CLI。默认使用 `stocks.auto` 自动兜底数据源，也可以显式指定腾讯、新浪或东方财富。
 
 ## 特性
 
-- Node.js API + TypeScript 类型
+- Node.js / Browser bundler API + TypeScript 类型
 - CLI 查询股票行情和搜索股票
 - 默认自动兜底：`tencent -> sina -> eastmoney`
 - 指定数据源：`stocks.tencent` / `stocks.sina` / `stocks.eastmoney`
@@ -40,7 +40,7 @@
 npm install stock-api
 ```
 
-要求 Node.js `>=18`。
+Node.js 环境要求 `>=18`。浏览器环境可以通过前端构建工具、ESM CDN 或 `<script>` 标签使用。
 
 ## 快速使用
 
@@ -106,6 +106,8 @@ npx stock-api search 贵州茅台 --source eastmoney
 ```typescript
 const sources = stocks.getSources();
 // ["tencent", "sina", "eastmoney"]
+
+const capabilities = stocks.getProviderCapabilities();
 ```
 
 ## 股票代码
@@ -148,7 +150,7 @@ type Stock = {
 
 | 文档 | 内容 |
 | --- | --- |
-| [API 使用](docs/api.md) | Node.js API、自动兜底、诊断返回结构 |
+| [API 使用](docs/api.md) | TypeScript API、自动兜底、诊断返回结构 |
 | [CLI 使用](docs/cli.md) | 命令、参数、输出、退出码 |
 | [项目架构](docs/architecture.md) | 目录结构、provider 工厂、解析和错误模型 |
 | [开发指南](docs/development.md) | 本地开发、测试、发布前检查、新增数据源 |
@@ -156,7 +158,44 @@ type Stock = {
 
 ## 浏览器使用
 
-`stock-api` 面向 Node.js、后端服务、Serverless 函数和 CLI。不建议在浏览器前端直接使用，因为第三方行情接口可能存在 CORS 限制、编码问题和访问频率限制。前端项目建议通过自己的 API route 或后端服务代理。
+`stock-api` 可以在 Node.js 和现代浏览器构建环境中自适应运行：能直接 `fetch` 的数据源走标准请求；支持 JSONP/脚本接口的数据源会在浏览器中自动切换到底层适配。
+
+通过 npm 构建工具使用：
+
+```typescript
+import { stocks } from "stock-api";
+```
+
+通过 CDN 使用 IIFE 全局变量：
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/stock-api/dist/browser/stock-api.iife.min.js"></script>
+<script>
+  StockApi.stocks.auto.getStock("SH510500").then((stock) => {
+    console.log(stock);
+  });
+</script>
+```
+
+通过 CDN 使用 ESM：
+
+```html
+<script type="module">
+  import { stocks } from "https://cdn.jsdelivr.net/npm/stock-api/dist/browser/stock-api.esm.mjs";
+
+  const stock = await stocks.auto.getStock("SH510500");
+</script>
+```
+
+当前浏览器直连能力：
+
+| API | 浏览器直连 |
+| --- | --- |
+| `stocks.auto.getStock` / `stocks.tencent.getStock` / `stocks.eastmoney.getStock` | 支持 |
+| `stocks.auto.searchStocks` / `stocks.tencent.searchStocks` / `stocks.eastmoney.searchStocks` | 支持 |
+| `stocks.sina.*` | 浏览器直连不支持，Sina 需要有效 Referer，建议通过 Node.js 或后端代理 |
+
+生产环境仍然更推荐通过自己的 API route 或后端服务代理，方便统一缓存、限流和降级：
 
 ```text
 frontend -> your backend API -> stock-api -> market data source

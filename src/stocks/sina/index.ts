@@ -17,6 +17,16 @@ import {
 
 const refererHeader = [["Referer", "https://finance.sina.com.cn/"]] as const;
 
+function getQuoteUrl(apiCodes: string[]): string {
+  return `https://hq.sinajs.cn/list=${apiCodes.join(",")}`;
+}
+
+function getSearchUrl(key: string): string {
+  return `https://suggest3.sinajs.cn/suggest/type=2&key=${encodeURIComponent(
+    key
+  )}`;
+}
+
 /**
  * 新浪股票代码接口
  */
@@ -28,7 +38,7 @@ const Sina = createStockProvider({
     encoding: "gb18030",
     headers: refererHeader,
     getUrl(apiCodes) {
-      return `https://hq.sinajs.cn/list=${apiCodes.join(",")}`;
+      return getQuoteUrl(apiCodes);
     },
     isMissing(row) {
       return getAssignedValue(row) === '""';
@@ -41,9 +51,7 @@ const Sina = createStockProvider({
     encoding: "gb18030",
     headers: refererHeader,
     getUrl(key) {
-      return `http://suggest3.sinajs.cn/suggest/type=2&key=${encodeURIComponent(
-        key
-      )}`;
+      return getSearchUrl(key);
     },
     parseCodes(body) {
       const rows = body

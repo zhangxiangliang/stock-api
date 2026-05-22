@@ -1,7 +1,7 @@
 <h1 align="center">stock-api</h1>
 
 <p align="center">
-  Stock market data API for Node.js and TypeScript.
+  TypeScript stock market data API for Node.js and browsers.
 </p>
 
 <p align="center">
@@ -23,11 +23,11 @@
   <img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fzhangxiangliang%2Fstock-api%2Fapi-status%2Feastmoney.json&cacheSeconds=300" alt="Eastmoney Status">
 </p>
 
-`stock-api` is a zero-runtime-dependency stock market data toolkit with a Node.js API and CLI. Use `stocks.auto` by default for provider fallback, or call Tencent, Sina, or Eastmoney directly.
+`stock-api` is a zero-runtime-dependency stock market data toolkit with a TypeScript API and CLI. Use `stocks.auto` by default for provider fallback, or call Tencent, Sina, or Eastmoney directly.
 
 ## Features
 
-- Node.js API with TypeScript types
+- Node.js / browser bundler API with TypeScript types
 - CLI for quote lookup and symbol search
 - Default fallback order: `tencent -> sina -> eastmoney`
 - Direct providers: `stocks.tencent` / `stocks.sina` / `stocks.eastmoney`
@@ -40,7 +40,7 @@
 npm install stock-api
 ```
 
-Requires Node.js `>=18`.
+Node.js usage requires `>=18`. Browser usage can go through a frontend bundler, an ESM CDN import, or a `<script>` tag.
 
 ## Quick Start
 
@@ -106,6 +106,8 @@ Available direct providers:
 ```typescript
 const sources = stocks.getSources();
 // ["tencent", "sina", "eastmoney"]
+
+const capabilities = stocks.getProviderCapabilities();
 ```
 
 ## Stock Codes
@@ -148,7 +150,7 @@ type Stock = {
 
 | Document | Description |
 | --- | --- |
-| [API usage](docs/api.EN.md) | Node.js API, automatic fallback, inspection output |
+| [API usage](docs/api.EN.md) | TypeScript API, automatic fallback, inspection output |
 | [CLI usage](docs/cli.EN.md) | Commands, options, output, and exit codes |
 | [Architecture](docs/architecture.EN.md) | Directory layout, provider factory, parsing, and errors |
 | [Development guide](docs/development.EN.md) | Local development, tests, release checks, and adding providers |
@@ -156,7 +158,44 @@ type Stock = {
 
 ## Browser Usage
 
-`stock-api` is designed for Node.js, backend services, serverless functions, and CLI usage. Direct browser usage is not recommended because third-party endpoints may block CORS, return non-UTF-8 encoded responses, or rate-limit public clients. Frontend apps should call your own API route or backend proxy.
+`stock-api` can adapt to Node.js and modern browser bundler environments. Providers that support normal `fetch` use standard requests; providers with JSONP/script endpoints automatically switch to lower-level browser adapters.
+
+Use with an npm bundler:
+
+```typescript
+import { stocks } from "stock-api";
+```
+
+Use the IIFE global from a CDN:
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/stock-api/dist/browser/stock-api.iife.min.js"></script>
+<script>
+  StockApi.stocks.auto.getStock("SH510500").then((stock) => {
+    console.log(stock);
+  });
+</script>
+```
+
+Use ESM from a CDN:
+
+```html
+<script type="module">
+  import { stocks } from "https://cdn.jsdelivr.net/npm/stock-api/dist/browser/stock-api.esm.mjs";
+
+  const stock = await stocks.auto.getStock("SH510500");
+</script>
+```
+
+Current direct browser support:
+
+| API | Direct browser support |
+| --- | --- |
+| `stocks.auto.getStock` / `stocks.tencent.getStock` / `stocks.eastmoney.getStock` | Supported |
+| `stocks.auto.searchStocks` / `stocks.tencent.searchStocks` / `stocks.eastmoney.searchStocks` | Supported |
+| `stocks.sina.*` | Not supported for direct browser usage; Sina requires a valid Referer, so use Node.js or a backend proxy |
+
+For production apps, a backend API route or proxy is still recommended so you can centralize caching, rate limiting, and fallback behavior:
 
 ```text
 frontend -> your backend API -> stock-api -> market data source

@@ -32,3 +32,11 @@ jobs:
 
       - name: CI
         run: npm run ci
+
+      - name: Install browser
+        if: matrix.node-version == 20
+        run: npx playwright install --with-deps chromium
+
+      - name: Browser smoke
+        if: matrix.node-version == 20
+        run: npm run test:browser

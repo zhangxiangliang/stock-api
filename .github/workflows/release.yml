@@ -33,8 +33,11 @@ jobs:
       - name: Install
         run: npm ci
 
-      - name: Validate
-        run: npm run validate
+      - name: Install browser
+        run: npx playwright install --with-deps chromium
+
+      - name: Release validation
+        run: npm run validate:release
 
       - name: Release
         env:

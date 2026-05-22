@@ -53,6 +53,8 @@ const results = await stocks.eastmoney.searchStocks("贵州茅台");
 ```typescript
 const sources = stocks.getSources();
 // ["tencent", "sina", "eastmoney"]
+
+const capabilities = stocks.getProviderCapabilities();
 ```
 
 ## Provider 接口
@@ -131,16 +133,59 @@ client -> your API/cache/rate limit -> stock-api -> market data source
 
 ## 浏览器使用边界
 
-不建议在浏览器前端直接使用 `stock-api` 访问第三方行情接口。
+`stock-api` 可以在 Node.js 和现代浏览器构建环境中自适应运行。普通接口会走 `fetch`；支持 JSONP/脚本接口的数据源会在浏览器中自动切到底层适配。
+
+浏览器构建产物位于：
+
+```text
+dist/browser/stock-api.iife.js
+dist/browser/stock-api.iife.min.js
+dist/browser/stock-api.iife.min.js.map
+dist/browser/stock-api.esm.mjs
+dist/browser/stock-api.esm.min.mjs
+```
+
+IIFE 产物暴露 `StockApi` 全局变量：
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/stock-api/dist/browser/stock-api.iife.min.js"></script>
+<script>
+  StockApi.stocks.auto.getStock("SH510500").then((stock) => {
+    console.log(stock);
+  });
+</script>
+```
+
+ESM 产物可以直接 import：
+
+```html
+<script type="module">
+  import { stocks } from "https://cdn.jsdelivr.net/npm/stock-api/dist/browser/stock-api.esm.mjs";
+
+  const stock = await stocks.auto.getStock("SH510500");
+</script>
+```
+
+当前浏览器直连状态：
+
+| API | 状态 |
+| --- | --- |
+| `stocks.auto.getStock` | 支持，默认优先腾讯 |
+| `stocks.tencent.getStock` / `stocks.tencent.searchStocks` | 支持 |
+| `stocks.eastmoney.getStock` / `stocks.eastmoney.searchStocks` | 支持 |
+| `stocks.auto.searchStocks` | 支持，默认优先腾讯 |
+| `stocks.sina.*` | 浏览器直连不支持，Sina 服务端要求有效 Referer，浏览器无法伪造，建议走 Node.js 或后端代理 |
+
+生产环境仍建议通过自己的服务端、Serverless function 或 API route 调用 `stock-api`，前端只调用你自己的接口。
 
 原因：
 
-- 第三方接口可能不允许浏览器跨域请求
-- 部分数据源返回非 UTF-8 内容，浏览器端处理成本更高
+- 方便统一缓存、限流和降级
 - 高频前端请求更容易触发第三方限制
-- 直接暴露请求逻辑后，不方便统一缓存、限流和降级
+- 第三方接口可能随时改变浏览器访问策略
+- 前端直接暴露请求逻辑后，不方便控制调用频率
 
-推荐方式是在自己的服务端、Serverless function 或 API route 中调用 `stock-api`，前端只调用你自己的接口。
+如果只是低频工具、内部页面或实验项目，也可以直接在浏览器构建环境中使用同一套 API。
 
 ## 诊断数据源
 
