@@ -1,8 +1,9 @@
 import { mkdir } from "node:fs/promises";
-import { resolve } from "node:path";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import { build } from "esbuild";
 
-const root = resolve(import.meta.dirname, "..");
+const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const entryPoint = resolve(root, "src/index.ts");
 const outdir = resolve(root, "dist/browser");
 const commonOptions = {
