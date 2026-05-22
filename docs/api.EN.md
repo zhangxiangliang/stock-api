@@ -2,7 +2,7 @@
 
 [English](api.EN.md) | [简体中文](api.md)
 
-This document explains the Node.js API. Most users should start with `stocks.auto`.
+This document explains the Node.js and browser API. Most users should start with `stocks.auto`.
 
 ## Import
 
@@ -148,9 +148,9 @@ The IIFE build exposes a `StockApi` global:
 ```html
 <script src="https://cdn.jsdelivr.net/npm/stock-api/dist/browser/stock-api.iife.min.js"></script>
 <script>
-  StockApi.stocks.auto.getStock("SH510500").then((stock) => {
-    console.log(stock);
-  });
+  StockApi.stocks.auto.getStock("SH510500").then(console.log);
+  StockApi.stocks.auto.getStocks(["SH510500", "SZ000651"]).then(console.log);
+  StockApi.stocks.auto.searchStocks("格力电器").then(console.log);
 </script>
 ```
 
@@ -161,6 +161,8 @@ The ESM build can be imported directly:
   import { stocks } from "https://cdn.jsdelivr.net/npm/stock-api/dist/browser/stock-api.esm.mjs";
 
   const stock = await stocks.auto.getStock("SH510500");
+  const list = await stocks.auto.getStocks(["SH510500", "SZ000651"]);
+  const results = await stocks.auto.searchStocks("格力电器");
 </script>
 ```
 
@@ -168,10 +170,9 @@ Current direct browser status:
 
 | API | Status |
 | --- | --- |
-| `stocks.auto.getStock` | Supported, Tencent first by default |
-| `stocks.tencent.getStock` / `stocks.tencent.searchStocks` | Supported |
-| `stocks.eastmoney.getStock` / `stocks.eastmoney.searchStocks` | Supported |
-| `stocks.auto.searchStocks` | Supported, Tencent first by default |
+| `stocks.auto.getStock` / `stocks.auto.getStocks` / `stocks.auto.searchStocks` | Supported, Tencent first by default |
+| `stocks.tencent.getStock` / `stocks.tencent.getStocks` / `stocks.tencent.searchStocks` | Supported |
+| `stocks.eastmoney.getStock` / `stocks.eastmoney.getStocks` / `stocks.eastmoney.searchStocks` | Supported |
 | `stocks.sina.*` | Not supported for direct browser usage; Sina requires a valid Referer that browsers cannot spoof, so use Node.js or a backend proxy |
 
 For production apps, it is still recommended to call `stock-api` from your backend service, serverless function, or API route, and let the frontend call your own endpoint.

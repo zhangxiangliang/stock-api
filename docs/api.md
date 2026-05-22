@@ -2,7 +2,7 @@
 
 [English](api.EN.md) | [简体中文](api.md)
 
-这份文档说明 `stock-api` 的 Node.js API。大多数用户只需要使用 `stocks.auto`。
+这份文档说明 `stock-api` 的 Node.js 和浏览器 API。大多数用户只需要使用 `stocks.auto`。
 
 ## 导入
 
@@ -150,9 +150,9 @@ IIFE 产物暴露 `StockApi` 全局变量：
 ```html
 <script src="https://cdn.jsdelivr.net/npm/stock-api/dist/browser/stock-api.iife.min.js"></script>
 <script>
-  StockApi.stocks.auto.getStock("SH510500").then((stock) => {
-    console.log(stock);
-  });
+  StockApi.stocks.auto.getStock("SH510500").then(console.log);
+  StockApi.stocks.auto.getStocks(["SH510500", "SZ000651"]).then(console.log);
+  StockApi.stocks.auto.searchStocks("格力电器").then(console.log);
 </script>
 ```
 
@@ -163,6 +163,8 @@ ESM 产物可以直接 import：
   import { stocks } from "https://cdn.jsdelivr.net/npm/stock-api/dist/browser/stock-api.esm.mjs";
 
   const stock = await stocks.auto.getStock("SH510500");
+  const list = await stocks.auto.getStocks(["SH510500", "SZ000651"]);
+  const results = await stocks.auto.searchStocks("格力电器");
 </script>
 ```
 
@@ -170,10 +172,9 @@ ESM 产物可以直接 import：
 
 | API | 状态 |
 | --- | --- |
-| `stocks.auto.getStock` | 支持，默认优先腾讯 |
-| `stocks.tencent.getStock` / `stocks.tencent.searchStocks` | 支持 |
-| `stocks.eastmoney.getStock` / `stocks.eastmoney.searchStocks` | 支持 |
-| `stocks.auto.searchStocks` | 支持，默认优先腾讯 |
+| `stocks.auto.getStock` / `stocks.auto.getStocks` / `stocks.auto.searchStocks` | 支持，默认优先腾讯 |
+| `stocks.tencent.getStock` / `stocks.tencent.getStocks` / `stocks.tencent.searchStocks` | 支持 |
+| `stocks.eastmoney.getStock` / `stocks.eastmoney.getStocks` / `stocks.eastmoney.searchStocks` | 支持 |
 | `stocks.sina.*` | 浏览器直连不支持，Sina 服务端要求有效 Referer，浏览器无法伪造，建议走 Node.js 或后端代理 |
 
 生产环境仍建议通过自己的服务端、Serverless function 或 API route 调用 `stock-api`，前端只调用你自己的接口。
