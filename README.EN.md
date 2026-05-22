@@ -23,16 +23,7 @@
   <img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fzhangxiangliang%2Fstock-api%2Fapi-status%2Feastmoney.json&cacheSeconds=300" alt="Eastmoney Status">
 </p>
 
-`stock-api` is a zero-runtime-dependency stock market data toolkit with a TypeScript API and CLI. Use `stocks.auto` by default for provider fallback, or call Tencent, Sina, or Eastmoney directly.
-
-## Features
-
-- Node.js / browser bundler API with TypeScript types
-- CLI for quote lookup and symbol search
-- Default fallback order: `tencent -> sina -> eastmoney`
-- Direct providers: `stocks.tencent` / `stocks.sina` / `stocks.eastmoney`
-- A-share, Hong Kong, and US market code formats
-- Zero runtime dependencies
+`stock-api` is a zero-runtime-dependency stock market data toolkit for Node.js, browsers, and CLI usage. Use `stocks.auto` by default to read from the first available provider.
 
 ## Installation
 
@@ -40,11 +31,9 @@
 npm install stock-api
 ```
 
-Node.js usage requires `>=18`. Browser usage can go through a frontend bundler, an ESM CDN import, or a `<script>` tag.
+Node.js usage requires `>=18`.
 
-## Quick Start
-
-Use `stocks.auto` by default:
+## Usage
 
 ```typescript
 import { stocks } from "stock-api";
@@ -54,30 +43,20 @@ const list = await stocks.auto.getStocks(["SH510500", "SZ000651"]);
 const results = await stocks.auto.searchStocks("格力电器");
 ```
 
-CommonJS:
+Stock codes use `SH` / `SZ` / `HK` / `US` prefixes, such as `SH510500` and `SZ000651`.
 
-```javascript
-const { stocks } = require("stock-api");
-```
+## Browser Usage
 
-To use one provider directly, replace `auto` with the provider name:
-
-```typescript
-const stock = await stocks.tencent.getStock("SH510500");
-const list = await stocks.sina.getStocks(["SH510500", "SZ000651"]);
-const results = await stocks.eastmoney.searchStocks("贵州茅台");
-```
-
-Inspect provider status:
-
-```typescript
-const autoInspection = await stocks.auto.inspectStock("SH510500");
-const sinaInspection = await stocks.sina.inspectStock("SH510500");
+```html
+<script src="https://cdn.jsdelivr.net/npm/stock-api/dist/browser/stock-api.iife.min.js"></script>
+<script>
+  StockApi.stocks.auto.getStock("SH510500").then(console.log);
+  StockApi.stocks.auto.getStocks(["SH510500", "SZ000651"]).then(console.log);
+  StockApi.stocks.auto.searchStocks("格力电器").then(console.log);
+</script>
 ```
 
 ## CLI
-
-The CLI uses `auto` mode by default:
 
 ```shell
 npx stock-api get-stock SH510500
@@ -85,121 +64,19 @@ npx stock-api get-stocks SH510500 SZ000651
 npx stock-api search 格力电器
 ```
 
-Use one provider directly:
-
-```shell
-npx stock-api get-stock SH510500 --source sina
-npx stock-api search 贵州茅台 --source eastmoney
-```
-
 ## Providers
 
-| Provider | API | Features |
-| --- | --- | --- |
-| Auto fallback | `stocks.auto` | Single quote, batch quotes, search, inspection |
-| Tencent | `stocks.tencent` | Single quote, batch quotes, search, inspection |
-| Sina | `stocks.sina` | Single quote, batch quotes, search, inspection |
-| Eastmoney | `stocks.eastmoney` | A-share single quote, batch quotes, search, inspection |
-
-Available direct providers:
-
-```typescript
-const sources = stocks.getSources();
-// ["tencent", "sina", "eastmoney"]
-
-const capabilities = stocks.getProviderCapabilities();
-```
-
-## Stock Codes
-
-Use `market prefix + symbol`:
-
-| Market | Prefix | Example |
-| --- | --- | --- |
-| Shanghai Stock Exchange | `SH` | `SH510500` |
-| Shenzhen Stock Exchange | `SZ` | `SZ000651` |
-| Hong Kong market | `HK` | `HK02020` |
-| US market | `US` | `USDJI` |
-
-## Return Shape
-
-```typescript
-type Stock = {
-  code: string;
-  name: string;
-  percent: number;
-  now: number;
-  low: number;
-  high: number;
-  yesterday: number;
-  source?: "base" | "tencent" | "sina" | "eastmoney";
-};
-```
-
-`source` identifies the provider that returned the quote. `stocks.auto` and `inspectStock` include `source`; direct calls such as `stocks.tencent.getStock`, `stocks.sina.getStock`, and `stocks.eastmoney.getStock` do not fall back and keep that provider's response shape.
-
-### Field Contract
-
-`Stock` is the stable normalized return shape. Minor releases do not change the meaning or type of existing fields; new capabilities are added as optional fields when possible. Raw third-party payloads are not mixed into `Stock`, so provider-specific data does not make the shared shape unpredictable.
-
-## Server-Side Usage
-
-`stock-api` does not ship built-in caching or rate limiting, keeping zero runtime dependencies. For high-frequency production usage, add short-TTL caching by stock code and source in your own service layer, and rate-limit outbound requests to third-party market data endpoints.
+Built-in providers include Tencent, Sina, and Eastmoney. `stocks.auto` handles provider fallback by default.
 
 ## Documentation
 
-| Document | Description |
-| --- | --- |
-| [API usage](docs/api.EN.md) | TypeScript API, automatic fallback, inspection output |
-| [CLI usage](docs/cli.EN.md) | Commands, options, output, and exit codes |
-| [Architecture](docs/architecture.EN.md) | Directory layout, provider factory, parsing, and errors |
-| [Development guide](docs/development.EN.md) | Local development, tests, release checks, and adding providers |
-| [API monitoring](docs/monitoring.EN.md) | Scheduled third-party API checks and status badges |
-
-## Browser Usage
-
-`stock-api` can adapt to Node.js and modern browser bundler environments. Providers that support normal `fetch` use standard requests; providers with JSONP/script endpoints automatically switch to lower-level browser adapters.
-
-Use with an npm bundler:
-
-```typescript
-import { stocks } from "stock-api";
-```
-
-Use the IIFE global from a CDN:
-
-```html
-<script src="https://cdn.jsdelivr.net/npm/stock-api/dist/browser/stock-api.iife.min.js"></script>
-<script>
-  StockApi.stocks.auto.getStock("SH510500").then((stock) => {
-    console.log(stock);
-  });
-</script>
-```
-
-Use ESM from a CDN:
-
-```html
-<script type="module">
-  import { stocks } from "https://cdn.jsdelivr.net/npm/stock-api/dist/browser/stock-api.esm.mjs";
-
-  const stock = await stocks.auto.getStock("SH510500");
-</script>
-```
-
-Current direct browser support:
-
-| API | Direct browser support |
-| --- | --- |
-| `stocks.auto.getStock` / `stocks.tencent.getStock` / `stocks.eastmoney.getStock` | Supported |
-| `stocks.auto.searchStocks` / `stocks.tencent.searchStocks` / `stocks.eastmoney.searchStocks` | Supported |
-| `stocks.sina.*` | Not supported for direct browser usage; Sina requires a valid Referer, so use Node.js or a backend proxy |
-
-For production apps, a backend API route or proxy is still recommended so you can centralize caching, rate limiting, and fallback behavior:
-
-```text
-frontend -> your backend API -> stock-api -> market data source
-```
+| Document                                    | Description                                             |
+| ------------------------------------------- | ------------------------------------------------------- |
+| [API usage](docs/api.EN.md)                 | TypeScript API, automatic fallback, inspection output   |
+| [CLI usage](docs/cli.EN.md)                 | Commands, options, output, and exit codes               |
+| [Architecture](docs/architecture.EN.md)     | Directory layout, provider factory, parsing, and errors |
+| [Development guide](docs/development.EN.md) | Local development, tests, release checks, and providers |
+| [API monitoring](docs/monitoring.EN.md)     | Scheduled third-party API checks and status badges      |
 
 ## Disclaimer
 
