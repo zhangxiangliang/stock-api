@@ -1,3 +1,10 @@
+## [2.5.1](https://github.com/zhangxiangliang/stock-api/compare/v2.5.0...v2.5.1) (2026-05-23)
+
+
+### Bug Fixes
+
+* stabilize eastmoney provider ([9d0e185](https://github.com/zhangxiangliang/stock-api/commit/9d0e185beb9866b0402901eb3179eab64c73bfa2))
+
 # [2.5.0](https://github.com/zhangxiangliang/stock-api/compare/v2.4.1...v2.5.0) (2026-05-23)
 
 
