@@ -26,7 +26,7 @@ npx stock-api --help
 | `get-stock <code>` | 获取单只股票行情 |
 | `get-stocks <code...>` | 批量获取股票行情 |
 | `get-klines <code>` | 获取日 K / 周 K / 月 K |
-| `search <keyword>` | 搜索股票并返回行情数据 |
+| `search-stocks <keyword>` | 搜索股票并返回行情数据 |
 | `help` / `--help` | 查看帮助 |
 
 ## 参数
@@ -110,26 +110,28 @@ npx stock-api get-stocks SH510500 SZ000651
 ]
 ```
 
-## search
+## search-stocks
 
 搜索股票，并返回匹配股票的行情数据。默认使用 `auto`：
 
 ```shell
-npx stock-api search 格力电器
+npx stock-api search-stocks 格力电器
 ```
 
 多个词会自动合并为一个关键词：
 
 ```shell
-npx stock-api search 中证 500
+npx stock-api search-stocks 中证 500
 ```
 
 指定数据源：
 
 ```shell
-npx stock-api search 格力电器 -s sina
-npx stock-api search 贵州茅台 -s eastmoney
+npx stock-api search-stocks 格力电器 -s sina
+npx stock-api search-stocks 贵州茅台 -s eastmoney
 ```
+
+`search` 是旧版本兼容别名，新代码建议使用 `search-stocks`。
 
 ## get-klines
 
@@ -201,7 +203,7 @@ node dist/cli.js --help
 node dist/cli.js get-stock SH510500
 node dist/cli.js get-stocks SH510500 SZ000651
 node dist/cli.js get-klines SH600519 --period week --count 20
-node dist/cli.js search 格力电器
+node dist/cli.js search-stocks 格力电器
 ```
 
 模拟发布后的 `npx`：

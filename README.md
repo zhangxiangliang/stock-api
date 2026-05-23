@@ -82,7 +82,7 @@ const results = await stocks.auto.searchStocks("格力电器");
 npx stock-api get-stock SH510500
 npx stock-api get-stocks SH510500 SZ000651
 npx stock-api get-klines SH600519 --period day --count 120
-npx stock-api search 格力电器
+npx stock-api search-stocks 格力电器
 ```
 
 ## 数据源
