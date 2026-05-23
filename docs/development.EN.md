@@ -67,6 +67,17 @@ Unit tests do not access the network. They cover code transforms, parsing, fixtu
 
 Integration tests access real provider endpoints and should be run before publishing or when fixing provider behavior. They are intentionally not part of default CI because public endpoints can be slow, rate-limited, or temporarily unavailable.
 
+Integration tests must stay strict: Tencent, Sina, and Eastmoney must not skip assertions or turn failures into success because of timeouts, network errors, or upstream provider errors. The purpose of these tests is to expose real problems.
+
+When a provider is unstable, fix the provider implementation instead:
+
+- Use a more stable endpoint path
+- Add an explicit request timeout
+- Add fallback hosts for equivalent provider endpoints
+- Lock parsing behavior with fixture/unit tests
+
+Do not use `catch -> console.warn -> pass` in provider integration tests. `stocks.auto` may catch one provider failure and continue fallback; direct integration for `stocks.tencent`, `stocks.sina`, and `stocks.eastmoney` must expose the final error.
+
 Browser smoke tests first generate the official browser builds, then start a local page and load `dist/browser/stock-api.iife.min.js` and `dist/browser/stock-api.esm.mjs` in Chromium. They verify the files CDN users receive and also verify that Sina returns the documented backend-proxy error in browsers.
 
 ## CI

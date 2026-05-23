@@ -20,9 +20,7 @@ import {
 } from "./transforms/stock";
 
 type EastmoneyQuoteResponse = {
-  data?: {
-    diff?: EastmoneyQuote[] | Record<string, EastmoneyQuote>;
-  } | null;
+  data?: EastmoneyQuote | null;
 };
 
 type EastmoneySuggestItem = {
@@ -44,10 +42,19 @@ type EastmoneyKlineResponse = {
   } | null;
 };
 
-const quoteFields = "f12,f14,f2,f3,f15,f16,f18";
+const quoteFields = "f43,f44,f45,f57,f58,f60,f170";
 const klineFields = "f51,f52,f53,f54,f55,f56";
 const suggestToken = "D43BF722C8E33BDC906FB84D85E326E8";
-const requestTimeoutMs = 5000;
+const requestTimeoutMs = 4000;
+const defaultPush2Host = "push2delay.eastmoney.com";
+const defaultPush2HisHost = "push2his.eastmoney.com";
+const push2HisHosts = [
+  defaultPush2HisHost,
+  "7.push2his.eastmoney.com",
+  "33.push2his.eastmoney.com",
+  "63.push2his.eastmoney.com",
+  "91.push2his.eastmoney.com",
+];
 
 function getSuggestUrl(key: string): string {
   return `https://searchapi.eastmoney.com/api/suggest/get?input=${encodeURIComponent(
@@ -100,12 +107,15 @@ async function getKlines(code: string, options?: KlineOptions): Promise<Kline[]>
 
   const normalizedOptions = normalizeKlineOptions(options);
   const apiCode = EastmoneyCommonCodeTransform.transform(code);
-  const url = `https://push2his.eastmoney.com/api/qt/stock/kline/get?fields1=f1,f2,f3,f4,f5,f6&fields2=${klineFields}&ut=7eea3edcaed734bea9cbfc24409ed989&klt=${getKlinePeriodCode(
+  const url = `https://${defaultPush2HisHost}/api/qt/stock/kline/get?fields1=f1,f2,f3,f4,f5,f6&fields2=${klineFields}&ut=7eea3edcaed734bea9cbfc24409ed989&klt=${getKlinePeriodCode(
     normalizedOptions.period
   )}&fqt=${getAdjustCode(normalizedOptions.adjust)}&secid=${encodeURIComponent(
     apiCode
   )}&beg=19700101&end=20500101&lmt=${normalizedOptions.count}`;
-  const response = await requestKlineJson<EastmoneyKlineResponse>(url);
+  const response = await requestJsonFromHosts<EastmoneyKlineResponse>(
+    url,
+    push2HisHosts
+  );
   const rows = response.data?.klines || [];
 
   return rows.map((line) => {
@@ -124,18 +134,48 @@ async function getKlines(code: string, options?: KlineOptions): Promise<Kline[]>
 
 async function fetchOneStock(code: string): Promise<Stock> {
   const apiCode = EastmoneyCommonCodeTransform.transform(code);
-  const response = await requestJson<EastmoneyQuoteResponse>(
-    `https://push2delay.eastmoney.com/api/qt/ulist.np/get?fltt=2&secids=${encodeURIComponent(
-      apiCode
-    )}&fields=${quoteFields}`
-  );
-  const [quote] = getQuoteRows(response);
+  const url = `https://${defaultPush2Host}/api/qt/stock/get?fltt=2&invt=2&secid=${encodeURIComponent(
+    apiCode
+  )}&fields=${quoteFields}`;
+  const quote = await requestQuote(url);
 
-  if (!quote?.f12) {
+  if (!quote?.f57 && !quote?.f58) {
     return createMissingStock(code);
   }
 
   return parseEastmoneyStock(code, quote);
+}
+
+async function requestQuote(url: string): Promise<EastmoneyQuote | undefined> {
+  const response = await requestJson<EastmoneyQuoteResponse>(url, 1);
+  const quote = response.data;
+
+  if (quote?.f57 || quote?.f58) {
+    return quote;
+  }
+
+  return undefined;
+}
+
+async function requestJson<T>(url: string, retries = 0): Promise<T> {
+  let lastError: unknown;
+
+  for (let attempt = 0; attempt <= retries; attempt++) {
+    try {
+      const response = await fetch
+        .get(url)
+        .set("Accept", "application/json,text/plain,*/*")
+        .set("Referer", "https://quote.eastmoney.com/")
+        .retries(0)
+        .timeout(requestTimeoutMs);
+
+      return JSON.parse(response.text) as T;
+    } catch (error) {
+      lastError = error;
+    }
+  }
+
+  throw lastError;
 }
 
 function getKlinePeriodCode(period: KlineOptions["period"]): string {
@@ -172,7 +212,7 @@ async function requestSuggestJson(key: string): Promise<EastmoneySuggestResponse
     });
   }
 
-  return requestJson<EastmoneySuggestResponse>(url);
+  return requestJson<EastmoneySuggestResponse>(url, 1);
 }
 
 function parseSuggestCode(item: EastmoneySuggestItem): string {
@@ -190,53 +230,27 @@ function createMissingStock(code: string): Stock {
   return { ...DEFAULT_STOCK, code };
 }
 
-async function requestJson<T>(url: string): Promise<T> {
-  const response = await fetch
-    .get(url)
-    .set("Accept", "application/json,text/plain,*/*")
-    .set("Referer", "https://quote.eastmoney.com/")
-    .timeout(requestTimeoutMs);
+async function requestJsonFromHosts<T>(
+  url: string,
+  hosts: string[]
+): Promise<T> {
+  let lastError: unknown;
 
-  return JSON.parse(response.text) as T;
-}
-
-async function requestKlineJson<T>(url: string): Promise<T> {
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 3000);
-
-  try {
-    const response = await globalThis.fetch(url, {
-      headers: createKlineHeaders(),
-      signal: controller.signal,
-    });
-
-    if (!response.ok) {
-      throw new Error(`Request failed with status ${response.status}`);
+  for (const host of hosts) {
+    try {
+      return await requestJson<T>(replaceUrlHost(url, host));
+    } catch (error) {
+      lastError = error;
     }
-
-    return JSON.parse(await response.text()) as T;
-  } finally {
-    clearTimeout(timeoutId);
-  }
-}
-
-function createKlineHeaders(): Record<string, string> {
-  if (isBrowserRuntime()) {
-    return { Accept: "application/json,text/plain,*/*" };
   }
 
-  return {
-    Accept: "application/json,text/plain,*/*",
-    Referer: "https://quote.eastmoney.com/",
-  };
+  throw lastError;
 }
 
-function getQuoteRows(response: EastmoneyQuoteResponse): EastmoneyQuote[] {
-  const diff = response.data?.diff;
-  if (!diff) return [];
-  if (Array.isArray(diff)) return diff;
-
-  return Object.values(diff);
+function replaceUrlHost(url: string, host: string): string {
+  const parsedUrl = new URL(url);
+  parsedUrl.hostname = host;
+  return parsedUrl.toString();
 }
 
 export default Eastmoney;
