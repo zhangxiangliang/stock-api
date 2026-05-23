@@ -36,6 +36,11 @@ class RequestBuilder implements PromiseLike<Response> {
     return this;
   }
 
+  retries(count: number): this {
+    this.options.retries = count;
+    return this;
+  }
+
   timeout(ms: number): this {
     this.options.timeout = ms;
     return this;

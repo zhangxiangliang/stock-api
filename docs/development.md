@@ -95,6 +95,17 @@ fixture 的目标是把真实数据源返回固化下来，避免解析逻辑改
 
 不建议把 integration 放进默认 CI，因为公网接口可能超时、限流或临时波动。
 
+Integration 测试必须保持严格：腾讯、新浪、东方财富都不允许因为超时、网络错误或第三方接口错误而跳过断言或把失败转成成功。测试的职责是暴露真实问题。
+
+如果某个数据源不稳定，应优先修复请求实现，例如：
+
+- 使用更稳定的接口路径
+- 增加明确的请求超时
+- 对同一数据源的等价 host 做 fallback
+- 用 fixture/unit test 锁住解析逻辑
+
+不要在 provider integration 测试里使用 `catch -> console.warn -> pass` 这类逻辑。`stocks.auto` 可以吞掉单个 provider 错误并继续兜底；`stocks.tencent`、`stocks.sina`、`stocks.eastmoney` 的 direct integration 必须让最终错误暴露出来。
+
 ### Browser Smoke
 
 `npm run test:browser` 会先生成正式浏览器产物，然后启动本地页面并用 Chromium 加载 `dist/browser/stock-api.iife.min.js` 和 `dist/browser/stock-api.esm.mjs`。它用于确认 CDN 用户会拿到的文件真的可运行，同时确认 Sina 在浏览器下返回文档化的代理提示错误。
