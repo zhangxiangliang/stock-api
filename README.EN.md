@@ -40,6 +40,7 @@ import { stocks } from "stock-api";
 
 const stock = await stocks.auto.getStock("SH510500");
 const list = await stocks.auto.getStocks(["SH510500", "SZ000651"]);
+const klines = await stocks.auto.getKlines("SH600519", { period: "day" });
 const results = await stocks.auto.searchStocks("格力电器");
 ```
 
@@ -52,6 +53,7 @@ Stock codes use `SH` / `SZ` / `HK` / `US` prefixes, such as `SH510500` and `SZ00
 <script>
   StockApi.stocks.auto.getStock("SH510500").then(console.log);
   StockApi.stocks.auto.getStocks(["SH510500", "SZ000651"]).then(console.log);
+  StockApi.stocks.auto.getKlines("SH600519", { period: "day" }).then(console.log);
   StockApi.stocks.auto.searchStocks("格力电器").then(console.log);
 </script>
 ```
@@ -61,6 +63,7 @@ Stock codes use `SH` / `SZ` / `HK` / `US` prefixes, such as `SH510500` and `SZ00
 ```shell
 npx stock-api get-stock SH510500
 npx stock-api get-stocks SH510500 SZ000651
+npx stock-api get-klines SH600519 --period day --count 120
 npx stock-api search 格力电器
 ```
 

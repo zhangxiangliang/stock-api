@@ -4,6 +4,7 @@ import fetch from "../../utils/fetch";
 import iconv from "../../utils/iconv";
 import { DEFAULT_STOCK } from "../../utils/constant";
 import StockApi from "../../types/stocks";
+import Kline, { KlineOptions } from "../../types/utils/kline";
 import Stock, { StockSource } from "../../types/utils/stock";
 import { assertProviderFeatureSupported } from "./capabilities";
 import { normalizeStock } from "./normalize";
@@ -34,7 +35,12 @@ type SearchConfig = {
   parseCodes(body: string): string[];
 };
 
+type KlineConfig = {
+  getKlines(code: string, options?: KlineOptions): Promise<Kline[]>;
+};
+
 export type StockProviderConfig = {
+  kline: KlineConfig;
   source: Exclude<StockSource, "base">;
   quote: QuoteConfig;
   search: SearchConfig;
@@ -124,6 +130,10 @@ export function createStockProvider(config: StockProviderConfig): StockProviderA
     },
 
     getStocks,
+
+    getKlines(code: string, options?: KlineOptions): Promise<Kline[]> {
+      return config.kline.getKlines(code, options);
+    },
 
     async searchStocks(key: string): Promise<Stock[]> {
       assertProviderFeatureSupported(config.source, "search");

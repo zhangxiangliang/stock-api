@@ -25,6 +25,7 @@ npx stock-api --help
 | --- | --- |
 | `get-stock <code>` | 获取单只股票行情 |
 | `get-stocks <code...>` | 批量获取股票行情 |
+| `get-klines <code>` | 获取日 K / 周 K / 月 K |
 | `search <keyword>` | 搜索股票并返回行情数据 |
 | `help` / `--help` | 查看帮助 |
 
@@ -33,6 +34,9 @@ npx stock-api --help
 | 参数 | 简写 | 说明 | 默认值 |
 | --- | --- | --- | --- |
 | `--source` | `-s` | 指定数据源，可选 `auto` / `tencent` / `sina` / `eastmoney` | `auto` |
+| `--period` | `-p` | K 线周期，可选 `day` / `week` / `month` | `day` |
+| `--count` | `-c` | K 线返回条数 | `120` |
+| `--adjust` | - | 复权方式，可选 `none` / `qfq` / `hfq` | `none` |
 
 ## get-stock
 
@@ -127,6 +131,37 @@ npx stock-api search 格力电器 -s sina
 npx stock-api search 贵州茅台 -s eastmoney
 ```
 
+## get-klines
+
+获取 K 线数据。默认使用 `auto`：
+
+```shell
+npx stock-api get-klines SH600519
+```
+
+指定周期和条数：
+
+```shell
+npx stock-api get-klines SH600519 --period week --count 20
+npx stock-api get-klines SH600519 --period month --source sina
+```
+
+输出：
+
+```json
+[
+  {
+    "date": "2026-05-22",
+    "open": 1310.95,
+    "close": 1290.2,
+    "high": 1311.91,
+    "low": 1290.12,
+    "source": "tencent",
+    "volume": 49157
+  }
+]
+```
+
 ## 数据源选择
 
 | 用法 | 行为 |
@@ -165,6 +200,7 @@ npm run build
 node dist/cli.js --help
 node dist/cli.js get-stock SH510500
 node dist/cli.js get-stocks SH510500 SZ000651
+node dist/cli.js get-klines SH600519 --period week --count 20
 node dist/cli.js search 格力电器
 ```
 

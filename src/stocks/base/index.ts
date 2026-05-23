@@ -2,10 +2,12 @@
 import {
   ERROR_UNDEFINED_GET_STOCK,
   ERROR_UNDEFINED_GET_STOCKS,
+  ERROR_UNDEFINED_GET_KLINES,
   ERROR_UNDEFINED_SEARCH_STOCK,
 } from "../../utils/constant";
 
 // Types
+import Kline, { KlineOptions } from "../../types/utils/kline";
 import Stock from "../../types/utils/stock";
 import StockApi from "../../types/stocks/index";
 
@@ -27,6 +29,14 @@ const Base: StockApi = {
    */
   async getStocks(_codes: string[]): Promise<Stock[]> {
     throw new Error(ERROR_UNDEFINED_GET_STOCKS);
+  },
+
+  /**
+   * 获取 K 线数据
+   * @param code 股票代码
+   */
+  async getKlines(_code: string, _options?: KlineOptions): Promise<Kline[]> {
+    throw new Error(ERROR_UNDEFINED_GET_KLINES);
   },
 
   /**

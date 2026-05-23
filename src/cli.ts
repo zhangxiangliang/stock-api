@@ -2,12 +2,16 @@
 
 import { stocks } from "./index";
 import StockApi from "./types/stocks";
+import { KlineAdjust, KlinePeriod } from "./types/utils/kline";
 
 type SourceName = "eastmoney" | "sina" | "tencent";
 type CliSourceName = "auto" | SourceName;
 
 type ParsedArgs = {
   command?: string;
+  adjust?: KlineAdjust;
+  count?: number;
+  period?: KlinePeriod;
   values: string[];
   source: CliSourceName;
 };
@@ -42,6 +46,17 @@ async function run(args: string[]): Promise<void> {
       printJson(await source.getStocks(parsed.values));
       return;
 
+    case "get-klines":
+      requireValues(parsed.values, "get-klines <code>");
+      printJson(
+        await source.getKlines(parsed.values[0], {
+          adjust: parsed.adjust,
+          count: parsed.count,
+          period: parsed.period,
+        })
+      );
+      return;
+
     case "search":
       requireValues(parsed.values, "search <keyword>");
       printJson(await source.searchStocks(parsed.values.join(" ")));
@@ -55,6 +70,9 @@ async function run(args: string[]): Promise<void> {
 function parseArgs(args: string[]): ParsedArgs {
   const values: string[] = [];
   let command: string | undefined;
+  let adjust: KlineAdjust | undefined;
+  let count: number | undefined;
+  let period: KlinePeriod | undefined;
   let source: CliSourceName = "auto";
 
   for (let index = 0; index < args.length; index++) {
@@ -72,6 +90,42 @@ function parseArgs(args: string[]): ParsedArgs {
       continue;
     }
 
+    if (arg === "--period" || arg === "-p") {
+      const value = args[index + 1];
+
+      if (!isKlinePeriod(value)) {
+        throw new Error(`Invalid period: ${value || ""}`);
+      }
+
+      period = value;
+      index += 1;
+      continue;
+    }
+
+    if (arg === "--count" || arg === "-c") {
+      const value = Number(args[index + 1]);
+
+      if (!Number.isFinite(value) || value <= 0) {
+        throw new Error(`Invalid count: ${args[index + 1] || ""}`);
+      }
+
+      count = Math.floor(value);
+      index += 1;
+      continue;
+    }
+
+    if (arg === "--adjust") {
+      const value = args[index + 1];
+
+      if (!isKlineAdjust(value)) {
+        throw new Error(`Invalid adjust: ${value || ""}`);
+      }
+
+      adjust = value;
+      index += 1;
+      continue;
+    }
+
     if (!command) {
       command = arg;
       continue;
@@ -80,7 +134,7 @@ function parseArgs(args: string[]): ParsedArgs {
     values.push(arg);
   }
 
-  return { command, source, values };
+  return { adjust, command, count, period, source, values };
 }
 
 function getSource(source: CliSourceName): StockApi {
@@ -89,6 +143,14 @@ function getSource(source: CliSourceName): StockApi {
 
 function isCliSourceName(value: string | undefined): value is CliSourceName {
   return cliSourceNames.includes(value as CliSourceName);
+}
+
+function isKlinePeriod(value: string | undefined): value is KlinePeriod {
+  return value === "day" || value === "week" || value === "month";
+}
+
+function isKlineAdjust(value: string | undefined): value is KlineAdjust {
+  return value === "none" || value === "qfq" || value === "hfq";
 }
 
 function requireValues(values: string[], usage: string): void {
@@ -105,10 +167,12 @@ function printHelp(): void {
   console.log(`Usage:
   stock-api get-stock <code> [--source auto|tencent|sina|eastmoney]
   stock-api get-stocks <code...> [--source auto|tencent|sina|eastmoney]
+  stock-api get-klines <code> [--period day|week|month] [--count n] [--adjust none|qfq|hfq] [--source auto|tencent|sina|eastmoney]
   stock-api search <keyword> [--source auto|tencent|sina|eastmoney]
 
 Examples:
   stock-api get-stock SH510500
   stock-api get-stocks SH510500 SZ000651
+  stock-api get-klines SH600519 --period week --count 20
   stock-api search 格力电器 --source eastmoney`);
 }

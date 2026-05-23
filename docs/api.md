@@ -31,6 +31,7 @@ tencent -> sina -> eastmoney
 ```typescript
 const stock = await stocks.auto.getStock("SH510500");
 const list = await stocks.auto.getStocks(["SH510500", "SZ000651"]);
+const klines = await stocks.auto.getKlines("SH600519", { period: "day" });
 const results = await stocks.auto.searchStocks("格力电器");
 ```
 
@@ -43,6 +44,7 @@ const results = await stocks.auto.searchStocks("格力电器");
 ```typescript
 const stock = await stocks.tencent.getStock("SH510500");
 const list = await stocks.sina.getStocks(["SH510500", "SZ000651"]);
+const klines = await stocks.tencent.getKlines("SH600519", { period: "week" });
 const results = await stocks.eastmoney.searchStocks("贵州茅台");
 ```
 
@@ -65,10 +67,51 @@ const capabilities = stocks.getProviderCapabilities();
 type StockApi = {
   getStock(code: string): Promise<Stock>;
   getStocks(codes: string[]): Promise<Stock[]>;
+  getKlines(code: string, options?: KlineOptions): Promise<Kline[]>;
   searchStocks(keyword: string): Promise<Stock[]>;
   inspectStock(code: string): Promise<AutoStockInspection | StockProviderInspection>;
 };
 ```
+
+## K 线
+
+`getKlines` 支持日 K、周 K、月 K：
+
+```typescript
+const klines = await stocks.auto.getKlines("SH600519", {
+  period: "day",
+  count: 120,
+});
+```
+
+指定数据源：
+
+```typescript
+const weekly = await stocks.tencent.getKlines("SH600519", { period: "week" });
+const monthly = await stocks.sina.getKlines("SH600519", { period: "month" });
+```
+
+`stocks.auto.getKlines` 会按 `tencent -> sina -> eastmoney` 顺序兜底。
+
+```typescript
+type KlineOptions = {
+  period?: "day" | "week" | "month";
+  count?: number;
+  adjust?: "none" | "qfq" | "hfq";
+};
+
+type Kline = {
+  date: string;
+  open: number;
+  close: number;
+  high: number;
+  low: number;
+  volume?: number;
+  source?: "tencent" | "sina" | "eastmoney";
+};
+```
+
+默认 `period` 是 `day`，默认 `count` 是 `120`，默认 `adjust` 是 `none`。新浪 K 线不支持复权，传 `qfq` / `hfq` 时会返回空数组。
 
 ## 返回结构
 
@@ -152,6 +195,7 @@ IIFE 产物暴露 `StockApi` 全局变量：
 <script>
   StockApi.stocks.auto.getStock("SH510500").then(console.log);
   StockApi.stocks.auto.getStocks(["SH510500", "SZ000651"]).then(console.log);
+  StockApi.stocks.auto.getKlines("SH600519", { period: "day" }).then(console.log);
   StockApi.stocks.auto.searchStocks("格力电器").then(console.log);
 </script>
 ```
@@ -164,6 +208,7 @@ ESM 产物可以直接 import：
 
   const stock = await stocks.auto.getStock("SH510500");
   const list = await stocks.auto.getStocks(["SH510500", "SZ000651"]);
+  const klines = await stocks.auto.getKlines("SH600519", { period: "day" });
   const results = await stocks.auto.searchStocks("格力电器");
 </script>
 ```
@@ -172,10 +217,11 @@ ESM 产物可以直接 import：
 
 | API | 状态 |
 | --- | --- |
-| `stocks.auto.getStock` / `stocks.auto.getStocks` / `stocks.auto.searchStocks` | 支持，默认优先腾讯 |
-| `stocks.tencent.getStock` / `stocks.tencent.getStocks` / `stocks.tencent.searchStocks` | 支持 |
-| `stocks.eastmoney.getStock` / `stocks.eastmoney.getStocks` / `stocks.eastmoney.searchStocks` | 支持 |
-| `stocks.sina.*` | 浏览器直连不支持，Sina 服务端要求有效 Referer，浏览器无法伪造，建议走 Node.js 或后端代理 |
+| `stocks.auto.getStock` / `stocks.auto.getStocks` / `stocks.auto.searchStocks` / `stocks.auto.getKlines` | 支持，默认优先腾讯 |
+| `stocks.tencent.getStock` / `stocks.tencent.getStocks` / `stocks.tencent.searchStocks` / `stocks.tencent.getKlines` | 支持 |
+| `stocks.eastmoney.getStock` / `stocks.eastmoney.getStocks` / `stocks.eastmoney.searchStocks` / `stocks.eastmoney.getKlines` | 支持 |
+| `stocks.sina.getKlines` | 支持 |
+| `stocks.sina.getStock` / `stocks.sina.getStocks` / `stocks.sina.searchStocks` | 浏览器直连不支持，Sina 服务端要求有效 Referer，浏览器无法伪造，建议走 Node.js 或后端代理 |
 
 生产环境仍建议通过自己的服务端、Serverless function 或 API route 调用 `stock-api`，前端只调用你自己的接口。
 
