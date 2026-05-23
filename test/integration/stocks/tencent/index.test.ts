@@ -61,4 +61,22 @@ describe("【腾讯】股票代码接口", () => {
       ])
     );
   });
+
+  it("获取 K 线数据", async () => {
+    await expect(
+      Tencent.getKlines("SH600519", { count: 3, period: "week" })
+    ).resolves.toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          close: expect.any(Number),
+          date: expect.any(String),
+          high: expect.any(Number),
+          low: expect.any(Number),
+          open: expect.any(Number),
+          source: "tencent",
+          volume: expect.any(Number),
+        }),
+      ])
+    );
+  });
 });

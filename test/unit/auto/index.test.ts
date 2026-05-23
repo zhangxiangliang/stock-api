@@ -1,5 +1,6 @@
 import { createAutoStockApi } from "stocks/auto";
 import StockApi from "types/stocks";
+import Kline from "types/utils/kline";
 import Stock from "types/utils/stock";
 import {
   StockInspectionStatus,
@@ -27,6 +28,25 @@ describe("【自动】股票数据源", () => {
     high: 1458.88,
     yesterday: 1419,
   };
+
+  const availableKlines: Kline[] = [
+    {
+      close: 1290.2,
+      date: "2026-05-22",
+      high: 1311.91,
+      low: 1290.12,
+      open: 1310.95,
+      source: "eastmoney",
+      volume: 4915714,
+    },
+  ];
+
+  const tencentKlines: Kline[] = [
+    {
+      ...availableKlines[0],
+      source: "tencent",
+    },
+  ];
 
   it("单只股票会跳过失败和空结果", async () => {
     const api = createAutoStockApi([
@@ -111,6 +131,16 @@ describe("【自动】股票数据源", () => {
       }),
     ]);
   });
+
+  it("K 线使用统一的数据源兜底顺序", async () => {
+    const api = createAutoStockApi([
+      provider("tencent", { getKlines: async () => tencentKlines }),
+      provider("sina", { getKlines: async () => availableKlines }),
+      provider("eastmoney", { getKlines: async () => availableKlines }),
+    ]);
+
+    await expect(api.getKlines("SH600519")).resolves.toEqual(tencentKlines);
+  });
 });
 
 function provider(
@@ -118,6 +148,7 @@ function provider(
   overrides: Partial<StockApi>
 ) {
   const api: StockProviderApi = {
+    getKlines: async () => [],
     getStock: async () => missingStock(),
     getStocks: async () => [],
     inspectStock: async (code: string): Promise<StockProviderInspection> => {

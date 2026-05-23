@@ -2,7 +2,7 @@ import { StockRequestError } from "../../errors";
 import { isBrowserRuntime } from "../../utils/browser-script";
 import { StockSource } from "../../types/utils/stock";
 
-export type StockProviderFeature = "quote" | "search";
+export type StockProviderFeature = "kline" | "quote" | "search";
 export type StockProviderRuntime = "browser" | "node";
 export type StockProviderSupport = {
   supported: boolean;
@@ -28,10 +28,12 @@ const capabilities: Record<
 > = {
   eastmoney: {
     browser: {
+      kline: supported,
       quote: supported,
       search: supported,
     },
     node: {
+      kline: supported,
       quote: supported,
       search: supported,
     },
@@ -39,10 +41,12 @@ const capabilities: Record<
   },
   sina: {
     browser: {
+      kline: supported,
       quote: sinaBrowserUnsupported,
       search: sinaBrowserUnsupported,
     },
     node: {
+      kline: supported,
       quote: supported,
       search: supported,
     },
@@ -50,10 +54,12 @@ const capabilities: Record<
   },
   tencent: {
     browser: {
+      kline: supported,
       quote: supported,
       search: supported,
     },
     node: {
+      kline: supported,
       quote: supported,
       search: supported,
     },
@@ -87,6 +93,7 @@ function cloneRuntimeCapability(
   capability: Record<StockProviderFeature, StockProviderSupport>
 ): Record<StockProviderFeature, StockProviderSupport> {
   return {
+    kline: { ...capability.kline },
     quote: { ...capability.quote },
     search: { ...capability.search },
   };

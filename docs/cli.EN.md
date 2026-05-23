@@ -29,6 +29,7 @@ npx stock-api --help
 | --- | --- |
 | `get-stock <code>` | Get one quote |
 | `get-stocks <code...>` | Get multiple quotes |
+| `get-klines <code>` | Get daily / weekly / monthly K-lines |
 | `search <keyword>` | Search symbols and return quotes |
 | `help` / `--help` | Show help |
 
@@ -37,6 +38,9 @@ npx stock-api --help
 | Option | Alias | Description | Default |
 | --- | --- | --- | --- |
 | `--source` | `-s` | `auto` / `tencent` / `sina` / `eastmoney` | `auto` |
+| `--period` | `-p` | `day` / `week` / `month` | `day` |
+| `--count` | `-c` | Number of K-line rows | `120` |
+| `--adjust` | - | `none` / `qfq` / `hfq` | `none` |
 
 ## get-stock
 
@@ -98,6 +102,35 @@ npx stock-api search 格力电器 -s sina
 npx stock-api search 贵州茅台 -s eastmoney
 ```
 
+## get-klines
+
+```shell
+npx stock-api get-klines SH600519
+```
+
+Set period and count:
+
+```shell
+npx stock-api get-klines SH600519 --period week --count 20
+npx stock-api get-klines SH600519 --period month --source sina
+```
+
+Output:
+
+```json
+[
+  {
+    "date": "2026-05-22",
+    "open": 1310.95,
+    "close": 1290.2,
+    "high": 1311.91,
+    "low": 1290.12,
+    "source": "tencent",
+    "volume": 49157
+  }
+]
+```
+
 ## Source Selection
 
 | Usage | Behavior |
@@ -132,6 +165,7 @@ npm run build
 node dist/cli.js --help
 node dist/cli.js get-stock SH510500
 node dist/cli.js get-stocks SH510500 SZ000651
+node dist/cli.js get-klines SH600519 --period week --count 20
 node dist/cli.js search 格力电器
 ```
 

@@ -31,6 +31,7 @@ If one provider fails or returns an empty quote, the next provider is tried.
 ```typescript
 const stock = await stocks.auto.getStock("SH510500");
 const list = await stocks.auto.getStocks(["SH510500", "SZ000651"]);
+const klines = await stocks.auto.getKlines("SH600519", { period: "day" });
 const results = await stocks.auto.searchStocks("格力电器");
 ```
 
@@ -43,6 +44,7 @@ Use a provider directly when you do not want fallback:
 ```typescript
 const stock = await stocks.tencent.getStock("SH510500");
 const list = await stocks.sina.getStocks(["SH510500", "SZ000651"]);
+const klines = await stocks.tencent.getKlines("SH600519", { period: "week" });
 const results = await stocks.eastmoney.searchStocks("贵州茅台");
 ```
 
@@ -65,10 +67,51 @@ const capabilities = stocks.getProviderCapabilities();
 type StockApi = {
   getStock(code: string): Promise<Stock>;
   getStocks(codes: string[]): Promise<Stock[]>;
+  getKlines(code: string, options?: KlineOptions): Promise<Kline[]>;
   searchStocks(keyword: string): Promise<Stock[]>;
   inspectStock(code: string): Promise<AutoStockInspection | StockProviderInspection>;
 };
 ```
+
+## K-lines
+
+`getKlines` supports daily, weekly, and monthly K-lines:
+
+```typescript
+const klines = await stocks.auto.getKlines("SH600519", {
+  period: "day",
+  count: 120,
+});
+```
+
+Use one provider directly:
+
+```typescript
+const weekly = await stocks.tencent.getKlines("SH600519", { period: "week" });
+const monthly = await stocks.sina.getKlines("SH600519", { period: "month" });
+```
+
+`stocks.auto.getKlines` falls back in this order: `tencent -> sina -> eastmoney`.
+
+```typescript
+type KlineOptions = {
+  period?: "day" | "week" | "month";
+  count?: number;
+  adjust?: "none" | "qfq" | "hfq";
+};
+
+type Kline = {
+  date: string;
+  open: number;
+  close: number;
+  high: number;
+  low: number;
+  volume?: number;
+  source?: "tencent" | "sina" | "eastmoney";
+};
+```
+
+The default `period` is `day`, default `count` is `120`, and default `adjust` is `none`. Sina K-lines do not support adjusted prices; `qfq` / `hfq` returns an empty array.
 
 ## Return Shape
 
@@ -150,6 +193,7 @@ The IIFE build exposes a `StockApi` global:
 <script>
   StockApi.stocks.auto.getStock("SH510500").then(console.log);
   StockApi.stocks.auto.getStocks(["SH510500", "SZ000651"]).then(console.log);
+  StockApi.stocks.auto.getKlines("SH600519", { period: "day" }).then(console.log);
   StockApi.stocks.auto.searchStocks("格力电器").then(console.log);
 </script>
 ```
@@ -162,6 +206,7 @@ The ESM build can be imported directly:
 
   const stock = await stocks.auto.getStock("SH510500");
   const list = await stocks.auto.getStocks(["SH510500", "SZ000651"]);
+  const klines = await stocks.auto.getKlines("SH600519", { period: "day" });
   const results = await stocks.auto.searchStocks("格力电器");
 </script>
 ```
@@ -170,10 +215,11 @@ Current direct browser status:
 
 | API | Status |
 | --- | --- |
-| `stocks.auto.getStock` / `stocks.auto.getStocks` / `stocks.auto.searchStocks` | Supported, Tencent first by default |
-| `stocks.tencent.getStock` / `stocks.tencent.getStocks` / `stocks.tencent.searchStocks` | Supported |
-| `stocks.eastmoney.getStock` / `stocks.eastmoney.getStocks` / `stocks.eastmoney.searchStocks` | Supported |
-| `stocks.sina.*` | Not supported for direct browser usage; Sina requires a valid Referer that browsers cannot spoof, so use Node.js or a backend proxy |
+| `stocks.auto.getStock` / `stocks.auto.getStocks` / `stocks.auto.searchStocks` / `stocks.auto.getKlines` | Supported, Tencent first by default |
+| `stocks.tencent.getStock` / `stocks.tencent.getStocks` / `stocks.tencent.searchStocks` / `stocks.tencent.getKlines` | Supported |
+| `stocks.eastmoney.getStock` / `stocks.eastmoney.getStocks` / `stocks.eastmoney.searchStocks` / `stocks.eastmoney.getKlines` | Supported |
+| `stocks.sina.getKlines` | Supported |
+| `stocks.sina.getStock` / `stocks.sina.getStocks` / `stocks.sina.searchStocks` | Not supported for direct browser usage; Sina requires a valid Referer that browsers cannot spoof, so use Node.js or a backend proxy |
 
 For production apps, it is still recommended to call `stock-api` from your backend service, serverless function, or API route, and let the frontend call your own endpoint.
 

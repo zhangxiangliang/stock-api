@@ -1,5 +1,6 @@
 import { DEFAULT_STOCK } from "../../utils/constant";
 import StockApi from "../../types/stocks";
+import Kline, { KlineOptions } from "../../types/utils/kline";
 import Stock, { StockSource } from "../../types/utils/stock";
 import eastmoney from "../eastmoney";
 import sina from "../sina";
@@ -41,6 +42,18 @@ export function createAutoStockApi(autoProviders: AutoStockProvider[]): AutoStoc
 
     async getStocks(codes: string[]): Promise<Stock[]> {
       return Promise.all(normalizeCodes(codes).map((code) => api.getStock(code)));
+    },
+
+    async getKlines(code: string, options?: KlineOptions): Promise<Kline[]> {
+      for (const provider of getKlineProviders(autoProviders)) {
+        const klines = await getProviderKlines(provider, code, options);
+
+        if (klines.length > 0) {
+          return klines;
+        }
+      }
+
+      return [];
     },
 
     async searchStocks(key: string): Promise<Stock[]> {
@@ -88,6 +101,32 @@ export function createAutoStockApi(autoProviders: AutoStockProvider[]): AutoStoc
 }
 
 const Auto = createAutoStockApi(providers);
+
+function getKlineProviders(autoProviders: AutoStockProvider[]): AutoStockProvider[] {
+  const order = new Map<AutoStockProvider["name"], number>([
+    ["tencent", 0],
+    ["sina", 1],
+    ["eastmoney", 2],
+  ]);
+
+  return [...autoProviders].sort(
+    (left, right) =>
+      (order.get(left.name) ?? Number.MAX_SAFE_INTEGER) -
+      (order.get(right.name) ?? Number.MAX_SAFE_INTEGER)
+  );
+}
+
+async function getProviderKlines(
+  provider: AutoStockProvider,
+  code: string,
+  options?: KlineOptions
+): Promise<Kline[]> {
+  try {
+    return await provider.api.getKlines(code, options);
+  } catch {
+    return [];
+  }
+}
 
 async function searchProviderStocks(
   provider: AutoStockProvider,

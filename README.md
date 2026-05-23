@@ -28,7 +28,7 @@
 ## 特性
 
 - Node.js / Browser bundler API + TypeScript 类型
-- CLI 查询股票行情和搜索股票
+- CLI 查询股票行情、K 线和搜索股票
 - 默认自动兜底：`tencent -> sina -> eastmoney`
 - 指定数据源：`stocks.tencent` / `stocks.sina` / `stocks.eastmoney`
 - 支持 A 股、港股、美股代码格式
@@ -51,6 +51,7 @@ import { stocks } from "stock-api";
 
 const stock = await stocks.auto.getStock("SH510500");
 const list = await stocks.auto.getStocks(["SH510500", "SZ000651"]);
+const klines = await stocks.auto.getKlines("SH600519", { period: "day" });
 const results = await stocks.auto.searchStocks("格力电器");
 ```
 
@@ -70,6 +71,7 @@ const results = await stocks.auto.searchStocks("格力电器");
 <script>
   StockApi.stocks.auto.getStock("SH510500").then(console.log);
   StockApi.stocks.auto.getStocks(["SH510500", "SZ000651"]).then(console.log);
+  StockApi.stocks.auto.getKlines("SH600519", { period: "day" }).then(console.log);
   StockApi.stocks.auto.searchStocks("格力电器").then(console.log);
 </script>
 ```
@@ -79,6 +81,7 @@ const results = await stocks.auto.searchStocks("格力电器");
 ```shell
 npx stock-api get-stock SH510500
 npx stock-api get-stocks SH510500 SZ000651
+npx stock-api get-klines SH600519 --period day --count 120
 npx stock-api search 格力电器
 ```
 
@@ -88,10 +91,10 @@ npx stock-api search 格力电器
 
 | 数据源 | 用法 | 能力 |
 | --- | --- | --- |
-| 自动兜底 | `stocks.auto` | 单只行情、批量行情、搜索、诊断 |
-| 腾讯 | `stocks.tencent` | 单只行情、批量行情、搜索、诊断 |
-| 新浪 | `stocks.sina` | 单只行情、批量行情、搜索、诊断 |
-| 东方财富 | `stocks.eastmoney` | A 股单只行情、批量行情、搜索、诊断 |
+| 自动兜底 | `stocks.auto` | 单只行情、批量行情、K 线、搜索、诊断 |
+| 腾讯 | `stocks.tencent` | 单只行情、批量行情、K 线、搜索、诊断 |
+| 新浪 | `stocks.sina` | 单只行情、批量行情、K 线、搜索、诊断 |
+| 东方财富 | `stocks.eastmoney` | A 股单只行情、批量行情、K 线、搜索、诊断 |
 
 ## 文档
 

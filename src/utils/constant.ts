@@ -8,6 +8,7 @@ export const ERROR_COMMON_CODE = "请检查统一代码是否正确";
 
 export const ERROR_UNDEFINED_GET_STOCK = "未实现获取股票数据";
 export const ERROR_UNDEFINED_GET_STOCKS = "未实现获取股票数据组";
+export const ERROR_UNDEFINED_GET_KLINES = "未实现获取 K 线数据";
 export const ERROR_UNDEFINED_SEARCH_STOCK = "未实现搜索股票代码";
 
 export const ERROR_UNDEFINED_COMMON_CODE = "未实现统一代码转换股票代码";

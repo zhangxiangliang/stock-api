@@ -5,6 +5,7 @@ describe("【基础】股票代码接口", () => {
   const {
     ERROR_UNDEFINED_GET_STOCK,
     ERROR_UNDEFINED_GET_STOCKS,
+    ERROR_UNDEFINED_GET_KLINES,
     ERROR_UNDEFINED_SEARCH_STOCK,
   } = require("utils/constant");
 
@@ -24,5 +25,11 @@ describe("【基础】股票代码接口", () => {
     await expect(Base.searchStocks("510500"))
       .rejects
       .toThrow(new Error(ERROR_UNDEFINED_SEARCH_STOCK));
+  });
+
+  it("需要获取 K 线数据", async () => {
+    await expect(Base.getKlines("SZ000000"))
+      .rejects
+      .toThrow(new Error(ERROR_UNDEFINED_GET_KLINES));
   });
 });
