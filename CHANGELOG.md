@@ -1,3 +1,16 @@
+# [2.5.0](https://github.com/zhangxiangliang/stock-api/compare/v2.4.1...v2.5.0) (2026-05-23)
+
+
+### Bug Fixes
+
+* align search cli command ([a98b9c6](https://github.com/zhangxiangliang/stock-api/commit/a98b9c6afcbce1a7161697edb63a682cdb6b3891))
+* stabilize eastmoney integration ([08460b1](https://github.com/zhangxiangliang/stock-api/commit/08460b1b86c67d9f05c658829b93ec6a8c6a4006))
+
+
+### Features
+
+* add kline support ([4e43656](https://github.com/zhangxiangliang/stock-api/commit/4e4365655e701cf9ff4e730bc598346d739ba05f))
+
 ## [2.4.1](https://github.com/zhangxiangliang/stock-api/compare/v2.4.0...v2.4.1) (2026-05-22)
 
 
