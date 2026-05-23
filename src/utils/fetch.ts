@@ -36,6 +36,11 @@ class RequestBuilder implements PromiseLike<Response> {
     return this;
   }
 
+  timeout(ms: number): this {
+    this.options.timeout = ms;
+    return this;
+  }
+
   then<TResult1 = Response, TResult2 = never>(
     onfulfilled?:
       | ((value: Response) => TResult1 | PromiseLike<TResult1>)

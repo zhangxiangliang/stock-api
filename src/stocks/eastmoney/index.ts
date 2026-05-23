@@ -47,6 +47,7 @@ type EastmoneyKlineResponse = {
 const quoteFields = "f12,f14,f2,f3,f15,f16,f18";
 const klineFields = "f51,f52,f53,f54,f55,f56";
 const suggestToken = "D43BF722C8E33BDC906FB84D85E326E8";
+const requestTimeoutMs = 5000;
 
 function getSuggestUrl(key: string): string {
   return `https://searchapi.eastmoney.com/api/suggest/get?input=${encodeURIComponent(
@@ -193,7 +194,8 @@ async function requestJson<T>(url: string): Promise<T> {
   const response = await fetch
     .get(url)
     .set("Accept", "application/json,text/plain,*/*")
-    .set("Referer", "https://quote.eastmoney.com/");
+    .set("Referer", "https://quote.eastmoney.com/")
+    .timeout(requestTimeoutMs);
 
   return JSON.parse(response.text) as T;
 }
