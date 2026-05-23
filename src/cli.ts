@@ -57,8 +57,9 @@ async function run(args: string[]): Promise<void> {
       );
       return;
 
+    case "search-stocks":
     case "search":
-      requireValues(parsed.values, "search <keyword>");
+      requireValues(parsed.values, "search-stocks <keyword>");
       printJson(await source.searchStocks(parsed.values.join(" ")));
       return;
 
@@ -168,11 +169,11 @@ function printHelp(): void {
   stock-api get-stock <code> [--source auto|tencent|sina|eastmoney]
   stock-api get-stocks <code...> [--source auto|tencent|sina|eastmoney]
   stock-api get-klines <code> [--period day|week|month] [--count n] [--adjust none|qfq|hfq] [--source auto|tencent|sina|eastmoney]
-  stock-api search <keyword> [--source auto|tencent|sina|eastmoney]
+  stock-api search-stocks <keyword> [--source auto|tencent|sina|eastmoney]
 
 Examples:
   stock-api get-stock SH510500
   stock-api get-stocks SH510500 SZ000651
   stock-api get-klines SH600519 --period week --count 20
-  stock-api search 格力电器 --source eastmoney`);
+  stock-api search-stocks 格力电器 --source eastmoney`);
 }

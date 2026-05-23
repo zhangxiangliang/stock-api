@@ -30,7 +30,7 @@ npx stock-api --help
 | `get-stock <code>` | Get one quote |
 | `get-stocks <code...>` | Get multiple quotes |
 | `get-klines <code>` | Get daily / weekly / monthly K-lines |
-| `search <keyword>` | Search symbols and return quotes |
+| `search-stocks <keyword>` | Search symbols and return quotes |
 | `help` / `--help` | Show help |
 
 ## Options
@@ -83,24 +83,26 @@ Output:
 npx stock-api get-stocks SH510500 SZ000651
 ```
 
-## search
+## search-stocks
 
 ```shell
-npx stock-api search 格力电器
+npx stock-api search-stocks 格力电器
 ```
 
 Multiple words are joined into one keyword:
 
 ```shell
-npx stock-api search 中证 500
+npx stock-api search-stocks 中证 500
 ```
 
 Use one provider:
 
 ```shell
-npx stock-api search 格力电器 -s sina
-npx stock-api search 贵州茅台 -s eastmoney
+npx stock-api search-stocks 格力电器 -s sina
+npx stock-api search-stocks 贵州茅台 -s eastmoney
 ```
+
+`search` is kept as a backward-compatible alias. New code should use `search-stocks`.
 
 ## get-klines
 
@@ -166,7 +168,7 @@ node dist/cli.js --help
 node dist/cli.js get-stock SH510500
 node dist/cli.js get-stocks SH510500 SZ000651
 node dist/cli.js get-klines SH600519 --period week --count 20
-node dist/cli.js search 格力电器
+node dist/cli.js search-stocks 格力电器
 ```
 
 Simulate published `npx` usage:
