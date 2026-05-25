@@ -194,6 +194,15 @@
             不建议设置过小，过于频繁请求可能触发第三方数据源限流或禁止访问。
           </p>
         </div>
+
+        <div class="pt-4 border-t border-slate-200 dark:border-[#1f2635] flex items-center justify-between gap-4">
+          <p class="text-[10px] leading-relaxed text-slate-500 dark:text-slate-400" data-i18n="reset_example_hint">
+            恢复默认自选、周期、颜色和请求频率。
+          </p>
+          <button onclick="resetExampleData()" class="shrink-0 px-3 py-2 border border-red-500/20 bg-red-500/10 text-red-500 hover:bg-red-500/15 text-xs font-semibold rounded-lg transition-colors" data-i18n="reset_example">
+            重置示例数据
+          </button>
+        </div>
       </div>
 
       <div class="mt-8 flex justify-end">
@@ -295,6 +304,7 @@
       sortKey: 'none',
       sortDirection: 'desc',
       logs: [],
+      dataSourceError: '',
       searchLoading: false,
       searchSubmitted: false,
       isInitializing: true,
@@ -318,6 +328,7 @@
         search_btn: "搜索",
         clear_btn: "清除",
         add_btn: "添加",
+        data_source_error: "数据源暂不可用，稍后会自动重试。",
         watchlist_title: "自选列表",
         table_name: "名称",
         table_latest: "最新价",
@@ -350,6 +361,8 @@
         refresh_interval: "请求频率",
         refresh_seconds: "秒",
         refresh_interval_hint: "不建议设置过小，过于频繁请求可能触发第三方数据源限流或禁止访问。",
+        reset_example: "重置示例数据",
+        reset_example_hint: "恢复默认自选、周期、颜色和请求频率。",
         btn_confirm: "确 定",
         toast_high: "刷新今日高点",
         toast_low: "刷新今日低点",
@@ -366,6 +379,7 @@
         search_btn: "Search",
         clear_btn: "Clear",
         add_btn: "Add",
+        data_source_error: "Data source is temporarily unavailable. The demo will retry automatically.",
         watchlist_title: "Watchlist",
         table_name: "Name",
         table_latest: "Latest",
@@ -398,6 +412,8 @@
         refresh_interval: "Request interval",
         refresh_seconds: "seconds",
         refresh_interval_hint: "Avoid very small intervals. Frequent requests may trigger third-party data source rate limits or blocks.",
+        reset_example: "Reset demo data",
+        reset_example_hint: "Restore the default watchlist, period, colors, and request interval.",
         btn_confirm: "Confirm",
         toast_high: "Hit Daily High",
         toast_low: "Hit Daily Low",
@@ -501,6 +517,8 @@
         }
       });
 
+      const failedCount = results.filter(result => result.status === 'rejected').length;
+      appState.dataSourceError = failedCount > 0 ? i18n[appState.lang].data_source_error : '';
       render();
     }
 
@@ -825,6 +843,36 @@
       localStorage.setItem(periodStorageKey, normalizePeriod(appState.activePeriod));
     }
 
+    function getDefaultWatchlist() {
+      return [
+        createWatchStock('SH510500'),
+        createWatchStock('SH510300')
+      ];
+    }
+
+    function resetExampleData() {
+      localStorage.removeItem(watchlistStorageKey);
+      localStorage.removeItem(selectedCodeStorageKey);
+      localStorage.removeItem(periodStorageKey);
+      localStorage.removeItem(colorRuleStorageKey);
+      localStorage.removeItem(refreshIntervalStorageKey);
+
+      appState.watchlist = getDefaultWatchlist();
+      appState.selectedStock = 'SH510500';
+      appState.activePeriod = 'Day';
+      appState.colorRule = 'asia';
+      appState.refreshInterval = 30000;
+      appState.dataSourceError = '';
+
+      saveSettings();
+      savePersistedState();
+      changeColorRule('asia', false);
+      restartMarketSimulation();
+      closeSettingsModal();
+      showWatchlist();
+      refreshWatchlist().catch(() => {});
+    }
+
     function initSettings() {
       const savedTheme = localStorage.getItem('sa_theme') || 'dark';
       const savedRule = localStorage.getItem(colorRuleStorageKey) || 'asia';
@@ -949,6 +997,9 @@
     // Language Switcher - Triggers UI updates
     function changeLanguage(lang, save = true) {
       appState.lang = lang;
+      if (appState.dataSourceError) {
+        appState.dataSourceError = i18n[lang].data_source_error;
+      }
       
       const textMap = { 'zh': '简体中文', 'en': 'English' };
       const label = document.getElementById('current-lang-text');
@@ -1531,6 +1582,17 @@
         .finally(() => render());
     });
 
+    function renderDataSourceAlert() {
+      if (!appState.dataSourceError) return '';
+
+      return `
+        <div class="rounded-xl border border-amber-500/20 bg-amber-500/10 px-4 py-3 text-xs font-sans text-amber-600 dark:text-amber-300 flex items-start gap-2">
+          <span class="mt-0.5 h-2 w-2 rounded-full bg-amber-400 shrink-0"></span>
+          <span>${appState.dataSourceError}</span>
+        </div>
+      `;
+    }
+
     // Render engine matching dynamic template
     function render() {
       const viewPort = document.getElementById('view-port');
@@ -1558,6 +1620,8 @@
             <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-[#f8fafc]" data-i18n="title_tag">${dict.title_tag}</h1>
             <p class="text-slate-500 dark:text-[#5f6a80] text-sm" data-i18n="subtitle_tag">${dict.subtitle_tag}</p>
           </div>
+
+          ${renderDataSourceAlert()}
 
           <!-- Add / Search Bar Panel (Symmetrical Image Wrapper) -->
           <div class="bg-white dark:bg-[#111520] border border-slate-200 dark:border-[#1f2635] rounded-xl p-4 sm:p-5 shadow-lg font-sans">
@@ -1704,6 +1768,8 @@
             </button>
             <span class="min-w-0 max-w-[45vw] truncate text-xs font-mono font-bold text-slate-400 dark:text-[#5f6a80]">${stock.code}</span>
           </div>
+
+          ${renderDataSourceAlert()}
 
           <!-- Highlight Stock Card Header (Symmetrical Grid with Dividers) -->
           <div class="w-full min-w-0 bg-white dark:bg-[#111520] border border-slate-200 dark:border-[#1f2635] rounded-xl overflow-hidden grid grid-cols-12 items-stretch shadow-lg font-sans">
