@@ -25,10 +25,10 @@
 
 <p align="center">
   <a href="https://zhangxiangliang.github.io/stock-api/web-demo/">
-    <img src="https://img.shields.io/badge/Live%20Demo-Web%20Example-3b82f6?style=for-the-badge" alt="Live Demo">
+    <img src="https://img.shields.io/badge/Live%20Demo-WEB%20DEMO-3b82f6?style=for-the-badge" alt="Live Demo">
   </a>
   <a href="https://zhangxiangliang.github.io/stock-api/">
-    <img src="https://img.shields.io/badge/GitHub%20Pages-Examples%20Home-24292f?style=for-the-badge&logo=github" alt="GitHub Pages">
+    <img src="https://img.shields.io/badge/Home%20Page-HOME%20PAGE-24292f?style=for-the-badge" alt="Home Page">
   </a>
 </p>
 
