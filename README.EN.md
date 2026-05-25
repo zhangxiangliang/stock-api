@@ -24,7 +24,9 @@
 </p>
 
 <p align="center">
-  <a href="https://zhangxiangliang.github.io/stock-api/stock-api-web-example/">Live demo</a>
+  <a href="https://zhangxiangliang.github.io/stock-api/stock-api-web-example/">
+    <img src="https://img.shields.io/badge/Live%20Demo-Web%20Example-3b82f6?style=for-the-badge" alt="Live Demo">
+  </a>
 </p>
 
 <p align="center">

@@ -24,7 +24,9 @@
 </p>
 
 <p align="center">
-  <a href="https://zhangxiangliang.github.io/stock-api/stock-api-web-example/">在线示例</a>
+  <a href="https://zhangxiangliang.github.io/stock-api/stock-api-web-example/">
+    <img src="https://img.shields.io/badge/%E5%9C%A8%E7%BA%BF%E4%BD%93%E9%AA%8C-Web%20Demo-3b82f6?style=for-the-badge" alt="在线体验">
+  </a>
 </p>
 
 <p align="center">
