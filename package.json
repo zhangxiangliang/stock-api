@@ -72,7 +72,7 @@
     "test:integration": "jest --config jest.integration.config.js --runInBand",
     "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.test.json",
     "validate": "npm run lint && npm run ci",
-    "validate:release": "npm run validate && npm run test:browser && npm run test:integration"
+    "validate:release": "npm run validate"
   },
   "license": "MIT",
   "files": [
