@@ -25,10 +25,10 @@
 
 <p align="center">
   <a href="https://zhangxiangliang.github.io/stock-api/web-demo/">
-    <img src="https://img.shields.io/badge/%E5%9C%A8%E7%BA%BF%E4%BD%93%E9%AA%8C-Web%20Demo-3b82f6?style=for-the-badge" alt="在线体验">
+    <img src="https://img.shields.io/badge/%E5%9C%A8%E7%BA%BF%E4%BD%93%E9%AA%8C-WEB%20DEMO-3b82f6?style=for-the-badge" alt="在线体验">
   </a>
   <a href="https://zhangxiangliang.github.io/stock-api/">
-    <img src="https://img.shields.io/badge/GitHub%20Pages-%E7%A4%BA%E4%BE%8B%E9%A6%96%E9%A1%B5-24292f?style=for-the-badge&logo=github" alt="GitHub Pages">
+    <img src="https://img.shields.io/badge/%E9%A1%B9%E7%9B%AE%E4%B8%BB%E9%A1%B5-HOME%20PAGE-24292f?style=for-the-badge" alt="项目主页">
   </a>
 </p>
 
