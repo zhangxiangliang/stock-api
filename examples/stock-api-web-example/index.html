@@ -1,0 +1,2114 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>stock-api - 极客股票量化终端</title>
+  <link rel="icon" href="data:,">
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    /* CSS Variables supporting live Up/Down theme changes */
+    :root {
+      --color-up: 239, 68, 68;      /* Default Red Up (239, 68, 68) */
+      --color-down: 16, 185, 129;   /* Default Green Down (16, 185, 129) */
+    }
+    
+    .text-up { color: rgb(var(--color-up)); }
+    .text-down { color: rgb(var(--color-down)); }
+    .bg-up { background-color: rgb(var(--color-up)); }
+    .bg-down { background-color: rgb(var(--color-down)); }
+    .border-up { border-color: rgb(var(--color-up)); }
+    .border-down { border-color: rgb(var(--color-down)); }
+
+    /* Custom scrollbar for absolute modern aesthetic */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(156, 163, 175, 0.25);
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(156, 163, 175, 0.45);
+    }
+
+    /* Glow animations on price updates */
+    @keyframes glow-up {
+      0% { box-shadow: 0 0 0 0px rgba(239, 68, 68, 0.5); background-color: rgba(239, 68, 68, 0.15); }
+      100% { box-shadow: 0 0 0 8px rgba(239, 68, 68, 0); background-color: transparent; }
+    }
+    @keyframes glow-down {
+      0% { box-shadow: 0 0 0 0px rgba(16, 185, 129, 0.5); background-color: rgba(16, 185, 129, 0.15); }
+      100% { box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); background-color: transparent; }
+    }
+    .flash-up {
+      animation: glow-up 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .flash-down {
+      animation: glow-down 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+  </style>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f5f7fa',
+              100: '#eaeef4',
+              500: '#3b82f6',
+              900: '#0f172a',
+              950: '#070a13',
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-[#0d111a] text-slate-100 dark:text-slate-100 min-h-screen overflow-x-hidden transition-colors duration-300 font-sans antialiased">
+
+  <!-- Top Navigation Header -->
+  <header class="border-b border-slate-200 dark:border-[#1f2635] bg-white dark:bg-[#111520] sticky top-0 z-40 transition-colors duration-300">
+    <div class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 min-h-16 py-3 flex flex-wrap items-center justify-between gap-3">
+      <a href="../" class="flex min-w-0 items-center space-x-3">
+        <div class="w-9 h-9 shrink-0 bg-gradient-to-tr from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/20">
+          <!-- Logo Inline SVG (Bulletproof icon) -->
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-white"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline><polyline points="16 7 22 7 22 13"></polyline></svg>
+        </div>
+        <div class="flex flex-col items-start gap-1">
+          <span class="font-bold text-lg !leading-none tracking-tight text-slate-900 dark:text-white">Stock API</span>
+          <span id="app-version-badge" class="text-[10px] px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20 font-mono leading-none">v2.0</span>
+        </div>
+      </a>
+
+      <div class="flex flex-wrap items-center justify-end gap-2">
+        <!-- GitHub Link -->
+        <a href="https://github.com/zhangxiangliang/stock-api" target="_blank" class="h-10 px-3 bg-slate-100 dark:bg-slate-900/80 hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-200 dark:border-[#1f2635] text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white rounded-lg transition-all flex items-center justify-center space-x-1.5 text-sm">
+          <!-- Github Inline SVG -->
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path><path d="M9 18c-4.51 2-5-2-7-2"></path></svg>
+          <span class="hidden sm:inline font-sans">GitHub</span>
+        </a>
+
+        <!-- Classic Language Dropdown Menu (Requested back by user) -->
+        <div class="relative inline-block text-left font-sans" id="lang-menu">
+          <button onclick="toggleDropdown('lang-dropdown')" class="h-10 px-3 bg-slate-100 dark:bg-slate-900/80 hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-200 dark:border-[#1f2635] text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white rounded-lg text-xs flex items-center justify-center space-x-1.5 transition-all focus:outline-none">
+            <!-- Languages Globe Inline SVG -->
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-500 dark:text-slate-400"><path d="m5 8 6 6"></path><path d="m4 14 6-6 2-3"></path><path d="M2 5h12"></path><path d="M7 2h1"></path><path d="m22 22-5-10-5 10"></path><path d="M14 18h6"></path></svg>
+            <span id="current-lang-text" class="font-sans max-[420px]:hidden">简体中文</span>
+            <!-- Chevron Down Inline SVG -->
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-slate-500 transition-transform duration-200" id="lang-chevron"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+          <div id="lang-dropdown" class="hidden absolute right-0 mt-1.5 w-32 bg-white dark:bg-[#111520] border border-slate-200 dark:border-[#1f2635] rounded-lg shadow-xl py-1 z-50">
+            <button onclick="changeLanguage('zh')" class="w-full px-3 py-1.5 text-left text-xs text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white flex items-center justify-between">
+              简体中文 
+              <span id="check-zh" class="hidden text-blue-500">
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              </span>
+            </button>
+            <button onclick="changeLanguage('en')" class="w-full px-3 py-1.5 text-left text-xs text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white flex items-center justify-between">
+              English 
+              <span id="check-en" class="hidden text-blue-500">
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              </span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Independent Dark Mode Toggle Button (Navbar with Symmetrical SVG Container) -->
+        <button id="theme-toggle-btn" onclick="toggleTheme()" class="h-10 w-10 bg-slate-100 dark:bg-slate-900/80 hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-200 dark:border-[#1f2635] text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white rounded-lg transition-all focus:outline-none flex items-center justify-center" title="Toggle Theme">
+          <!-- Automatically filled with bulletproof SVG on load -->
+        </button>
+
+        <!-- Settings Button with Symmetrical Inline SVG (Never breaks) -->
+        <button onclick="openSettingsModal()" class="h-10 w-10 bg-slate-100 dark:bg-slate-900/80 hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-200 dark:border-[#1f2635] text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white rounded-lg transition-all focus:outline-none flex items-center justify-center" title="Settings">
+          <!-- Settings Inline SVG -->
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-600 dark:text-slate-300"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.1a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Body -->
+  <main class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
+
+    <!-- Tab / View Container -->
+    <div id="view-port" class="min-w-0 space-y-6">
+      <!-- Dynamic View elements will render here -->
+    </div>
+
+  </main>
+
+  <!-- Settings Modal (Redesigned) -->
+  <div id="settings-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 font-sans">
+    <div class="bg-white dark:bg-[#111520] border border-slate-200 dark:border-[#1f2635] rounded-xl w-full max-w-md shadow-2xl p-6 relative overflow-hidden">
+      <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-indigo-500"></div>
+      
+      <div class="flex justify-between items-center mb-6">
+        <div>
+          <h3 class="text-base font-bold text-slate-900 dark:text-slate-100" data-i18n="settings_title">偏好设置</h3>
+          <p class="text-xs text-slate-500 dark:text-[#5f6a80] mt-0.5" data-i18n="settings_subtitle">定制您的行情交互体验与系统风格</p>
+        </div>
+        <button onclick="closeSettingsModal()" class="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+
+      <div class="space-y-5">
+        <!-- Market Color Switcher -->
+        <div class="space-y-2">
+          <label class="text-xs font-semibold text-slate-700 dark:text-slate-300 block" data-i18n="color_rule">涨跌颜色规则</label>
+          <div class="grid grid-cols-2 gap-2">
+            <button id="color-rule-intl" onclick="changeColorRule('intl')" class="px-3 py-2 text-xs border border-slate-200 dark:border-slate-850 bg-slate-50 dark:bg-slate-900 rounded-lg flex items-center justify-between text-left transition-all">
+              <div>
+                <span class="block text-slate-700 dark:text-slate-300 font-sans" data-i18n="color_intl">红跌绿涨</span>
+                <span class="text-[10px] text-slate-400 dark:text-slate-500">Green Up / Red Down</span>
+              </div>
+              <div class="w-4 h-4 rounded-full border border-slate-300 dark:border-slate-700 flex items-center justify-center" id="radio-intl"></div>
+            </button>
+            <button id="color-rule-asia" onclick="changeColorRule('asia')" class="px-3 py-2 text-xs border border-slate-200 dark:border-slate-850 bg-slate-50 dark:bg-slate-900 rounded-lg flex items-center justify-between text-left transition-all">
+              <div>
+                <span class="block text-slate-700 dark:text-slate-300 font-sans" data-i18n="color_asia">红涨绿跌</span>
+                <span class="text-[10px] text-slate-400 dark:text-slate-500">Red Up / Green Down</span>
+              </div>
+              <div class="w-4 h-4 rounded-full border border-slate-300 dark:border-slate-700 flex items-center justify-center" id="radio-asia"></div>
+            </button>
+          </div>
+        </div>
+
+        <div class="space-y-2">
+          <label for="refresh-interval-seconds" class="text-xs font-semibold text-slate-700 dark:text-slate-300 block" data-i18n="refresh_interval">请求频率</label>
+          <div class="flex items-center gap-2">
+            <input id="refresh-interval-seconds" type="number" min="10" step="5" class="w-28 px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-850 text-slate-800 dark:text-slate-100 rounded-lg text-xs font-mono focus:outline-none focus:border-blue-500" value="30">
+            <span class="text-xs text-slate-500 dark:text-slate-400" data-i18n="refresh_seconds">秒</span>
+          </div>
+          <p class="text-[10px] leading-relaxed text-amber-600 dark:text-amber-400" data-i18n="refresh_interval_hint">
+            不建议设置过小，过于频繁请求可能触发第三方数据源限流或禁止访问。
+          </p>
+        </div>
+      </div>
+
+      <div class="mt-8 flex justify-end">
+        <button onclick="applySettingsFromModal()" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-xs font-semibold rounded-lg text-white shadow-lg shadow-blue-500/10 transition-colors" data-i18n="btn_confirm">确定</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- API Response Inspect Modal -->
+  <div id="log-detail-modal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 font-mono">
+    <div class="bg-white dark:bg-[#111520] border border-slate-200 dark:border-[#1f2635] rounded-xl w-full max-w-2xl shadow-2xl p-6 relative flex flex-col max-h-[85vh]">
+      <div class="flex justify-between items-center mb-4 border-b border-slate-200 dark:border-[#1f2635] pb-3">
+        <div>
+          <h3 class="text-sm font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+            Inspector
+          </h3>
+          <p class="text-[10px] text-slate-400 mt-1" id="inspect-route-info">StockApi request</p>
+        </div>
+        <button onclick="closeLogDetailModal()" class="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+
+      <div class="grid grid-cols-3 gap-2.5 text-[10px] text-slate-500 mb-4 bg-slate-50 dark:bg-slate-950 p-2.5 rounded-lg border border-slate-200 dark:border-[#1f2635]/60">
+        <div><span data-i18n="inspect_status">状态</span>: <span class="text-green-500 font-bold" id="inspect-status">200 OK</span></div>
+        <div><span data-i18n="inspect_latency">耗时</span>: <span class="text-yellow-500 font-bold" id="inspect-latency">0 ms</span></div>
+        <div><span data-i18n="inspect_time">时间</span>: <span class="text-blue-400" id="inspect-time">--:--:--</span></div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3 flex-1 min-h-0">
+        <div class="flex flex-col min-h-0">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-[10px] uppercase tracking-wider text-slate-500 font-bold" data-i18n="inspect_input">输入</span>
+            <button onclick="copyInspectSection('inspect-input-json')" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-[10px] rounded text-slate-300 transition-colors select-none focus:outline-none">
+              <span data-i18n="copy_btn">复制</span>
+            </button>
+          </div>
+          <div class="flex-1 overflow-auto bg-slate-950 p-4 rounded-lg border border-slate-300 dark:border-[#1f2635] text-[11px] leading-relaxed text-slate-200">
+            <pre><code id="inspect-input-json" class="break-all whitespace-pre-wrap">Awaiting input...</code></pre>
+          </div>
+        </div>
+
+        <div class="flex flex-col min-h-0">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-[10px] uppercase tracking-wider text-slate-500 font-bold" data-i18n="inspect_response">返回</span>
+            <button onclick="copyInspectSection('inspect-response-json')" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-[10px] rounded text-slate-300 transition-colors select-none focus:outline-none">
+              <span data-i18n="copy_btn">复制</span>
+            </button>
+          </div>
+          <div class="flex-1 overflow-auto bg-slate-950 p-4 rounded-lg border border-slate-300 dark:border-[#1f2635] text-[11px] leading-relaxed text-slate-200">
+            <pre><code id="inspect-response-json" class="break-all whitespace-pre-wrap">Awaiting response...</code></pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-4 pt-3 border-t border-slate-200 dark:border-[#1f2635] flex justify-end">
+        <button onclick="closeLogDetailModal()" class="px-4 py-2 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-850 hover:bg-slate-200 dark:hover:bg-slate-800 text-xs font-bold rounded-lg text-slate-800 dark:text-slate-100 transition-colors" data-i18n="close_btn">关闭</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Realtime Market Notification Toast -->
+  <div id="market-toast" class="fixed bottom-4 right-4 bg-white dark:bg-[#111520] border border-slate-200 dark:border-[#1f2635] px-4 py-3 rounded-lg shadow-xl z-50 flex items-center space-x-3 transform translate-y-20 opacity-0 transition-all duration-300 font-sans">
+    <div id="toast-icon-bg" class="w-8 h-8 rounded-full flex items-center justify-center bg-green-500/10 text-green-400">
+      <i data-lucide="arrow-up-right" id="toast-icon" class="w-4 h-4"></i>
+    </div>
+    <div>
+      <p class="text-xs text-slate-500 dark:text-slate-400" id="toast-title">行情更新</p>
+      <p class="text-sm font-semibold text-slate-800 dark:text-slate-100" id="toast-desc">腾讯控股 刷新今日高点</p>
+    </div>
+  </div>
+
+  <script src="./vendor/stock-api.iife.min.js"></script>
+
+  <!-- Full Application Controller Javascript -->
+  <script>
+    const stocks = window.StockApi.stocks;
+    const appMeta = {
+      name: 'stock-api',
+      titleSuffix: '极客股票量化终端',
+      fallbackVersion: 'v0.0.0',
+      versionSources: [
+        { url: 'https://registry.npmjs.org/stock-api/latest', path: 'version' },
+      ]
+    };
+
+    // State of the application
+    const appState = {
+      currentView: 'list', // 'list' or 'details'
+      selectedStock: 'SH510500',
+      activePeriod: 'Day', // 'Day', 'Week', 'Month'
+      lang: 'zh',
+      colorRule: 'asia', // 'asia' = Red up / Green down, 'intl' = Green up / Red down
+      theme: 'dark', // 'dark', 'light'
+      refreshInterval: 30000,
+      searchQuery: '',
+      consoleCollapsed: true,
+      sortKey: 'none',
+      sortDirection: 'desc',
+      logs: [],
+      searchLoading: false,
+      searchSubmitted: false,
+      isInitializing: true,
+      detailOpenedFromList: false,
+      watchlist: [
+        createWatchStock('SH510500'),
+        createWatchStock('SH510300')
+      ],
+      searchResults: [],
+    };
+
+    // Dictionary of translations
+    const i18n = {
+      zh: {
+        title_tag: "Web Demo",
+        subtitle_tag: '在浏览器中使用 <a href="https://github.com/zhangxiangliang/stock-api" target="_blank" rel="noreferrer" class="text-blue-500 hover:text-blue-400 underline underline-offset-4">stock-api</a> 查询行情、搜索股票和查看 K 线。',
+        search_placeholder: "输入股票代码或名称搜索并添加",
+        search_loading: "搜索中...",
+        detail_loading: "正在加载股票详情...",
+        search_no_results: "没有找到匹配的股票代码...",
+        search_btn: "搜索",
+        clear_btn: "清除",
+        add_btn: "添加",
+        watchlist_title: "自选列表",
+        table_name: "名称",
+        table_latest: "最新价",
+        table_change: "涨跌幅",
+        table_actions: "操作",
+        table_remove: "删除",
+        sort_by: "排序:",
+        view_detail_hint: "选择股票查看详情和 K 线。",
+        back_btn: "返回列表",
+        kline_title: "K 线",
+        code_label: "代码",
+        period_label: "周期",
+        period_day: "日",
+        period_week: "周",
+        period_month: "月",
+        rows_label: "条",
+        updated_from_provider: "数据来自 stock-api 自动数据源。",
+        inspect_status: "状态",
+        inspect_latency: "耗时",
+        inspect_time: "时间",
+        inspect_input: "输入",
+        inspect_response: "返回",
+        copy_btn: "复制",
+        close_btn: "关闭",
+        settings_title: "偏好设置",
+        settings_subtitle: "定制您的行情交互体验与系统风格",
+        color_rule: "涨跌红绿规则",
+        color_intl: "红跌绿涨",
+        color_asia: "红涨绿跌",
+        refresh_interval: "请求频率",
+        refresh_seconds: "秒",
+        refresh_interval_hint: "不建议设置过小，过于频繁请求可能触发第三方数据源限流或禁止访问。",
+        btn_confirm: "确 定",
+        toast_high: "刷新今日高点",
+        toast_low: "刷新今日低点",
+        toast_title: "实盘异动通知",
+        console_title: "实时日志"
+      },
+      en: {
+        title_tag: "Web Demo",
+        subtitle_tag: 'Use <a href="https://github.com/zhangxiangliang/stock-api" target="_blank" rel="noreferrer" class="text-blue-500 hover:text-blue-400 underline underline-offset-4">stock-api</a> in the browser to fetch quotes, search symbols, and view K-lines.',
+        search_placeholder: "Search code or name to add...",
+        search_loading: "Searching...",
+        detail_loading: "Loading stock details...",
+        search_no_results: "No matching stocks found.",
+        search_btn: "Search",
+        clear_btn: "Clear",
+        add_btn: "Add",
+        watchlist_title: "Watchlist",
+        table_name: "Name",
+        table_latest: "Latest",
+        table_change: "Change",
+        table_actions: "Action",
+        table_remove: "Remove",
+        sort_by: "Sort:",
+        view_detail_hint: "Select a stock to view details and K-line.",
+        back_btn: "Back to list",
+        kline_title: "K-line",
+        code_label: "Code",
+        period_label: "Period",
+        period_day: "Day",
+        period_week: "Week",
+        period_month: "Month",
+        rows_label: "rows",
+        updated_from_provider: "Updated from stock-api auto provider.",
+        inspect_status: "Status",
+        inspect_latency: "Latency",
+        inspect_time: "Time",
+        inspect_input: "Input",
+        inspect_response: "Response",
+        copy_btn: "Copy",
+        close_btn: "Close",
+        settings_title: "Settings",
+        settings_subtitle: "Configure market styling and layout parameters.",
+        color_rule: "Market Color Standard",
+        color_intl: "Green Up / Red Down",
+        color_asia: "Red Up / Green Down",
+        refresh_interval: "Request interval",
+        refresh_seconds: "seconds",
+        refresh_interval_hint: "Avoid very small intervals. Frequent requests may trigger third-party data source rate limits or blocks.",
+        btn_confirm: "Confirm",
+        toast_high: "Hit Daily High",
+        toast_low: "Hit Daily Low",
+        toast_title: "Intraday Volatility Notification",
+        console_title: "Live Logs"
+      }
+    };
+
+    // Simulated historical data cache to prevent resetting charts
+    const refreshIntervalStorageKey = 'sa_refresh_interval_seconds_v2';
+    const colorRuleStorageKey = 'sa_color_rule_v2';
+    const watchlistStorageKey = 'sa_watchlist_codes_v2';
+    const selectedCodeStorageKey = 'sa_selected_code_v2';
+    const periodStorageKey = 'sa_active_period_v2';
+    const historicalCache = {};
+    const pendingKlineRequests = {};
+
+    function createWatchStock(code, quote = {}) {
+      const normalizedCode = String(code || '').trim().toUpperCase();
+      const now = Number(quote.now || 0);
+      const yesterday = Number(quote.yesterday || 0);
+      const percent = Number.isFinite(Number(quote.percent))
+        ? Number(quote.percent) * 100
+        : yesterday
+          ? ((now - yesterday) / yesterday) * 100
+          : 0;
+
+      return {
+        code: normalizedCode,
+        nameZh: quote.name || normalizedCode,
+        nameEn: quote.name || normalizedCode,
+        price: now,
+        change: Number.isFinite(percent) ? percent : 0,
+        prevClose: yesterday || now || 0,
+        source: quote.source || 'auto',
+        lastResponse: JSON.stringify(quote || {}, null, 2)
+      };
+    }
+
+    function applyQuoteToStock(stock, quote) {
+      const nextStock = createWatchStock(stock.code, quote);
+      Object.assign(stock, nextStock);
+      return stock;
+    }
+
+    function describeError(error) {
+      if (error instanceof Error) return error.message;
+      return String(error || 'Unknown error');
+    }
+
+    async function traceRequest(message, input, request) {
+      const startTime = performance.now();
+      try {
+        const result = await request();
+        logTerminal(message, '200 OK', Math.round(performance.now() - startTime), '', {
+          input,
+          response: result
+        });
+        return result;
+      } catch (error) {
+        logTerminal(message, 'FAILED', Math.round(performance.now() - startTime), describeError(error), {
+          input,
+          error: describeError(error)
+        });
+        throw error;
+      }
+    }
+
+    async function fetchQuote(code) {
+      const quote = await traceRequest(
+        `StockApi.stocks.auto.getStock(${code})`,
+        { selectedCode: code },
+        () => stocks.auto.getStock(code)
+      );
+      return createWatchStock(code, quote);
+    }
+
+    async function refreshStock(code) {
+      const stock = appState.watchlist.find(item => item.code === code);
+      if (!stock) return null;
+      const quote = await traceRequest(
+        `StockApi.stocks.auto.getStock(${code})`,
+        { selectedCode: code },
+        () => stocks.auto.getStock(code)
+      );
+      return applyQuoteToStock(stock, quote);
+    }
+
+    async function refreshWatchlist() {
+      const results = await Promise.allSettled(
+        appState.watchlist.map(stock => traceRequest(
+          `StockApi.stocks.auto.getStock(${stock.code})`,
+          { selectedCode: stock.code },
+          () => stocks.auto.getStock(stock.code)
+        ))
+      );
+
+      results.forEach((result, index) => {
+        if (result.status === 'fulfilled') {
+          applyQuoteToStock(appState.watchlist[index], result.value);
+        }
+      });
+
+      render();
+    }
+
+    function toApiPeriod(period) {
+      if (period === 'Week') return 'week';
+      if (period === 'Month') return 'month';
+      return 'day';
+    }
+
+    function toChartRow(row) {
+      return {
+        time: new Date(`${row.date}T00:00:00`),
+        open: Number(row.open),
+        high: Number(row.high),
+        low: Number(row.low),
+        close: Number(row.close),
+        volume: Number(row.volume || 0)
+      };
+    }
+
+    async function fetchKlineData(symbol, period, count = 80) {
+      const cacheKey = `${symbol}_${period}`;
+      if (historicalCache[cacheKey]) {
+        return historicalCache[cacheKey];
+      }
+
+      if (pendingKlineRequests[cacheKey]) {
+        return pendingKlineRequests[cacheKey];
+      }
+
+      const apiPeriod = toApiPeriod(period);
+      pendingKlineRequests[cacheKey] = (async () => {
+        const rows = await traceRequest(
+          `StockApi.stocks.auto.getKlines(${symbol}, ${apiPeriod}, ${count})`,
+          { selectedCode: symbol, period: apiPeriod, count },
+          () => stocks.auto.getKlines(symbol, { count, period: apiPeriod })
+        );
+
+        if (!rows.length) return [];
+
+        const data = rows.map(toChartRow).filter(row =>
+          Number.isFinite(row.open) &&
+          Number.isFinite(row.high) &&
+          Number.isFinite(row.low) &&
+          Number.isFinite(row.close)
+        );
+
+        calculateMAs(data);
+        historicalCache[cacheKey] = data;
+        return data;
+      })();
+
+      try {
+        return await pendingKlineRequests[cacheKey];
+      } finally {
+        delete pendingKlineRequests[cacheKey];
+      }
+    }
+
+    function normalizeVersion(version) {
+      if (version === null || version === undefined) return '';
+      const rawVersion = String(version).trim();
+      if (!rawVersion) return '';
+      return rawVersion.startsWith('v') ? rawVersion : `v${rawVersion}`;
+    }
+
+    function readPathValue(source, path) {
+      return path.split('.').reduce((value, key) => {
+        if (value && Object.prototype.hasOwnProperty.call(value, key)) {
+          return value[key];
+        }
+        return undefined;
+      }, source);
+    }
+
+    function applyAppVersion(version) {
+      const normalizedVersion = normalizeVersion(version) || appMeta.fallbackVersion;
+      const badge = document.getElementById('app-version-badge');
+      if (badge) {
+        badge.innerText = normalizedVersion;
+        badge.title = `Version ${normalizedVersion}`;
+      }
+      document.title = `${appMeta.name} ${normalizedVersion} - ${appMeta.titleSuffix}`;
+    }
+
+    async function fetchVersionFromSource(source) {
+      const response = await fetch(source.url, { cache: 'no-store' });
+      if (!response.ok) {
+        throw new Error(`Version source unavailable: ${source.url}`);
+      }
+
+      const payload = await response.json();
+      return normalizeVersion(readPathValue(payload, source.path || 'version'));
+    }
+
+    function getGitHubRepoFromHeaderLink() {
+      const githubLink = document.querySelector('a[href*="github.com"]');
+      if (!githubLink) return '';
+
+      try {
+        const url = new URL(githubLink.href);
+        const pathParts = url.pathname.split('/').filter(Boolean);
+        if (url.hostname !== 'github.com' || pathParts.length < 2) return '';
+        return `${pathParts[0]}/${pathParts[1]}`;
+      } catch (error) {
+        return '';
+      }
+    }
+
+    async function fetchGitHubReleaseVersion() {
+      const repo = getGitHubRepoFromHeaderLink();
+      if (!repo) return '';
+
+      const endpoints = [
+        `https://api.github.com/repos/${repo}/releases/latest`,
+        `https://api.github.com/repos/${repo}/tags`
+      ];
+
+      for (const endpoint of endpoints) {
+        try {
+          const response = await fetch(endpoint, { cache: 'no-store' });
+          if (!response.ok) continue;
+          const payload = await response.json();
+          const version = Array.isArray(payload) ? payload[0]?.name : payload.tag_name;
+          const normalizedVersion = normalizeVersion(version);
+          if (normalizedVersion) return normalizedVersion;
+        } catch (error) {
+          // Keep trying other version sources.
+        }
+      }
+
+      return '';
+    }
+
+    async function initAppVersion() {
+      applyAppVersion(appMeta.fallbackVersion);
+
+      for (const source of appMeta.versionSources) {
+        try {
+          const version = await fetchVersionFromSource(source);
+          if (version) {
+            applyAppVersion(version);
+            return;
+          }
+        } catch (error) {
+          // Missing local version files are expected when opening this HTML directly.
+        }
+      }
+
+      const githubVersion = await fetchGitHubReleaseVersion();
+      if (githubVersion) {
+        applyAppVersion(githubVersion);
+      }
+    }
+
+    // Generate incredibly high-fidelity candlestick data procedurally
+    function generateHistoricalData(symbol, period, count = 120) {
+      const cacheKey = `${symbol}_${period}`;
+      if (historicalCache[cacheKey]) {
+        return historicalCache[cacheKey];
+      }
+
+      // Volatility profiles
+      let volatility = 0.015;
+      let basePrice = 50;
+      let drift = 0.0002; // general growth drift
+
+      if (symbol.startsWith('SH') || symbol.startsWith('SZ')) {
+        volatility = 0.012;
+        basePrice = symbol === 'SH600519' ? 1600 : 40;
+      } else if (symbol.startsWith('HK')) {
+        volatility = 0.018;
+        basePrice = 200;
+      } else if (symbol.startsWith('US')) {
+        volatility = 0.022;
+        basePrice = symbol.includes('NVDA') ? 800 : 150;
+      }
+
+      // Seed based on string hash
+      let seed = 0;
+      for (let i = 0; i < symbol.length; i++) {
+        seed += symbol.charCodeAt(i);
+      }
+
+      function pseudoRandom() {
+        let x = Math.sin(seed++) * 10000;
+        return x - Math.floor(x);
+      }
+
+      const data = [];
+      let currentClose = basePrice;
+      let now = new Date();
+
+      // Step back in time
+      for (let i = count; i > 0; i--) {
+        let date = new Date(now.getTime());
+        if (period === '1m') date.setMinutes(now.getMinutes() - i);
+        else if (period === '5m') date.setMinutes(now.getMinutes() - i * 5);
+        else if (period === 'Week') date.setDate(now.getDate() - i * 7);
+        else date.setDate(now.getDate() - i); // Daily default
+
+        // Skip weekends for daily and weekly
+        if ((period === 'Day' || period === 'Week') && (date.getDay() === 0 || date.getDay() === 6)) {
+          continue;
+        }
+
+        // Random walk
+        let changePercent = (pseudoRandom() - 0.49) * volatility + drift;
+        let open = currentClose;
+        let close = open * (1 + changePercent);
+        let high = Math.max(open, close) * (1 + pseudoRandom() * volatility * 0.4);
+        let low = Math.min(open, close) * (1 - pseudoRandom() * volatility * 0.4);
+        let volume = Math.floor((pseudoRandom() * 100000 + 50000) * (basePrice / close));
+
+        data.push({
+          time: date,
+          open: parseFloat(open.toFixed(2)),
+          high: parseFloat(high.toFixed(2)),
+          low: parseFloat(low.toFixed(2)),
+          close: parseFloat(close.toFixed(2)),
+          volume: volume
+        });
+
+        currentClose = close;
+      }
+
+      // Calculate simple moving averages (MAs)
+      calculateMAs(data);
+
+      historicalCache[cacheKey] = data;
+      return data;
+    }
+
+    function calculateMAs(data) {
+      for (let i = 0; i < data.length; i++) {
+        data[i].ma5 = getMA(data, i, 5);
+        data[i].ma10 = getMA(data, i, 10);
+        data[i].ma20 = getMA(data, i, 20);
+      }
+    }
+
+    // Mathematical MA formula
+    function getMA(data, index, period) {
+      if (index < period - 1) return null;
+      let sum = 0;
+      for (let i = 0; i < period; i++) {
+        sum += data[index - i].close;
+      }
+      return parseFloat((sum / period).toFixed(2));
+    }
+
+    // Set Up Global CSS variable colors according to selected rule
+    function updateColors() {
+      const isAsia = appState.colorRule === 'asia';
+      const root = document.documentElement;
+      if (isAsia) {
+        // Red up, Green down (China style)
+        root.style.setProperty('--color-up', '239, 68, 68');     // Red
+        root.style.setProperty('--color-down', '16, 185, 129');  // Green
+      } else {
+        // Green up, Red down (International)
+        root.style.setProperty('--color-up', '16, 185, 129');    // Green
+        root.style.setProperty('--color-down', '239, 68, 68');   // Red
+      }
+    }
+
+    // Initialize LocalStorage parameters
+    function normalizeRefreshInterval(seconds) {
+      if (seconds === null || seconds === undefined || seconds === '') return 30;
+      const numericSeconds = Number(seconds);
+      if (!Number.isFinite(numericSeconds)) return 30;
+      return Math.max(10, Math.round(numericSeconds));
+    }
+
+    function normalizePeriod(period) {
+      return ['Day', 'Week', 'Month'].includes(period) ? period : 'Day';
+    }
+
+    function normalizeWatchlistCodes(value) {
+      if (!Array.isArray(value)) return [];
+
+      const uniqueCodes = [];
+      value.forEach(code => {
+        const normalizedCode = normalizeStockCode(code);
+        if (normalizedCode && !uniqueCodes.includes(normalizedCode)) {
+          uniqueCodes.push(normalizedCode);
+        }
+      });
+
+      return uniqueCodes;
+    }
+
+    function readJsonStorage(key, fallback) {
+      try {
+        const rawValue = localStorage.getItem(key);
+        return rawValue ? JSON.parse(rawValue) : fallback;
+      } catch (error) {
+        return fallback;
+      }
+    }
+
+    function initPersistedState() {
+      const savedCodes = normalizeWatchlistCodes(readJsonStorage(watchlistStorageKey, []));
+      const savedSelectedCode = normalizeStockCode(localStorage.getItem(selectedCodeStorageKey));
+      const savedPeriod = normalizePeriod(localStorage.getItem(periodStorageKey));
+
+      if (savedCodes.length > 0) {
+        appState.watchlist = savedCodes.map(code => createWatchStock(code));
+      }
+
+      if (savedSelectedCode) {
+        appState.selectedStock = savedSelectedCode;
+      }
+
+      appState.activePeriod = savedPeriod;
+    }
+
+    function savePersistedState() {
+      const codes = normalizeWatchlistCodes(appState.watchlist.map(stock => stock.code));
+      localStorage.setItem(watchlistStorageKey, JSON.stringify(codes));
+      localStorage.setItem(selectedCodeStorageKey, normalizeStockCode(appState.selectedStock));
+      localStorage.setItem(periodStorageKey, normalizePeriod(appState.activePeriod));
+    }
+
+    function initSettings() {
+      const savedTheme = localStorage.getItem('sa_theme') || 'dark';
+      const savedRule = localStorage.getItem(colorRuleStorageKey) || 'asia';
+      const savedLang = localStorage.getItem('sa_lang') || 'zh';
+      const savedConsoleCollapsed = localStorage.getItem('sa_console_collapsed');
+      const savedRefreshInterval = localStorage.getItem(refreshIntervalStorageKey);
+
+      appState.theme = savedTheme;
+      appState.colorRule = savedRule;
+      appState.lang = savedLang;
+      appState.refreshInterval = normalizeRefreshInterval(savedRefreshInterval) * 1000;
+      appState.consoleCollapsed = savedConsoleCollapsed !== null
+        ? savedConsoleCollapsed === 'true'
+        : true;
+
+      changeTheme(savedTheme, false);
+      changeColorRule(savedRule, false);
+      changeLanguage(savedLang, false);
+    }
+
+    // Save configuration utility
+    function saveSettings() {
+      localStorage.setItem('sa_theme', appState.theme);
+      localStorage.setItem(colorRuleStorageKey, appState.colorRule);
+      localStorage.setItem('sa_lang', appState.lang);
+      localStorage.setItem('sa_console_collapsed', appState.consoleCollapsed);
+      localStorage.setItem(refreshIntervalStorageKey, Math.round(appState.refreshInterval / 1000));
+    }
+
+    // Toggle dropdown UI (Enhanced for animation and rotate chevron)
+    function toggleDropdown(id) {
+      const el = document.getElementById(id);
+      const chevron = document.getElementById('lang-chevron');
+      if (el.classList.contains('hidden')) {
+        el.classList.remove('hidden');
+        if (chevron) chevron.classList.add('rotate-180');
+      } else {
+        el.classList.add('hidden');
+        if (chevron) chevron.classList.remove('rotate-180');
+      }
+    }
+
+    // Hide menus on outside click
+    window.addEventListener('click', function(e) {
+      const langMenu = document.getElementById('lang-menu');
+      const langDropdown = document.getElementById('lang-dropdown');
+      const chevron = document.getElementById('lang-chevron');
+      if (langMenu && !langMenu.contains(e.target)) {
+        if (langDropdown) langDropdown.classList.add('hidden');
+        if (chevron) chevron.classList.remove('rotate-180');
+      }
+    });
+
+    // Theme Management - Toggles dark vs light theme
+    function toggleTheme() {
+      const nextTheme = appState.theme === 'dark' ? 'light' : 'dark';
+      changeTheme(nextTheme);
+    }
+
+    function changeTheme(mode, save = true) {
+      appState.theme = mode;
+      const root = document.documentElement;
+      
+      let actualDark = mode === 'dark';
+
+      if (actualDark) {
+        root.classList.add('dark');
+        document.body.className = "bg-[#0d111a] text-slate-100 dark:text-slate-100 min-h-screen transition-colors duration-300 font-sans antialiased";
+      } else {
+        root.classList.remove('dark');
+        document.body.className = "bg-[#f8fafc] text-[#0f172a] min-h-screen transition-colors duration-300 font-sans antialiased";
+      }
+
+      // Update navbar toggle icon dynamically using bulletproof inline SVG injection
+      const themeToggleBtn = document.getElementById('theme-toggle-btn');
+      if (themeToggleBtn) {
+        if (actualDark) {
+          // Show Sun SVG when in Dark theme (ready to switch to Light)
+          themeToggleBtn.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-600 dark:text-slate-300"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg>
+          `;
+        } else {
+          // Show Moon SVG when in Light theme (ready to switch to Dark)
+          themeToggleBtn.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-600 dark:text-slate-300"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg>
+          `;
+        }
+      }
+
+      if (save) saveSettings();
+      drawChart(); 
+    }
+
+    // Color Rule Manager
+    function changeColorRule(rule, save = true) {
+      appState.colorRule = rule;
+      updateColors();
+
+      const radioIntl = document.getElementById('radio-intl');
+      const radioAsia = document.getElementById('radio-asia');
+      const cardIntl = document.getElementById('color-rule-intl');
+      const cardAsia = document.getElementById('color-rule-asia');
+
+      if (radioIntl && radioAsia) {
+        if (rule === 'intl') {
+          radioIntl.innerHTML = '<div class="w-2.5 h-2.5 bg-blue-500 rounded-full"></div>';
+          radioAsia.innerHTML = '';
+          cardIntl.classList.add('border-blue-500', 'bg-blue-500/10');
+          cardAsia.classList.remove('border-blue-500', 'bg-blue-500/10');
+        } else {
+          radioAsia.innerHTML = '<div class="w-2.5 h-2.5 bg-blue-500 rounded-full"></div>';
+          radioIntl.innerHTML = '';
+          cardAsia.classList.add('border-blue-500', 'bg-blue-500/10');
+          cardIntl.classList.remove('border-blue-500', 'bg-blue-500/10');
+        }
+      }
+
+      if (save) saveSettings();
+      render();
+    }
+
+    // Language Switcher - Triggers UI updates
+    function changeLanguage(lang, save = true) {
+      appState.lang = lang;
+      
+      const textMap = { 'zh': '简体中文', 'en': 'English' };
+      const label = document.getElementById('current-lang-text');
+      if (label) label.innerText = textMap[lang];
+
+      const checkZh = document.getElementById('check-zh');
+      const checkEn = document.getElementById('check-en');
+      if (checkZh && checkEn) {
+        if (lang === 'zh') {
+          checkZh.classList.remove('hidden');
+          checkEn.classList.add('hidden');
+        } else {
+          checkEn.classList.remove('hidden');
+          checkZh.classList.add('hidden');
+        }
+      }
+
+      if (save) saveSettings();
+      render();
+    }
+
+    // Modal control
+    function openSettingsModal() {
+      document.getElementById('settings-modal').classList.remove('hidden');
+      const intervalInput = document.getElementById('refresh-interval-seconds');
+      if (intervalInput) {
+        intervalInput.value = Math.round(appState.refreshInterval / 1000);
+      }
+      lucide.createIcons();
+    }
+
+    function closeSettingsModal() {
+      document.getElementById('settings-modal').classList.add('hidden');
+    }
+
+    function applySettingsFromModal() {
+      const intervalInput = document.getElementById('refresh-interval-seconds');
+      if (intervalInput) {
+        appState.refreshInterval = normalizeRefreshInterval(intervalInput.value) * 1000;
+        intervalInput.value = Math.round(appState.refreshInterval / 1000);
+      }
+
+      saveSettings();
+      restartMarketSimulation();
+      closeSettingsModal();
+    }
+
+    // Translate dynamic DOM values
+    function translateDOM() {
+      const dict = i18n[appState.lang];
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (dict[key]) {
+          if (el.tagName === 'INPUT') {
+            el.placeholder = dict[key];
+          } else if (key === 'subtitle_tag') {
+            el.innerHTML = dict[key];
+          } else {
+            el.innerText = dict[key];
+          }
+        }
+      });
+    }
+
+    function getSortedWatchlist() {
+      const list = [...appState.watchlist];
+      if (appState.sortKey === 'none') return list;
+
+      list.sort((a, b) => {
+        if (appState.sortKey === 'name') {
+          const valA = appState.lang === 'zh' ? a.nameZh : a.nameEn;
+          const valB = appState.lang === 'zh' ? b.nameZh : b.nameEn;
+          return appState.sortDirection === 'asc'
+            ? valA.localeCompare(valB, appState.lang === 'zh' ? 'zh' : 'en')
+            : valB.localeCompare(valA, appState.lang === 'zh' ? 'zh' : 'en');
+        }
+
+        const valA = appState.sortKey === 'change' ? a.change : a.price;
+        const valB = appState.sortKey === 'change' ? b.change : b.price;
+        return appState.sortDirection === 'asc' ? valA - valB : valB - valA;
+      });
+
+      return list;
+    }
+
+    function setSort(key) {
+      if (appState.sortKey === key) {
+        appState.sortDirection = appState.sortDirection === 'asc' ? 'desc' : 'asc';
+      } else {
+        appState.sortKey = key;
+        appState.sortDirection = 'desc';
+      }
+
+      render();
+    }
+
+    function renderSortIcon(key) {
+      if (appState.sortKey !== key) {
+        return `
+          <svg class="w-3 h-3 text-slate-400 dark:text-[#5f6a80] ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 15L12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9" />
+          </svg>
+        `;
+      }
+
+      return appState.sortDirection === 'asc'
+        ? `<svg class="w-3 h-3 text-blue-500 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5" /></svg>`
+        : `<svg class="w-3 h-3 text-blue-500 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg>`;
+    }
+
+    function getPeriodLabel(period) {
+      const dict = i18n[appState.lang];
+      if (period === 'Week') return dict.period_week;
+      if (period === 'Month') return dict.period_month;
+      return dict.period_day;
+    }
+
+    function escapeLogText(value) {
+      return String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    let inspectIndex = -1;
+
+    function logTerminal(message, status, latency, errorMsg = '', payload = null) {
+      const timestamp = new Date().toLocaleTimeString();
+      appState.logs.push({ timestamp, message, status, latency, errorMsg, payload });
+
+      if (appState.logs.length > 100) {
+        appState.logs.shift();
+      }
+
+      renderConsoleLogsOnly();
+    }
+
+    function isSuccessStatus(status) {
+      return status === 200 ||
+        status === '200 OK' ||
+        String(status).startsWith('2');
+    }
+
+    function renderConsoleLogsOnly() {
+      const consoleLog = document.getElementById('terminal-logs');
+      if (!consoleLog) return;
+
+      const countLabel = document.getElementById('console-log-count');
+      if (countLabel) {
+        countLabel.innerText = `(${appState.logs.length})`;
+      }
+
+      consoleLog.innerHTML = appState.logs.map((log, index) => {
+        const statusColor = isSuccessStatus(log.status) ? 'text-green-400' : 'text-red-400';
+        const errorText = log.errorMsg ? ` (${escapeLogText(log.errorMsg)})` : '';
+        const latencyText = log.errorMsg ? '' : ` <span class="text-slate-400">(${Number(log.latency || 0)}ms)</span>`;
+
+        return `
+          <div onclick="openLogDetails(${index}, event)" class="py-1 px-2 hover:bg-slate-900/60 rounded cursor-pointer transition-colors border-b border-slate-900/30 last:border-0 flex justify-between items-center group">
+            <span class="truncate pr-4">
+              <span class="text-slate-500">[${escapeLogText(log.timestamp)}]</span>
+              <span class="text-blue-400">${escapeLogText(log.message)}</span>
+              <span class="text-slate-500"> -> </span>
+              <span class="${statusColor}">${escapeLogText(log.status)}${errorText}</span>${latencyText}
+            </span>
+            <span class="text-[9px] bg-slate-800 text-slate-400 px-1 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity">Inspect</span>
+          </div>
+        `;
+      }).join('');
+
+      const wrapper = document.getElementById('terminal-logs-wrapper');
+      if (wrapper && !appState.consoleCollapsed) {
+        wrapper.scrollTop = wrapper.scrollHeight;
+      }
+    }
+
+    function openLogDetails(index, event) {
+      if (event) event.stopPropagation();
+      const log = appState.logs[index];
+      if (!log) return;
+
+      inspectIndex = index;
+      const statusEl = document.getElementById('inspect-status');
+      const inputCode = document.getElementById('inspect-input-json');
+      const responseCode = document.getElementById('inspect-response-json');
+      const payload = log.payload || {};
+
+      document.getElementById('inspect-route-info').innerText = log.message;
+      statusEl.innerText = log.status;
+      statusEl.className = `${isSuccessStatus(log.status) ? 'text-green-500' : 'text-red-500'} font-bold`;
+      document.getElementById('inspect-latency').innerText = `${Number(log.latency || 0)} ms`;
+      document.getElementById('inspect-time').innerText = log.timestamp;
+
+      inputCode.innerText = JSON.stringify(payload.input ?? null, null, 2);
+      responseCode.innerText = JSON.stringify(payload.response ?? payload.error ?? null, null, 2);
+
+      document.getElementById('log-detail-modal').classList.remove('hidden');
+    }
+
+    function closeLogDetailModal() {
+      document.getElementById('log-detail-modal').classList.add('hidden');
+      inspectIndex = -1;
+    }
+
+    function copyInspectSection(id) {
+      const codeArea = document.getElementById(id);
+      if (!codeArea) return;
+
+      const tempTextArea = document.createElement('textarea');
+      tempTextArea.value = codeArea.innerText;
+      document.body.appendChild(tempTextArea);
+      tempTextArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(tempTextArea);
+    }
+
+    function toggleConsole() {
+      appState.consoleCollapsed = !appState.consoleCollapsed;
+      saveSettings();
+
+      const wrapper = document.getElementById('terminal-logs-wrapper');
+      const chevron = document.getElementById('console-chevron');
+
+      if (!wrapper || !chevron) return;
+
+      if (appState.consoleCollapsed) {
+        wrapper.classList.add('hidden');
+        chevron.classList.remove('rotate-180');
+      } else {
+        wrapper.classList.remove('hidden');
+        chevron.classList.add('rotate-180');
+        renderConsoleLogsOnly();
+        wrapper.scrollTop = wrapper.scrollHeight;
+      }
+    }
+
+    function clearLogs(event) {
+      if (event) event.stopPropagation();
+      appState.logs = [];
+      renderConsoleLogsOnly();
+    }
+
+    function renderConsoleComponentHTML() {
+      const dict = i18n[appState.lang];
+      return `
+        <div class="border border-slate-200 dark:border-[#1f2635] rounded-xl overflow-hidden bg-white dark:bg-[#111520] shadow-lg font-mono">
+          <div onclick="toggleConsole()" class="px-5 py-3.5 bg-slate-50 dark:bg-slate-900/40 flex justify-between items-center cursor-pointer select-none border-b border-slate-200 dark:border-[#1f2635] transition-colors hover:bg-slate-100 dark:hover:bg-slate-800/20">
+            <div class="flex items-center space-x-2.5">
+              <span class="relative flex h-2 w-2">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+              </span>
+              <span class="text-[11px] font-bold tracking-wider text-slate-600 dark:text-slate-300 uppercase">
+                ${dict.console_title || 'Live Logs'}
+                <span id="console-log-count">(${appState.logs.length})</span>
+              </span>
+            </div>
+            <div class="flex items-center space-x-4">
+              <button onclick="clearLogs(event)" class="p-1 text-slate-400 dark:text-[#5f6a80] hover:text-red-500 transition-colors" title="Clear logs">
+                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg>
+              </button>
+              <svg id="console-chevron" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="text-slate-500 transition-transform duration-200 ${appState.consoleCollapsed ? '' : 'rotate-180'}"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </div>
+          </div>
+          <div id="terminal-logs-wrapper" class="${appState.consoleCollapsed ? 'hidden' : ''} bg-[#04060b] p-4 text-[10px] leading-relaxed text-[#10b981] h-48 overflow-y-auto space-y-1">
+            <div id="terminal-logs"></div>
+          </div>
+        </div>
+      `;
+    }
+
+    let marketIntervalId = null;
+
+    // Periodic real quote refresh.
+    function startMarketSimulation() {
+      if (marketIntervalId) return;
+
+      marketIntervalId = setInterval(() => {
+        refreshWatchlist().catch(() => {});
+      }, appState.refreshInterval);
+    }
+
+    function restartMarketSimulation() {
+      if (marketIntervalId) {
+        clearInterval(marketIntervalId);
+        marketIntervalId = null;
+      }
+
+      startMarketSimulation();
+    }
+
+    function triggerMarketToast(stock, isUp) {
+      const toast = document.getElementById('market-toast');
+      const iconBg = document.getElementById('toast-icon-bg');
+      const icon = document.getElementById('toast-icon');
+      const title = document.getElementById('toast-title');
+      const desc = document.getElementById('toast-desc');
+      const dict = i18n[appState.lang];
+
+      title.innerText = dict.toast_title;
+      desc.innerText = `${appState.lang === 'zh' ? stock.nameZh : stock.nameEn} ${isUp ? dict.toast_high : dict.toast_low} (${stock.price.toFixed(2)})`;
+
+      if (isUp) {
+        iconBg.className = "w-8 h-8 rounded-full flex items-center justify-center bg-red-500/10 text-red-400";
+        icon.setAttribute('data-lucide', 'arrow-up-right');
+      } else {
+        iconBg.className = "w-8 h-8 rounded-full flex items-center justify-center bg-emerald-500/10 text-emerald-400";
+        icon.setAttribute('data-lucide', 'arrow-down-left');
+      }
+
+      lucide.createIcons();
+
+      toast.classList.remove('opacity-0', 'translate-y-20');
+      toast.classList.add('opacity-100', 'translate-y-0');
+
+      setTimeout(() => {
+        toast.classList.remove('opacity-100', 'translate-y-0');
+        toast.classList.add('opacity-0', 'translate-y-20');
+      }, 3500);
+    }
+
+    function updateActiveDetailHeader(stock) {
+      const detailTitleEl = document.getElementById('detail-stock-name');
+      const detailPriceEl = document.getElementById('detail-stock-price');
+      const detailChangeEl = document.getElementById('detail-stock-change');
+      
+      if (detailTitleEl && detailPriceEl && detailChangeEl) {
+        detailTitleEl.innerText = appState.lang === 'zh' ? stock.nameZh : stock.nameEn;
+        detailPriceEl.innerText = stock.price.toFixed(2);
+        
+        const isUp = stock.change >= 0;
+        const colorClass = appState.colorRule === 'asia' 
+          ? (isUp ? 'text-red-500' : 'text-emerald-500')
+          : (isUp ? 'text-emerald-500' : 'text-red-500');
+        
+        detailChangeEl.innerText = (isUp ? '+' : '') + stock.change.toFixed(2) + '%';
+        detailChangeEl.className = `text-lg font-extrabold font-mono tracking-tight ${colorClass}`;
+      }
+    }
+
+    function appendRealtimeCandleTick(symbol, currentPrice) {
+      const cacheKey = `${symbol}_${appState.activePeriod}`;
+      const data = historicalCache[cacheKey];
+      if (!data || data.length === 0) return;
+
+      const lastCandle = data[data.length - 1];
+      
+      lastCandle.close = currentPrice;
+      if (currentPrice > lastCandle.high) lastCandle.high = currentPrice;
+      if (currentPrice < lastCandle.low) lastCandle.low = currentPrice;
+
+      calculateMAs(data);
+      drawChart();
+    }
+
+    let searchRequestToken = 0;
+
+    // Handle Search Auto-Suggest and Adding Stocks
+    function handleSearchInput(e) {
+      const query = e.target.value.trim();
+      const shouldResetVisibleResults = appState.searchSubmitted || appState.searchLoading || appState.searchResults.length > 0;
+      appState.searchQuery = query;
+      appState.searchLoading = false;
+      appState.searchSubmitted = false;
+      appState.searchResults = [];
+
+      if (!query || shouldResetVisibleResults) {
+        render();
+      } else {
+        syncSearchActionButton();
+      }
+    }
+
+    function syncSearchActionButton() {
+      const button = document.getElementById('search-action-btn');
+      if (!button) return;
+
+      const dict = i18n[appState.lang];
+      const showSearchResults = appState.searchQuery && appState.searchSubmitted;
+      button.classList.toggle('hidden', !appState.searchQuery);
+      button.innerText = showSearchResults ? dict.clear_btn : dict.search_btn;
+      button.onclick = showSearchResults ? clearSearch : handleSearchSubmit;
+    }
+
+    function handleSearchKeydown(event) {
+      if (event.key !== 'Enter') return;
+      event.preventDefault();
+      handleSearchSubmit();
+    }
+
+    function handleSearchSubmit() {
+      const input = document.getElementById('search-input');
+      const query = input ? input.value.trim() : appState.searchQuery.trim();
+      appState.searchQuery = query;
+
+      if (!query) {
+        appState.searchLoading = false;
+        appState.searchSubmitted = false;
+        appState.searchResults = [];
+        render();
+        return;
+      }
+
+      const token = ++searchRequestToken;
+      appState.searchLoading = true;
+      appState.searchSubmitted = true;
+      appState.searchResults = [];
+      render();
+      searchStocks(query, token).catch(() => {});
+    }
+
+    async function searchStocks(query, token) {
+      let matches = [];
+      try {
+        const currentCodes = appState.watchlist.map(s => s.code);
+        matches = (await traceRequest(
+          `StockApi.stocks.auto.searchStocks(${query})`,
+          { query },
+          () => stocks.auto.searchStocks(query)
+        ))
+          .filter(stock => stock && stock.code && !currentCodes.includes(stock.code))
+          .slice(0, 8);
+      } catch (error) {
+        matches = [];
+      }
+
+      if (token !== searchRequestToken) {
+        return;
+      }
+
+      appState.searchLoading = false;
+      appState.searchSubmitted = true;
+      appState.searchResults = matches;
+      render();
+    }
+
+    function clearSearch() {
+      searchRequestToken++;
+      appState.searchQuery = '';
+      appState.searchLoading = false;
+      appState.searchSubmitted = false;
+      appState.searchResults = [];
+      render();
+    }
+
+    function normalizeStockCode(code) {
+      return String(code || '').trim().toUpperCase();
+    }
+
+    function getRouteCode() {
+      return normalizeStockCode(new URLSearchParams(window.location.search).get('code'));
+    }
+
+    function getExampleBasePath() {
+      return window.location.pathname.replace(/\/index\.html$/, '/');
+    }
+
+    function getStockDetailHref(code) {
+      const url = new URL(window.location.href);
+      url.pathname = getExampleBasePath();
+      url.search = '';
+      url.searchParams.set('code', normalizeStockCode(code));
+      url.hash = '';
+      return `${url.pathname}${url.search}`;
+    }
+
+    function updateRouteCode(code, replace = false) {
+      const url = new URL(window.location.href);
+      const normalizedCode = normalizeStockCode(code);
+
+      if (normalizedCode) {
+        url.searchParams.set('code', normalizedCode);
+      } else {
+        url.searchParams.delete('code');
+      }
+
+      const nextUrl = `${url.pathname}${url.search}${url.hash}`;
+      const currentUrl = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+      if (nextUrl === currentUrl) return;
+
+      const method = replace ? 'replaceState' : 'pushState';
+      window.history[method]({}, '', nextUrl);
+    }
+
+    async function ensureWatchStock(code) {
+      const normalizedCode = normalizeStockCode(code);
+      if (!normalizedCode || appState.watchlist.some(s => s.code === normalizedCode)) return;
+
+      try {
+        appState.watchlist.unshift(await fetchQuote(normalizedCode));
+      } catch (error) {
+        appState.watchlist.unshift(createWatchStock(normalizedCode));
+      }
+
+      savePersistedState();
+    }
+
+    async function addStockFromCatalog(code) {
+      const normalizedCode = normalizeStockCode(code);
+      if (!normalizedCode || appState.watchlist.some(s => s.code === normalizedCode)) return;
+
+      try {
+        appState.watchlist.unshift(await fetchQuote(normalizedCode));
+      } catch (error) {
+        appState.watchlist.unshift(createWatchStock(normalizedCode));
+      }
+
+      savePersistedState();
+      appState.searchQuery = '';
+      appState.searchLoading = false;
+      appState.searchSubmitted = false;
+      appState.searchResults = [];
+      
+      const searchInput = document.getElementById('search-input');
+      if (searchInput) searchInput.value = '';
+      render();
+    }
+
+    function removeStock(code, event) {
+      if (event) event.stopPropagation(); 
+      appState.watchlist = appState.watchlist.filter(s => s.code !== code);
+      if (appState.selectedStock === code) {
+        appState.selectedStock = appState.watchlist[0]?.code || 'SH510500';
+      }
+      savePersistedState();
+      render();
+    }
+
+    function showWatchlist() {
+      if (appState.detailOpenedFromList && getRouteCode()) {
+        appState.detailOpenedFromList = false;
+        window.history.back();
+        return;
+      }
+
+      appState.detailOpenedFromList = false;
+      appState.currentView = 'list';
+      updateRouteCode('', true);
+      render();
+    }
+
+    function viewStockDetails(code, event) {
+      const normalizedCode = normalizeStockCode(code);
+      if (!normalizedCode) return;
+
+      if (event && (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button === 1)) {
+        return;
+      }
+
+      if (event) event.preventDefault();
+      appState.detailOpenedFromList = true;
+      appState.selectedStock = normalizedCode;
+      appState.currentView = 'details';
+      updateRouteCode(normalizedCode);
+      savePersistedState();
+      render();
+    }
+
+    async function applyRouteState(replace = true) {
+      const routeCode = getRouteCode();
+      if (!routeCode) {
+        appState.detailOpenedFromList = false;
+        appState.currentView = 'list';
+        return;
+      }
+
+      appState.detailOpenedFromList = false;
+      appState.selectedStock = routeCode;
+      appState.currentView = 'details';
+      updateRouteCode(routeCode, replace);
+      await ensureWatchStock(routeCode);
+      savePersistedState();
+    }
+
+    window.addEventListener('popstate', () => {
+      applyRouteState(false)
+        .catch(() => {})
+        .finally(() => render());
+    });
+
+    // Render engine matching dynamic template
+    function render() {
+      const viewPort = document.getElementById('view-port');
+      const dict = i18n[appState.lang];
+
+      if (appState.isInitializing && getRouteCode()) {
+        viewPort.innerHTML = `
+          <div class="min-h-[55vh] flex items-center justify-center font-sans">
+            <div class="flex flex-col items-center gap-3 text-center">
+              <div class="h-8 w-8 rounded-full border-2 border-slate-200 dark:border-[#1f2635] border-t-blue-500 animate-spin"></div>
+              <div class="text-sm font-semibold text-slate-700 dark:text-slate-200">${dict.detail_loading}</div>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      if (appState.currentView === 'list') {
+        const sortedList = getSortedWatchlist();
+        const showSearchResults = appState.searchQuery && appState.searchSubmitted;
+
+        viewPort.innerHTML = `
+          <!-- Title Section -->
+          <div class="min-w-0 space-y-1.5 font-sans">
+            <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-[#f8fafc]" data-i18n="title_tag">${dict.title_tag}</h1>
+            <p class="text-slate-500 dark:text-[#5f6a80] text-sm" data-i18n="subtitle_tag">${dict.subtitle_tag}</p>
+          </div>
+
+          <!-- Add / Search Bar Panel (Symmetrical Image Wrapper) -->
+          <div class="bg-white dark:bg-[#111520] border border-slate-200 dark:border-[#1f2635] rounded-xl p-4 sm:p-5 shadow-lg font-sans">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div class="flex-1">
+                <span class="text-[10px] text-slate-500 dark:text-[#5f6a80] font-bold block mb-1">${dict.code_label}</span>
+                <input id="search-input" oninput="handleSearchInput(event)" onkeydown="handleSearchKeydown(event)" type="text" value="${appState.searchQuery}" placeholder="${dict.search_placeholder}" class="w-full bg-transparent text-slate-900 dark:text-[#f8fafc] text-sm font-mono focus:outline-none placeholder-slate-400 dark:placeholder-[#5f6a80]">
+              </div>
+              <button id="search-action-btn" onclick="${showSearchResults ? 'clearSearch()' : 'handleSearchSubmit()'}" class="${appState.searchQuery ? '' : 'hidden'} ${showSearchResults ? 'bg-slate-500 hover:bg-slate-600 shadow-slate-500/10' : 'bg-[#3b82f6] hover:bg-blue-600 shadow-blue-500/10'} w-full sm:w-auto text-white text-xs font-semibold px-5 py-2.5 rounded-lg shadow-lg active:scale-[0.98] transition-all">
+                ${showSearchResults ? dict.clear_btn : dict.search_btn}
+              </button>
+            </div>
+
+            ${showSearchResults ? `
+              <div id="search-results" class="mt-4 border border-slate-200 dark:border-[#1f2635] rounded-xl overflow-hidden bg-slate-50 dark:bg-[#0d111a]">
+                ${appState.searchLoading ? `
+                  <div class="px-4 py-3 text-xs text-slate-500 dark:text-[#5f6a80]">${dict.search_loading}</div>
+                ` : appState.searchResults.length === 0 ? `
+                  <div class="px-4 py-3 text-xs text-slate-500 dark:text-[#5f6a80]">${dict.search_no_results}</div>
+                ` : appState.searchResults.map(stock => `
+                  <button onclick="addStockFromCatalog('${stock.code}')" class="w-full px-4 py-2.5 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer flex items-center justify-between border-b border-slate-200 dark:border-[#1f2635]/50 last:border-0 transition-colors text-left">
+                    <div>
+                      <span class="text-xs font-bold text-slate-800 dark:text-slate-100">${stock.code}</span>
+                      <span class="text-xs text-slate-500 dark:text-[#5f6a80] ml-2">${stock.name || stock.code}</span>
+                    </div>
+                    <span class="text-[10px] bg-blue-500/10 text-blue-500 dark:text-blue-400 border border-blue-500/20 px-1.5 py-0.5 rounded flex items-center">
+                      <i data-lucide="plus" class="w-3 h-3 mr-0.5"></i>
+                      <span>${dict.add_btn}</span>
+                    </span>
+                  </button>
+                `).join('')}
+              </div>
+            ` : ''}
+          </div>
+
+          <!-- Watchlist Board Container -->
+          <div class="bg-white dark:bg-[#111520] border border-slate-200 dark:border-[#1f2635] rounded-xl shadow-lg overflow-hidden font-sans">
+            <div class="px-5 py-4 border-b border-slate-200 dark:border-[#1f2635] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+              <span class="text-xs font-bold text-slate-500 dark:text-[#5f6a80] tracking-wider uppercase" data-i18n="watchlist_title">${dict.watchlist_title}</span>
+
+              <div class="flex items-center space-x-2 w-full sm:w-auto text-xs">
+                <span class="text-slate-400 dark:text-[#5f6a80] font-bold text-[10px] uppercase tracking-wider hidden sm:inline" data-i18n="sort_by">${dict.sort_by}</span>
+                <div class="flex bg-slate-100 dark:bg-[#0d111a] border border-slate-200 dark:border-[#1f2635] rounded-lg p-0.5 w-full sm:w-auto font-mono">
+                  <button onclick="setSort('name')" class="flex-1 sm:flex-none px-3 py-1 text-[10px] font-bold rounded-md transition-all focus:outline-none ${appState.sortKey === 'name' ? 'bg-white dark:bg-[#1f2635] text-blue-600 dark:text-blue-400 shadow-sm' : 'text-slate-500 dark:text-slate-400'}">
+                    ${dict.table_name} ${appState.sortKey === 'name' ? (appState.sortDirection === 'asc' ? '↑' : '↓') : ''}
+                  </button>
+                  <button onclick="setSort('price')" class="flex-1 sm:flex-none px-3 py-1 text-[10px] font-bold rounded-md transition-all focus:outline-none ${appState.sortKey === 'price' ? 'bg-white dark:bg-[#1f2635] text-blue-600 dark:text-blue-400 shadow-sm' : 'text-slate-500 dark:text-slate-400'}">
+                    ${dict.table_latest} ${appState.sortKey === 'price' ? (appState.sortDirection === 'asc' ? '↑' : '↓') : ''}
+                  </button>
+                  <button onclick="setSort('change')" class="flex-1 sm:flex-none px-3 py-1 text-[10px] font-bold rounded-md transition-all focus:outline-none ${appState.sortKey === 'change' ? 'bg-white dark:bg-[#1f2635] text-blue-600 dark:text-blue-400 shadow-sm' : 'text-slate-500 dark:text-slate-400'}">
+                    ${dict.table_change} ${appState.sortKey === 'change' ? (appState.sortDirection === 'asc' ? '↑' : '↓') : ''}
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="hidden md:grid grid-cols-12 bg-slate-50/70 dark:bg-[#161c2b]/30 border-b border-slate-200 dark:border-[#1f2635] text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-[#5f6a80] select-none">
+              <div onclick="setSort('name')" class="col-span-5 p-4 border-r border-slate-200 dark:border-[#1f2635]/60 flex items-center cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-850/50 transition-colors">
+                <span>${dict.table_name}</span>
+                ${renderSortIcon('name')}
+              </div>
+              <div onclick="setSort('price')" class="col-span-3 p-4 border-r border-slate-200 dark:border-[#1f2635]/60 flex items-center cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-850/50 transition-colors">
+                <span>${dict.table_latest}</span>
+                ${renderSortIcon('price')}
+              </div>
+              <div onclick="setSort('change')" class="col-span-3 p-4 border-r border-slate-200 dark:border-[#1f2635]/60 flex items-center cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-850/50 transition-colors">
+                <span>${dict.table_change}</span>
+                ${renderSortIcon('change')}
+              </div>
+              <div class="col-span-1 p-4 flex items-center justify-center">
+                <span>${dict.table_actions}</span>
+              </div>
+            </div>
+
+            <!-- Responsive Custom Table Row-Grid (As seen in Screenshot 1) -->
+            <div class="divide-y divide-slate-200 dark:divide-[#1f2635]">
+              ${sortedList.map(stock => {
+                const isUp = stock.change >= 0;
+                const colorClass = appState.colorRule === 'asia' 
+                  ? (isUp ? 'text-red-500' : 'text-emerald-500')
+                  : (isUp ? 'text-emerald-500' : 'text-red-500');
+
+                return `
+                  <div id="row-${stock.code}" class="group relative grid grid-cols-12 items-stretch hover:bg-slate-50 dark:hover:bg-[#161c2b]/30 transition-all duration-300">
+                    <a href="${getStockDetailHref(stock.code)}" onclick="viewStockDetails('${stock.code}', event)" class="col-span-12 md:col-span-11 grid grid-cols-11 cursor-pointer">
+                    
+                      <!-- Name Column with vertical divider -->
+                      <div class="col-span-11 md:col-span-5 p-4 pr-20 md:p-5 md:pr-5 border-b md:border-b-0 md:border-r border-slate-200 dark:border-[#1f2635]/60 flex flex-col justify-center">
+                        <span class="text-[10px] text-slate-500 dark:text-[#5f6a80] font-bold uppercase tracking-wider mb-1 md:hidden">${dict.table_name}</span>
+                        <span class="text-lg font-bold text-slate-900 dark:text-[#f8fafc] group-hover:text-blue-500 transition-colors">${appState.lang === 'zh' ? stock.nameZh : stock.nameEn}</span>
+                        <span class="text-xs font-mono text-slate-400 dark:text-slate-500 mt-0.5">${stock.code}</span>
+                      </div>
+
+                      <!-- Latest Column with vertical divider -->
+                      <div class="col-span-5 md:col-span-3 p-4 md:p-5 border-r border-slate-200 dark:border-[#1f2635]/60 flex flex-col justify-center">
+                        <span class="text-[10px] text-slate-500 dark:text-[#5f6a80] font-bold uppercase tracking-wider mb-1 md:hidden">${dict.table_latest}</span>
+                        <span id="price-${stock.code}" class="text-xl md:text-2xl font-black font-mono tracking-tight text-slate-800 dark:text-[#f8fafc]">${stock.price.toFixed(3)}</span>
+                      </div>
+
+                      <!-- Change Column with vertical divider -->
+                      <div class="col-span-6 md:col-span-3 p-4 md:p-5 md:border-r border-slate-200 dark:border-[#1f2635]/60 flex flex-col justify-center">
+                        <span class="text-[10px] text-slate-500 dark:text-[#5f6a80] font-bold uppercase tracking-wider mb-1 md:hidden">${dict.table_change}</span>
+                        <span id="change-${stock.code}" class="text-lg font-extrabold font-mono tracking-tight ${colorClass}">
+                          ${isUp ? '+' : ''}${stock.change.toFixed(2)}%
+                        </span>
+                      </div>
+                    </a>
+
+                    <!-- Remove Button Column -->
+                    <div class="absolute right-4 top-4 md:static md:col-span-1 p-0 md:p-5 flex items-center justify-center">
+                      <button onclick="removeStock('${stock.code}', event)" class="text-xs font-bold text-slate-400 dark:text-[#5f6a80] hover:text-red-500 transition-colors" data-i18n="table_remove">
+                        ${dict.table_remove}
+                      </button>
+                    </div>
+
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          </div>
+
+          ${renderConsoleComponentHTML()}
+          
+          <div class="text-[11px] text-slate-400 dark:text-[#5f6a80] font-mono pl-1" data-i18n="view_detail_hint">
+            ${dict.view_detail_hint}
+          </div>
+        `;
+      } else {
+        // Detailed Stocks K-Line View (As seen in Screenshot 2)
+        const stock = appState.watchlist.find(s => s.code === appState.selectedStock) || {
+          code: appState.selectedStock, nameZh: appState.selectedStock, nameEn: appState.selectedStock, price: 100, change: 0
+        };
+        const isUp = stock.change >= 0;
+        const colorClass = appState.colorRule === 'asia' 
+          ? (isUp ? 'text-red-500' : 'text-emerald-500')
+          : (isUp ? 'text-emerald-500' : 'text-red-500');
+
+        viewPort.innerHTML = `
+          <!-- Header Actions -->
+          <div class="flex justify-between items-center gap-3 mb-4 font-sans">
+            <button onclick="showWatchlist()" class="px-3.5 py-1.5 bg-white dark:bg-[#111520] hover:bg-slate-50 dark:hover:bg-[#161c2b] border border-slate-200 dark:border-[#1f2635] text-xs font-bold text-slate-800 dark:text-[#f8fafc] rounded-lg flex items-center space-x-1.5 transition-all">
+              <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
+              <span data-i18n="back_btn">${dict.back_btn}</span>
+            </button>
+            <span class="min-w-0 max-w-[45vw] truncate text-xs font-mono font-bold text-slate-400 dark:text-[#5f6a80]">${stock.code}</span>
+          </div>
+
+          <!-- Highlight Stock Card Header (Symmetrical Grid with Dividers) -->
+          <div class="w-full min-w-0 bg-white dark:bg-[#111520] border border-slate-200 dark:border-[#1f2635] rounded-xl overflow-hidden grid grid-cols-12 items-stretch shadow-lg font-sans">
+            <div class="min-w-0 col-span-12 md:col-span-5 p-4 md:p-5 border-b md:border-b-0 md:border-r border-slate-200 dark:border-[#1f2635]/60 flex flex-col justify-center">
+              <span class="text-[10px] text-slate-500 dark:text-[#5f6a80] font-bold uppercase tracking-wider mb-1">${dict.table_name}</span>
+              <span id="detail-stock-name" class="break-words text-lg font-bold text-slate-900 dark:text-[#f8fafc]">${appState.lang === 'zh' ? stock.nameZh : stock.nameEn}</span>
+            </div>
+            <div class="min-w-0 col-span-6 md:col-span-3 p-4 md:p-5 border-r border-slate-200 dark:border-[#1f2635]/60 flex flex-col justify-center">
+              <span class="text-[10px] text-slate-500 dark:text-[#5f6a80] font-bold uppercase tracking-wider mb-1">${dict.table_latest}</span>
+              <span id="detail-stock-price" class="text-xl md:text-2xl font-black font-mono tracking-tight text-slate-800 dark:text-[#f8fafc]">${stock.price.toFixed(3)}</span>
+            </div>
+            <div class="min-w-0 col-span-6 md:col-span-4 p-4 md:p-5 flex flex-col justify-center">
+              <span class="text-[10px] text-slate-500 dark:text-[#5f6a80] font-bold uppercase tracking-wider mb-1">${dict.table_change}</span>
+              <span id="detail-stock-change" class="text-lg font-extrabold font-mono tracking-tight ${colorClass}">
+                ${isUp ? '+' : ''}${stock.change.toFixed(2)}%
+              </span>
+            </div>
+          </div>
+
+          <!-- K-Line Container Board -->
+          <div class="w-full min-w-0 bg-white dark:bg-[#111520] border border-slate-200 dark:border-[#1f2635] rounded-xl p-4 md:p-5 shadow-lg flex flex-col space-y-4 font-sans">
+            <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-3 pb-2">
+              <span class="text-xs font-bold text-slate-500 dark:text-[#5f6a80]" data-i18n="kline_title">${dict.kline_title}</span>
+              <div class="min-w-0 flex flex-wrap items-center gap-2 md:gap-3 text-xs">
+                <span class="text-slate-400 dark:text-[#5f6a80]">${dict.period_label}</span>
+                <div class="relative">
+                  <select onchange="changePeriod(this.value)" class="bg-slate-50 dark:bg-[#0d111a] border border-slate-200 dark:border-[#1f2635] text-slate-800 dark:text-[#f8fafc] rounded-md px-2 py-1 focus:outline-none appearance-none pr-8 cursor-pointer font-medium text-xs">
+                    <option value="Day" ${appState.activePeriod === 'Day' ? 'selected' : ''}>${dict.period_day}</option>
+                    <option value="Week" ${appState.activePeriod === 'Week' ? 'selected' : ''}>${dict.period_week}</option>
+                    <option value="Month" ${appState.activePeriod === 'Month' ? 'selected' : ''}>${dict.period_month}</option>
+                  </select>
+                  <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-500 dark:text-[#5f6a80]">
+                    <i data-lucide="chevron-down" class="w-3.5 h-3.5"></i>
+                  </div>
+                </div>
+                <span class="min-w-0 break-all text-slate-400 dark:text-[#5f6a80] font-mono text-[11px] md:ml-1">${stock.code} / ${getPeriodLabel(appState.activePeriod)} / 80 ${dict.rows_label}</span>
+              </div>
+            </div>
+
+            <!-- Canvas Container -->
+            <div class="relative w-full min-w-0 h-[340px] md:h-[480px] bg-slate-50 dark:bg-[#0d111a] rounded-lg border border-slate-200 dark:border-[#1f2635] overflow-hidden flex flex-col">
+              <!-- MA floating legend -->
+              <div class="absolute top-2.5 left-3.5 right-3.5 z-10 flex flex-wrap gap-x-4 gap-y-1 text-xs font-mono">
+                <span id="legend-ma5" class="text-yellow-500 dark:text-yellow-400 font-medium">MA5: --</span>
+                <span id="legend-ma10" class="text-blue-500 dark:text-blue-400 font-medium">MA10: --</span>
+                <span id="legend-ma20" class="text-purple-500 dark:text-purple-400 font-medium">MA20: --</span>
+              </div>
+              <canvas id="kline-canvas" class="w-full flex-1 cursor-crosshair"></canvas>
+              <div id="kline-x-axis" class="pointer-events-none absolute bottom-2 left-3 right-[72px] z-10 flex justify-between gap-2 text-[10px] font-mono text-slate-500 dark:text-[#64748b]"></div>
+            </div>
+            
+            <!-- Footnote updated (Tencent Footnote) -->
+            <div class="text-[10px] text-slate-400 dark:text-[#5f6a80] font-mono">
+              ${dict.updated_from_provider}
+            </div>
+          </div>
+
+          ${renderConsoleComponentHTML()}
+        `;
+
+        setTimeout(() => {
+          initChartEngine().catch(() => {});
+        }, 50);
+      }
+
+      lucide.createIcons();
+      translateDOM();
+      renderConsoleLogsOnly();
+    }
+
+    // Interactive K-Line Canvas Engine
+    let canvas, ctx;
+    let klineData = [];
+    let crosshairIndex = -1;
+
+    function changePeriod(p) {
+      appState.activePeriod = normalizePeriod(p);
+      savePersistedState();
+      render();
+    }
+
+    async function initChartEngine() {
+      canvas = document.getElementById('kline-canvas');
+      if (!canvas) return;
+
+      ctx = canvas.getContext('2d');
+      klineData = await fetchKlineData(appState.selectedStock, appState.activePeriod);
+
+      if (klineData.length === 0) {
+        klineData = generateHistoricalData(appState.selectedStock, appState.activePeriod);
+      }
+
+      renderXAxisOverlay();
+      resizeCanvas();
+      window.addEventListener('resize', resizeCanvas);
+
+      canvas.addEventListener('mousemove', handleCanvasMouseMove);
+      canvas.addEventListener('mouseleave', handleCanvasMouseLeave);
+      canvas.addEventListener('touchmove', handleCanvasTouchMove);
+      canvas.addEventListener('touchend', handleCanvasMouseLeave);
+
+      drawChart();
+    }
+
+    function resizeCanvas() {
+      if (!canvas) return;
+      const rect = canvas.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      ctx.scale(dpr, dpr);
+      drawChart();
+    }
+
+    function handleCanvasMouseMove(e) {
+      if (!canvas || klineData.length === 0) return;
+      const rect = canvas.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      
+      const plotWidth = rect.width - 65; 
+      const candleWidth = plotWidth / klineData.length;
+      
+      let index = Math.floor(x / candleWidth);
+      if (index >= 0 && index < klineData.length) {
+        crosshairIndex = index;
+      } else {
+        crosshairIndex = -1;
+      }
+      drawChart();
+    }
+
+    function handleCanvasTouchMove(e) {
+      if (e.touches.length > 0) {
+        handleCanvasMouseMove(e.touches[0]);
+      }
+    }
+
+    function handleCanvasMouseLeave() {
+      crosshairIndex = -1;
+      drawChart();
+    }
+
+    function formatKlineAxisDate(date) {
+      const locale = appState.lang === 'zh' ? 'zh-CN' : 'en-US';
+      if (appState.activePeriod === 'Month') {
+        return date.toLocaleDateString(locale, { year: '2-digit', month: 'short' });
+      }
+
+      return date.toLocaleDateString(locale, { month: 'short', day: 'numeric' });
+    }
+
+    function getKlineAxisItems() {
+      if (klineData.length === 0) return [];
+
+      const tickCount = Math.min(6, klineData.length);
+      const tickStep = Math.max(1, Math.floor((klineData.length - 1) / Math.max(1, tickCount - 1)));
+      const tickIndexes = [];
+
+      for (let i = 0; i < klineData.length; i += tickStep) {
+        tickIndexes.push(i);
+      }
+
+      if (tickIndexes[tickIndexes.length - 1] !== klineData.length - 1) {
+        tickIndexes.push(klineData.length - 1);
+      }
+
+      return tickIndexes.map(index => ({
+        index,
+        label: formatKlineAxisDate(klineData[index].time)
+      }));
+    }
+
+    function renderXAxisOverlay() {
+      const axis = document.getElementById('kline-x-axis');
+      if (!axis) return;
+
+      axis.innerHTML = getKlineAxisItems()
+        .map((item, index, items) => `
+          <span class="${index === 0 ? 'text-left' : index === items.length - 1 ? 'text-right' : 'text-center'}">${item.label}</span>
+        `)
+        .join('');
+    }
+
+    function drawChart() {
+      if (!canvas || !ctx || klineData.length === 0) return;
+
+      const dpr = window.devicePixelRatio || 1;
+      const w = canvas.width / dpr;
+      const h = canvas.height / dpr;
+
+      ctx.clearRect(0, 0, w, h);
+
+      const topMargin = 30;
+      const rightMargin = 65;
+      const bottomMargin = 36;
+      const volumeHeight = 70;
+      const klineHeight = h - topMargin - bottomMargin - volumeHeight - 15;
+
+      const isDark = document.documentElement.classList.contains('dark');
+      const gridColor = isDark ? 'rgba(30, 41, 59, 0.4)' : 'rgba(226, 232, 240, 0.6)';
+      const textColor = isDark ? '#64748b' : '#475569';
+
+      const upStyle = `rgb(${getComputedStyle(document.documentElement).getPropertyValue('--color-up').trim()})`;
+      const downStyle = `rgb(${getComputedStyle(document.documentElement).getPropertyValue('--color-down').trim()})`;
+
+      let maxPrice = -Infinity;
+      let minPrice = Infinity;
+      let maxVol = -Infinity;
+
+      for (let i = 0; i < klineData.length; i++) {
+        const d = klineData[i];
+        if (d.high > maxPrice) maxPrice = d.high;
+        if (d.low < minPrice) minPrice = d.low;
+        if (d.volume > maxVol) maxVol = d.volume;
+
+        if (d.ma5 && d.ma5 > maxPrice) maxPrice = d.ma5;
+        if (d.ma5 && d.ma5 < minPrice) minPrice = d.ma5;
+        if (d.ma10 && d.ma10 > maxPrice) maxPrice = d.ma10;
+        if (d.ma10 && d.ma10 < minPrice) minPrice = d.ma10;
+        if (d.ma20 && d.ma20 > maxPrice) maxPrice = d.ma20;
+        if (d.ma20 && d.ma20 < minPrice) minPrice = d.ma20;
+      }
+
+      const pricePadding = (maxPrice - minPrice) * 0.05;
+      maxPrice += pricePadding;
+      minPrice -= pricePadding;
+
+      const plotWidth = w - rightMargin;
+
+      ctx.save();
+      ctx.lineWidth = 1;
+      ctx.setLineDash([2, 4]);
+      ctx.strokeStyle = gridColor;
+      ctx.font = '10px monospace';
+      ctx.fillStyle = textColor;
+      ctx.textAlign = 'left';
+
+      const gridLines = 5;
+      for (let i = 0; i <= gridLines; i++) {
+        const y = topMargin + (klineHeight / gridLines) * i;
+        const val = maxPrice - ((maxPrice - minPrice) / gridLines) * i;
+
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(plotWidth, y);
+        ctx.stroke();
+
+        ctx.fillText(val.toFixed(2), plotWidth + 8, y + 3);
+      }
+
+      ctx.beginPath();
+      ctx.moveTo(0, h - bottomMargin - volumeHeight);
+      ctx.lineTo(plotWidth, h - bottomMargin - volumeHeight);
+      ctx.moveTo(0, h - bottomMargin);
+      ctx.lineTo(plotWidth, h - bottomMargin);
+      ctx.stroke();
+      ctx.restore();
+
+      const scaleY = (p) => topMargin + ((maxPrice - p) / (maxPrice - minPrice)) * klineHeight;
+      const scaleVol = (v) => h - bottomMargin - (v / maxVol) * volumeHeight;
+      const barWidth = plotWidth / klineData.length;
+
+      for (let i = 0; i < klineData.length; i++) {
+        const d = klineData[i];
+        const x = i * barWidth + barWidth / 2;
+        const candleUp = d.close >= d.open;
+        const activeColor = candleUp ? upStyle : downStyle;
+
+        ctx.strokeStyle = activeColor;
+        ctx.fillStyle = activeColor;
+
+        ctx.save();
+        ctx.lineWidth = 1.2;
+        ctx.beginPath();
+        ctx.moveTo(x, scaleY(d.high));
+        ctx.lineTo(x, scaleY(d.low));
+        ctx.stroke();
+        ctx.restore();
+
+        const rectY = scaleY(Math.max(d.open, d.close));
+        const rectH = Math.max(1, Math.abs(scaleY(d.open) - scaleY(d.close)));
+        ctx.fillRect(x - barWidth * 0.35, rectY, barWidth * 0.7, rectH);
+
+        const volY = scaleVol(d.volume);
+        const volH = h - bottomMargin - volY;
+        ctx.save();
+        ctx.fillStyle = candleUp ? upStyle : downStyle;
+        ctx.globalAlpha = 0.65;
+        ctx.fillRect(x - barWidth * 0.35, volY, barWidth * 0.7, volH);
+        ctx.restore();
+      }
+
+      const drawMA = (key, color) => {
+        ctx.save();
+        ctx.lineWidth = 1.2;
+        ctx.strokeStyle = color;
+        ctx.beginPath();
+        let active = false;
+
+        for (let i = 0; i < klineData.length; i++) {
+          const val = klineData[i][key];
+          if (val === null) continue;
+          const x = i * barWidth + barWidth / 2;
+          const y = scaleY(val);
+
+          if (!active) {
+            ctx.moveTo(x, y);
+            active = true;
+          } else {
+            ctx.lineTo(x, y);
+          }
+        }
+        ctx.stroke();
+        ctx.restore();
+      };
+
+      drawMA('ma5', '#F59E0B');  
+      drawMA('ma10', '#3B82F6'); 
+      drawMA('ma20', '#A855F7'); 
+
+      const targetIdx = crosshairIndex !== -1 ? crosshairIndex : klineData.length - 1;
+      const activeData = klineData[targetIdx];
+
+      if (activeData) {
+        document.getElementById('legend-ma5').innerText = activeData.ma5 ? `MA5: ${activeData.ma5.toFixed(2)}` : 'MA5: --';
+        document.getElementById('legend-ma10').innerText = activeData.ma10 ? `MA10: ${activeData.ma10.toFixed(2)}` : 'MA10: --';
+        document.getElementById('legend-ma20').innerText = activeData.ma20 ? `MA20: ${activeData.ma20.toFixed(2)}` : 'MA20: --';
+      }
+
+      // Draw Interactive Crosshair & Axes Hover tags
+      if (crosshairIndex !== -1) {
+        const hData = klineData[crosshairIndex];
+        const x = crosshairIndex * barWidth + barWidth / 2;
+
+        ctx.save();
+        ctx.lineWidth = 1;
+        ctx.setLineDash([3, 3]);
+        ctx.strokeStyle = isDark ? 'rgba(255, 255, 255, 0.4)' : 'rgba(0, 0, 0, 0.4)';
+
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, h - bottomMargin);
+        ctx.stroke();
+
+        const hoverY = scaleY(hData.close);
+        ctx.beginPath();
+        ctx.moveTo(0, hoverY);
+        ctx.lineTo(plotWidth, hoverY);
+        ctx.stroke();
+
+        ctx.setLineDash([]);
+        ctx.fillStyle = '#1e293b';
+        ctx.fillRect(plotWidth + 4, hoverY - 9, rightMargin - 8, 18);
+        ctx.font = '9px monospace';
+        ctx.fillStyle = '#ffffff';
+        ctx.textAlign = 'center';
+        ctx.fillText(hData.close.toFixed(2), plotWidth + rightMargin / 2, hoverY + 3);
+
+        const dateStr = formatKlineAxisDate(hData.time);
+        const dateWidth = ctx.measureText(dateStr).width + 12;
+        ctx.fillStyle = '#1e293b';
+        ctx.fillRect(x - dateWidth / 2, h - bottomMargin + 6, dateWidth, 16);
+        ctx.fillStyle = '#ffffff';
+        ctx.fillText(dateStr, x, h - bottomMargin + 17);
+
+        ctx.restore();
+      } else {
+        // Latest price line (Right axis indicator standard)
+        const latestPrice = klineData[klineData.length - 1].close;
+        const latestY = scaleY(latestPrice);
+        
+        ctx.save();
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = latestPrice >= klineData[klineData.length - 1].open ? upStyle : downStyle;
+        ctx.setLineDash([3, 3]);
+        ctx.beginPath();
+        ctx.moveTo(0, latestY);
+        ctx.lineTo(plotWidth, latestY);
+        ctx.stroke();
+        
+        ctx.setLineDash([]);
+        ctx.fillStyle = latestPrice >= klineData[klineData.length - 1].open ? upStyle : downStyle;
+        ctx.fillRect(plotWidth + 4, latestY - 9, rightMargin - 8, 18);
+        ctx.font = '9px monospace';
+        ctx.fillStyle = '#ffffff';
+        ctx.textAlign = 'center';
+        ctx.fillText(latestPrice.toFixed(2), plotWidth + rightMargin / 2, latestY + 3);
+        ctx.restore();
+
+      }
+
+      renderXAxisOverlay();
+    }
+
+    // Window Init Trigger Entry
+    window.onload = async function() {
+      initAppVersion();
+      initSettings();
+      initPersistedState();
+      await applyRouteState().catch(() => {});
+      await refreshWatchlist().catch(() => {});
+      appState.isInitializing = false;
+      render();
+      startMarketSimulation();
+    };
+  </script>
+</body>
+</html>
