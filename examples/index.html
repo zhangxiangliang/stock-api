@@ -90,13 +90,49 @@
       </div>
     </section>
 
+    <section class="mt-8 space-y-4">
+      <div class="bg-white dark:bg-[#111520] border border-slate-200 dark:border-[#1f2635] rounded-xl overflow-hidden shadow-lg">
+        <div class="px-4 py-3 border-b border-slate-200 dark:border-[#1f2635] flex items-center justify-between gap-3">
+          <div>
+            <h2 class="text-sm font-bold text-slate-900 dark:text-slate-100" data-i18n="nodeUsage">Node.js 使用</h2>
+            <p class="mt-0.5 text-[11px] text-slate-500 dark:text-[#5f6a80]" data-i18n="nodeUsageHint">安装后直接使用默认自动数据源。</p>
+          </div>
+          <span class="shrink-0 rounded-md border border-blue-500/20 bg-blue-500/10 px-2 py-1 text-[10px] font-mono text-blue-500 dark:text-blue-400">Node.js</span>
+        </div>
+        <pre class="m-0 overflow-x-auto bg-slate-950 p-4 text-[12px] leading-6 text-slate-200"><code><span class="text-slate-500">// npm install stock-api</span>
+<span class="text-pink-400">import</span> { stocks } <span class="text-pink-400">from</span> <span class="text-green-300">"stock-api"</span>;
+
+<span class="text-pink-400">const</span> stock = <span class="text-pink-400">await</span> stocks.auto.getStock(<span class="text-green-300">"SH510500"</span>);
+<span class="text-pink-400">const</span> list = <span class="text-pink-400">await</span> stocks.auto.getStocks([<span class="text-green-300">"SH510500"</span>, <span class="text-green-300">"SZ000651"</span>]);
+<span class="text-pink-400">const</span> klines = <span class="text-pink-400">await</span> stocks.auto.getKlines(<span class="text-green-300">"SH600519"</span>, { period: <span class="text-green-300">"day"</span> });
+<span class="text-pink-400">const</span> results = <span class="text-pink-400">await</span> stocks.auto.searchStocks(<span class="text-green-300">"格力电器"</span>);</code></pre>
+      </div>
+
+      <div class="bg-white dark:bg-[#111520] border border-slate-200 dark:border-[#1f2635] rounded-xl overflow-hidden shadow-lg">
+        <div class="px-4 py-3 border-b border-slate-200 dark:border-[#1f2635] flex items-center justify-between gap-3">
+          <div>
+            <h2 class="text-sm font-bold text-slate-900 dark:text-slate-100" data-i18n="browserUsage">Browser 使用</h2>
+            <p class="mt-0.5 text-[11px] text-slate-500 dark:text-[#5f6a80]" data-i18n="browserUsageHint">通过 CDN 在页面中直接调用。</p>
+          </div>
+          <span class="shrink-0 rounded-md border border-indigo-500/20 bg-indigo-500/10 px-2 py-1 text-[10px] font-mono text-indigo-500 dark:text-indigo-400">CDN</span>
+        </div>
+        <pre class="m-0 overflow-x-auto bg-slate-950 p-4 text-[12px] leading-6 text-slate-200"><code><span class="text-slate-500">&lt;script src=</span><span class="text-green-300">"https://cdn.jsdelivr.net/npm/stock-api/dist/browser/stock-api.iife.min.js"</span><span class="text-slate-500">&gt;&lt;/script&gt;</span>
+<span class="text-slate-500">&lt;script&gt;</span>
+  StockApi.stocks.auto.getStock(<span class="text-green-300">"SH510500"</span>).then(console.log);
+  StockApi.stocks.auto.getStocks([<span class="text-green-300">"SH510500"</span>, <span class="text-green-300">"SZ000651"</span>]).then(console.log);
+  StockApi.stocks.auto.getKlines(<span class="text-green-300">"SH600519"</span>, { period: <span class="text-green-300">"day"</span> }).then(console.log);
+  StockApi.stocks.auto.searchStocks(<span class="text-green-300">"格力电器"</span>).then(console.log);
+<span class="text-slate-500">&lt;/script&gt;</span></code></pre>
+      </div>
+    </section>
+
     <section class="mt-10 space-y-4">
       <div>
         <h2 class="text-sm font-bold tracking-wider uppercase text-slate-500 dark:text-slate-400" data-i18n="demoList">Demo List</h2>
         <p class="mt-1 text-xs text-slate-500 dark:text-[#5f6a80]" data-i18n="demoHint">选择一个示例查看 stock-api 的实际用法。</p>
       </div>
 
-      <a href="./stock-api-web-example/" class="group block bg-white dark:bg-[#111520] border border-slate-200 dark:border-[#1f2635] hover:border-blue-500/50 rounded-xl p-5 shadow-lg transition-all">
+      <a href="./web-demo/" class="group block bg-white dark:bg-[#111520] border border-slate-200 dark:border-[#1f2635] hover:border-blue-500/50 rounded-xl p-5 shadow-lg transition-all">
         <div class="flex items-start justify-between gap-4">
           <div class="min-w-0">
             <h2 class="text-lg font-bold text-slate-900 dark:text-slate-100 group-hover:text-blue-500 dark:group-hover:text-blue-400 transition-colors" data-i18n="webExampleTitle">股票接口 Web 示例</h2>
@@ -158,6 +194,10 @@
         batchQuotes: '批量行情',
         symbolSearch: '股票搜索',
         klineData: 'K 线数据',
+        nodeUsage: 'Node.js 使用',
+        nodeUsageHint: '安装后直接使用默认自动数据源。',
+        browserUsage: 'Browser 使用',
+        browserUsageHint: '通过 CDN 在页面中直接调用。',
         demoList: 'Demo List',
         demoHint: '选择一个示例查看 stock-api 的实际用法。',
         webExampleTitle: '股票接口 Web Demo',
@@ -183,6 +223,10 @@
         batchQuotes: 'Batch quotes',
         symbolSearch: 'Symbol search',
         klineData: 'K-line data',
+        nodeUsage: 'Node.js Usage',
+        nodeUsageHint: 'Install the package and use the default auto provider.',
+        browserUsage: 'Browser Usage',
+        browserUsageHint: 'Load it from a CDN and call it directly in the page.',
         demoList: 'Demo List',
         demoHint: 'Choose an example to see stock-api in action.',
         webExampleTitle: 'Stock API Web Demo',

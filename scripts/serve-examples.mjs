@@ -4,7 +4,7 @@ import { createServer } from "node:http";
 
 const port = Number(process.env.PORT || 4173);
 const root = resolve("examples");
-const defaultExample = "stock-api-web-example";
+const defaultExample = "web-demo";
 
 const server = createServer((request, response) => {
   const pathname = decodeURIComponent(new URL(request.url || "/", `http://127.0.0.1:${port}`).pathname);

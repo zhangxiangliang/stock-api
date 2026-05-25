@@ -24,14 +24,11 @@
 </p>
 
 <p align="center">
-  <a href="https://zhangxiangliang.github.io/stock-api/stock-api-web-example/">
+  <a href="https://zhangxiangliang.github.io/stock-api/web-demo/">
     <img src="https://img.shields.io/badge/Live%20Demo-Web%20Example-3b82f6?style=for-the-badge" alt="Live Demo">
   </a>
-</p>
-
-<p align="center">
-  <a href="https://zhangxiangliang.github.io/stock-api/stock-api-web-example/">
-    <img src="docs/assets/demo-en.png" alt="stock-api live demo" width="860">
+  <a href="https://zhangxiangliang.github.io/stock-api/">
+    <img src="https://img.shields.io/badge/GitHub%20Pages-Examples%20Home-24292f?style=for-the-badge&logo=github" alt="GitHub Pages">
   </a>
 </p>
 
@@ -70,7 +67,7 @@ Stock codes use `SH` / `SZ` / `HK` / `US` prefixes, such as `SH510500` and `SZ00
 </script>
 ```
 
-Browser example: [GitHub Pages](https://zhangxiangliang.github.io/stock-api/stock-api-web-example/)
+Browser example: [GitHub Pages](https://zhangxiangliang.github.io/stock-api/web-demo/)
 
 ## CLI
 
