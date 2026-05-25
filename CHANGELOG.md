@@ -1,3 +1,10 @@
+# [2.6.0](https://github.com/zhangxiangliang/stock-api/compare/v2.5.1...v2.6.0) (2026-05-25)
+
+
+### Features
+
+* add web examples ([a0adff1](https://github.com/zhangxiangliang/stock-api/commit/a0adff15edbc5aab3899d30d0e6577762d1a6409))
+
 ## [2.5.1](https://github.com/zhangxiangliang/stock-api/compare/v2.5.0...v2.5.1) (2026-05-23)
 
 
