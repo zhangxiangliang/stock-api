@@ -24,14 +24,11 @@
 </p>
 
 <p align="center">
-  <a href="https://zhangxiangliang.github.io/stock-api/stock-api-web-example/">
+  <a href="https://zhangxiangliang.github.io/stock-api/web-demo/">
     <img src="https://img.shields.io/badge/%E5%9C%A8%E7%BA%BF%E4%BD%93%E9%AA%8C-Web%20Demo-3b82f6?style=for-the-badge" alt="在线体验">
   </a>
-</p>
-
-<p align="center">
-  <a href="https://zhangxiangliang.github.io/stock-api/stock-api-web-example/">
-    <img src="docs/assets/demo-zh.png" alt="stock-api 在线示例" width="860">
+  <a href="https://zhangxiangliang.github.io/stock-api/">
+    <img src="https://img.shields.io/badge/GitHub%20Pages-%E7%A4%BA%E4%BE%8B%E9%A6%96%E9%A1%B5-24292f?style=for-the-badge&logo=github" alt="GitHub Pages">
   </a>
 </p>
 
@@ -88,7 +85,7 @@ const results = await stocks.auto.searchStocks("格力电器");
 </script>
 ```
 
-浏览器示例：[GitHub Pages](https://zhangxiangliang.github.io/stock-api/stock-api-web-example/)
+浏览器示例：[GitHub Pages](https://zhangxiangliang.github.io/stock-api/web-demo/)
 
 ## CLI
 
