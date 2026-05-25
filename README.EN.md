@@ -23,6 +23,16 @@
   <img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fzhangxiangliang%2Fstock-api%2Fapi-status%2Feastmoney.json&cacheSeconds=300" alt="Eastmoney Status">
 </p>
 
+<p align="center">
+  <a href="https://zhangxiangliang.github.io/stock-api/stock-api-web-example/">Live demo</a>
+</p>
+
+<p align="center">
+  <a href="https://zhangxiangliang.github.io/stock-api/stock-api-web-example/">
+    <img src="docs/assets/demo-en.png" alt="stock-api live demo" width="860">
+  </a>
+</p>
+
 `stock-api` is a zero-runtime-dependency stock market data toolkit for Node.js, browsers, and CLI usage. Use `stocks.auto` by default to read from the first available provider.
 
 ## Installation
@@ -57,6 +67,8 @@ Stock codes use `SH` / `SZ` / `HK` / `US` prefixes, such as `SH510500` and `SZ00
   StockApi.stocks.auto.searchStocks("格力电器").then(console.log);
 </script>
 ```
+
+Browser example: [GitHub Pages](https://zhangxiangliang.github.io/stock-api/stock-api-web-example/)
 
 ## CLI
 

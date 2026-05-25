@@ -59,6 +59,7 @@
     "build": "npm run build:node && npm run build:browser",
     "build:browser": "node scripts/build-browser.mjs",
     "build:node": "tsc -p tsconfig.build.json",
+    "examples": "node scripts/serve-examples.mjs",
     "postbuild": "node -e \"require('fs').chmodSync('dist/cli.js', 0o755)\"",
     "prepack": "npm run build",
     "lint": "eslint .",

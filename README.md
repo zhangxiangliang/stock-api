@@ -23,6 +23,16 @@
   <img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fzhangxiangliang%2Fstock-api%2Fapi-status%2Feastmoney.zh-CN.json&cacheSeconds=300" alt="东方财富状态">
 </p>
 
+<p align="center">
+  <a href="https://zhangxiangliang.github.io/stock-api/stock-api-web-example/">在线示例</a>
+</p>
+
+<p align="center">
+  <a href="https://zhangxiangliang.github.io/stock-api/stock-api-web-example/">
+    <img src="docs/assets/demo-zh.png" alt="stock-api 在线示例" width="860">
+  </a>
+</p>
+
 `stock-api` 是一个零运行时依赖的股票行情工具，支持 Node.js、浏览器和 CLI。默认使用 `stocks.auto`，自动从可用数据源获取行情。
 
 ## 特性
@@ -75,6 +85,8 @@ const results = await stocks.auto.searchStocks("格力电器");
   StockApi.stocks.auto.searchStocks("格力电器").then(console.log);
 </script>
 ```
+
+浏览器示例：[GitHub Pages](https://zhangxiangliang.github.io/stock-api/stock-api-web-example/)
 
 ## CLI
 

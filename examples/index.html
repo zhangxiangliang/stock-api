@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>stock-api examples</title>
+  <link rel="icon" href="data:,">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+    };
+  </script>
+</head>
+<body class="min-h-screen bg-slate-50 text-slate-900 dark:bg-[#0d111a] dark:text-slate-100 font-sans antialiased transition-colors">
+  <header class="border-b border-slate-200 dark:border-[#1f2635] bg-white dark:bg-[#111520]">
+    <div class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 min-h-16 py-3 flex flex-wrap items-center justify-between gap-3">
+      <a href="./" class="flex min-w-0 items-center gap-3">
+        <div class="w-9 h-9 shrink-0 bg-gradient-to-tr from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/20">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-white"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline><polyline points="16 7 22 7 22 13"></polyline></svg>
+        </div>
+        <div class="flex flex-col items-start gap-1">
+          <span class="font-bold text-lg !leading-none tracking-tight text-slate-900 dark:text-white">Stock API</span>
+          <span class="text-[10px] px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20 font-mono leading-none">v2.5.1</span>
+        </div>
+      </a>
+
+      <div class="flex flex-wrap items-center justify-end gap-2">
+        <a href="https://github.com/zhangxiangliang/stock-api" target="_blank" rel="noreferrer" class="h-10 px-3 bg-slate-100 dark:bg-slate-900/80 hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-200 dark:border-[#1f2635] text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white rounded-lg transition-all flex items-center justify-center gap-1.5 text-sm">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path><path d="M9 18c-4.51 2-5-2-7-2"></path></svg>
+          <span>GitHub</span>
+        </a>
+
+        <div class="relative">
+          <button onclick="toggleLanguageMenu()" class="h-10 px-3 bg-slate-100 dark:bg-slate-900/80 hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-200 dark:border-[#1f2635] text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white rounded-lg flex items-center justify-center gap-1.5 text-sm">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-500 dark:text-slate-400"><path d="m5 8 6 6"></path><path d="m4 14 6-6 2-3"></path><path d="M2 5h12"></path><path d="M7 2h1"></path><path d="m22 22-5-10-5 10"></path><path d="M14 18h6"></path></svg>
+            <span id="language-label">简体中文</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-slate-500"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+          <div id="language-menu" class="hidden absolute right-0 mt-1.5 w-32 bg-white dark:bg-[#111520] border border-slate-200 dark:border-[#1f2635] rounded-lg shadow-xl py-1 z-50">
+            <button onclick="setLanguage('zh')" class="w-full px-3 py-1.5 text-left text-xs text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">简体中文</button>
+            <button onclick="setLanguage('en')" class="w-full px-3 py-1.5 text-left text-xs text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">English</button>
+          </div>
+        </div>
+
+        <button id="theme-toggle" onclick="toggleTheme()" class="h-10 w-10 bg-slate-100 dark:bg-slate-900/80 hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-200 dark:border-[#1f2635] text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white rounded-lg flex items-center justify-center" title="Theme"></button>
+        <button onclick="openSettings()" class="h-10 w-10 bg-slate-100 dark:bg-slate-900/80 hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-200 dark:border-[#1f2635] text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white rounded-lg flex items-center justify-center" title="Settings">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.1a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
+    <section class="space-y-5">
+      <div class="space-y-1.5">
+        <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-[#f8fafc]" data-i18n="title">股票接口</h1>
+        <p class="text-sm text-slate-500 dark:text-[#5f6a80]" id="subtitle"></p>
+      </div>
+
+      <div class="w-full bg-white dark:bg-[#111520] border border-slate-200 dark:border-[#1f2635] rounded-xl p-4 shadow-lg">
+        <div class="flex items-start gap-3">
+          <div class="w-9 h-9 shrink-0 rounded-lg bg-blue-500/10 border border-blue-500/20 text-blue-500 dark:text-blue-400 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .962 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.582a.5.5 0 0 1 0 .962L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.962 0z"></path><path d="M20 3v4"></path><path d="M22 5h-4"></path><path d="M4 17v2"></path><path d="M5 18H3"></path></svg>
+          </div>
+          <div class="min-w-0">
+            <p class="text-sm font-bold text-slate-900 dark:text-slate-100" data-i18n="pitchTitle">4 个接口即可覆盖大多数场景</p>
+            <p class="mt-1 text-xs leading-relaxed text-slate-500 dark:text-[#5f6a80]" data-i18n="pitchSubtitle">快速搭建自己的行情体验。</p>
+          </div>
+        </div>
+
+        <div class="mt-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 text-[11px] font-mono">
+          <div class="min-w-0 rounded-lg border border-slate-200 dark:border-[#1f2635] bg-slate-50 dark:bg-[#0d111a] px-3 py-2">
+            <span class="block whitespace-nowrap text-slate-500 dark:text-[#5f6a80] font-sans" data-i18n="singleQuote">单只行情</span>
+            <span class="block truncate text-blue-500 dark:text-blue-400">getStock</span>
+          </div>
+          <div class="min-w-0 rounded-lg border border-slate-200 dark:border-[#1f2635] bg-slate-50 dark:bg-[#0d111a] px-3 py-2">
+            <span class="block whitespace-nowrap text-slate-500 dark:text-[#5f6a80] font-sans" data-i18n="batchQuotes">批量行情</span>
+            <span class="block truncate text-blue-500 dark:text-blue-400">getStocks</span>
+          </div>
+          <div class="min-w-0 rounded-lg border border-slate-200 dark:border-[#1f2635] bg-slate-50 dark:bg-[#0d111a] px-3 py-2">
+            <span class="block whitespace-nowrap text-slate-500 dark:text-[#5f6a80] font-sans" data-i18n="symbolSearch">股票搜索</span>
+            <span class="block truncate text-blue-500 dark:text-blue-400">searchStocks</span>
+          </div>
+          <div class="min-w-0 rounded-lg border border-slate-200 dark:border-[#1f2635] bg-slate-50 dark:bg-[#0d111a] px-3 py-2">
+            <span class="block whitespace-nowrap text-slate-500 dark:text-[#5f6a80] font-sans" data-i18n="klineData">K 线数据</span>
+            <span class="block truncate text-blue-500 dark:text-blue-400">getKlines</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="mt-10 space-y-4">
+      <div>
+        <h2 class="text-sm font-bold tracking-wider uppercase text-slate-500 dark:text-slate-400" data-i18n="demoList">Demo List</h2>
+        <p class="mt-1 text-xs text-slate-500 dark:text-[#5f6a80]" data-i18n="demoHint">选择一个示例查看 stock-api 的实际用法。</p>
+      </div>
+
+      <a href="./stock-api-web-example/" class="group block bg-white dark:bg-[#111520] border border-slate-200 dark:border-[#1f2635] hover:border-blue-500/50 rounded-xl p-5 shadow-lg transition-all">
+        <div class="flex items-start justify-between gap-4">
+          <div class="min-w-0">
+            <h2 class="text-lg font-bold text-slate-900 dark:text-slate-100 group-hover:text-blue-500 dark:group-hover:text-blue-400 transition-colors" data-i18n="webExampleTitle">股票接口 Web 示例</h2>
+            <p class="mt-2 text-sm leading-relaxed text-slate-500 dark:text-[#5f6a80]" data-i18n="webExampleDesc">查询单只、批量行情、搜索股票和 K 线数据，展示 stock-api 在浏览器里的完整用法。</p>
+          </div>
+          <div class="shrink-0 rounded-lg bg-blue-500/10 border border-blue-500/20 text-blue-500 dark:text-blue-400 flex items-center justify-center p-2" data-i18n="tryDemo">体验</div>
+        </div>
+      </a>
+    </section>
+  </main>
+
+  <div id="settings-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-[#111520] border border-slate-200 dark:border-[#1f2635] rounded-xl w-full max-w-md shadow-2xl p-6 relative overflow-hidden">
+      <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-indigo-500"></div>
+      <div class="flex justify-between items-start mb-6">
+        <div>
+          <h3 class="text-base font-bold text-slate-900 dark:text-slate-100" data-i18n="settingsTitle">偏好设置</h3>
+          <p class="text-xs text-slate-500 dark:text-[#5f6a80] mt-0.5" data-i18n="settingsSubtitle">这些设置会与所有示例共用。</p>
+        </div>
+        <button onclick="closeSettings()" class="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">×</button>
+      </div>
+      <div class="space-y-5">
+        <div class="space-y-2">
+          <label class="text-xs font-semibold text-slate-700 dark:text-slate-300 block" data-i18n="colorRule">涨跌颜色规则</label>
+          <div class="grid grid-cols-2 gap-2">
+            <button id="color-intl" onclick="setColorRule('intl')" class="px-3 py-2 text-xs border border-slate-200 dark:border-[#1f2635] bg-slate-50 dark:bg-slate-900 rounded-lg text-left transition-all">
+              <span class="block text-slate-700 dark:text-slate-300" data-i18n="greenUp">红跌绿涨</span>
+            </button>
+            <button id="color-asia" onclick="setColorRule('asia')" class="px-3 py-2 text-xs border border-slate-200 dark:border-[#1f2635] bg-slate-50 dark:bg-slate-900 rounded-lg text-left transition-all">
+              <span class="block text-slate-700 dark:text-slate-300" data-i18n="redUp">红涨绿跌</span>
+            </button>
+          </div>
+        </div>
+        <div class="space-y-2">
+          <label for="refresh-interval" class="text-xs font-semibold text-slate-700 dark:text-slate-300 block" data-i18n="requestInterval">请求频率</label>
+          <div class="flex items-center gap-2">
+            <input id="refresh-interval" type="number" min="10" step="5" class="w-28 px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-[#1f2635] text-slate-800 dark:text-slate-100 rounded-lg text-xs font-mono focus:outline-none focus:border-blue-500" value="30">
+            <span class="text-xs text-slate-500 dark:text-slate-400" data-i18n="seconds">秒</span>
+          </div>
+          <p class="text-[10px] leading-relaxed text-amber-600 dark:text-amber-400" data-i18n="requestHint">不建议设置过小，过于频繁请求可能触发第三方数据源限流或禁止访问。</p>
+        </div>
+      </div>
+      <div class="mt-8 flex justify-end">
+        <button onclick="saveSettings()" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-xs font-semibold rounded-lg text-white shadow-lg shadow-blue-500/10 transition-colors" data-i18n="confirm">确定</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const refreshIntervalStorageKey = 'sa_refresh_interval_seconds_v2';
+    const colorRuleStorageKey = 'sa_color_rule_v2';
+    const dict = {
+      zh: {
+        title: '股票接口',
+        subtitle: '<a href="https://github.com/zhangxiangliang/stock-api" target="_blank" rel="noreferrer" class="text-blue-500 dark:text-blue-400 hover:text-blue-300 underline underline-offset-4">stock-api</a> - 一个简洁易用的股票接口工具',
+        pitchTitle: '4 个接口即可覆盖大多数场景',
+        pitchSubtitle: '快速搭建自己的行情体验。',
+        singleQuote: '单只行情',
+        batchQuotes: '批量行情',
+        symbolSearch: '股票搜索',
+        klineData: 'K 线数据',
+        demoList: 'Demo List',
+        demoHint: '选择一个示例查看 stock-api 的实际用法。',
+        webExampleTitle: '股票接口 Web Demo',
+        webExampleDesc: '查询单只、批量行情、搜索股票和 K 线数据，展示 stock-api 在浏览器里的完整用法。',
+        tryDemo: '体验',
+        settingsTitle: '偏好设置',
+        settingsSubtitle: '这些设置会与所有示例共用。',
+        colorRule: '涨跌颜色规则',
+        greenUp: '红跌绿涨',
+        redUp: '红涨绿跌',
+        requestInterval: '请求频率',
+        seconds: '秒',
+        requestHint: '不建议设置过小，过于频繁请求可能触发第三方数据源限流或禁止访问。',
+        confirm: '确定',
+        languageLabel: '简体中文',
+      },
+      en: {
+        title: 'stock-api examples',
+        subtitle: 'A collection of examples powered by <a href="https://github.com/zhangxiangliang/stock-api" target="_blank" rel="noreferrer" class="text-blue-500 dark:text-blue-400 hover:text-blue-300 underline underline-offset-4">stock-api</a>, covering browser integration and common market data flows.',
+        pitchTitle: 'Most use cases need only 4 APIs',
+        pitchSubtitle: 'To build a market experience fast.',
+        singleQuote: 'Single quote',
+        batchQuotes: 'Batch quotes',
+        symbolSearch: 'Symbol search',
+        klineData: 'K-line data',
+        demoList: 'Demo List',
+        demoHint: 'Choose an example to see stock-api in action.',
+        webExampleTitle: 'Stock API Web Demo',
+        webExampleDesc: 'Fetch one quote, batch quotes, search symbols, and load K-lines in the browser.',
+        tryDemo: 'Try',
+        settingsTitle: 'Settings',
+        settingsSubtitle: 'These settings are shared by all examples.',
+        colorRule: 'Market color rule',
+        greenUp: 'Green up / red down',
+        redUp: 'Red up / green down',
+        requestInterval: 'Request interval',
+        seconds: 'seconds',
+        requestHint: 'Avoid very small intervals. Frequent requests may trigger third-party data source rate limits or blocks.',
+        confirm: 'Confirm',
+        languageLabel: 'English',
+      },
+    };
+
+    let currentLanguage = localStorage.getItem('sa_lang') || 'zh';
+    let currentTheme = localStorage.getItem('sa_theme') || 'dark';
+    let currentColorRule = localStorage.getItem(colorRuleStorageKey) || 'asia';
+
+    function applyTheme() {
+      document.documentElement.classList.toggle('dark', currentTheme === 'dark');
+      document.getElementById('theme-toggle').innerHTML = currentTheme === 'dark'
+        ? '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg>'
+        : '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg>';
+    }
+
+    function translate() {
+      const lang = dict[currentLanguage] || dict.zh;
+      document.documentElement.lang = currentLanguage === 'zh' ? 'zh-CN' : 'en';
+      document.getElementById('language-label').innerText = lang.languageLabel;
+      document.getElementById('subtitle').innerHTML = lang.subtitle;
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (lang[key]) el.innerText = lang[key];
+      });
+    }
+
+    function toggleLanguageMenu() {
+      document.getElementById('language-menu').classList.toggle('hidden');
+    }
+
+    function setLanguage(language) {
+      currentLanguage = language;
+      localStorage.setItem('sa_lang', currentLanguage);
+      document.getElementById('language-menu').classList.add('hidden');
+      translate();
+    }
+
+    function toggleTheme() {
+      currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      localStorage.setItem('sa_theme', currentTheme);
+      applyTheme();
+    }
+
+    function setColorRule(rule) {
+      currentColorRule = rule;
+      localStorage.setItem(colorRuleStorageKey, rule);
+      syncColorRuleButtons();
+    }
+
+    function syncColorRuleButtons() {
+      ['intl', 'asia'].forEach(rule => {
+        const el = document.getElementById(`color-${rule}`);
+        el.classList.toggle('border-blue-500', currentColorRule === rule);
+        el.classList.toggle('bg-blue-500/10', currentColorRule === rule);
+      });
+    }
+
+    function normalizeRefreshInterval(value) {
+      const seconds = Number(value);
+      return Number.isFinite(seconds) && seconds >= 10 ? Math.round(seconds) : 30;
+    }
+
+    function openSettings() {
+      document.getElementById('refresh-interval').value = normalizeRefreshInterval(localStorage.getItem(refreshIntervalStorageKey));
+      syncColorRuleButtons();
+      document.getElementById('settings-modal').classList.remove('hidden');
+    }
+
+    function closeSettings() {
+      document.getElementById('settings-modal').classList.add('hidden');
+    }
+
+    function saveSettings() {
+      localStorage.setItem(refreshIntervalStorageKey, normalizeRefreshInterval(document.getElementById('refresh-interval').value));
+      closeSettings();
+    }
+
+    document.addEventListener('click', event => {
+      if (!event.target.closest('#language-menu') && !event.target.closest('[onclick="toggleLanguageMenu()"]')) {
+        document.getElementById('language-menu').classList.add('hidden');
+      }
+    });
+
+    applyTheme();
+    translate();
+  </script>
+</body>
+</html>
