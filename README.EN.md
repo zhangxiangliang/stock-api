@@ -32,7 +32,16 @@
   </a>
 </p>
 
-`stock-api` is a zero-runtime-dependency stock market data toolkit for Node.js, browsers, and CLI usage. Use `stocks.auto` by default to read from the first available provider.
+`stock-api` is a zero-runtime-dependency stock market data toolkit for Node.js, browsers, CLI usage, and MCP-compatible AI clients. Use `stocks.auto` by default to read from the first available provider.
+
+## Supported Usage
+
+<p>
+  <img src="https://img.shields.io/badge/Node.js-TypeScript%20API-22c55e?style=for-the-badge&logo=node.js&logoColor=white" alt="Node.js">
+  <img src="https://img.shields.io/badge/Browser-CDN%20%2F%20Bundler-38bdf8?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Browser">
+  <img src="https://img.shields.io/badge/CLI-npx%20stock--api-f97316?style=for-the-badge&logo=gnubash&logoColor=white" alt="CLI">
+  <img src="https://img.shields.io/badge/MCP-AI%20Tools-a855f7?style=for-the-badge&logo=openai&logoColor=white" alt="MCP">
+</p>
 
 ## Installation
 

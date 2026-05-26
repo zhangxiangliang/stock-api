@@ -32,12 +32,22 @@
   </a>
 </p>
 
-`stock-api` 是一个零运行时依赖的股票行情工具，支持 Node.js、浏览器和 CLI。默认使用 `stocks.auto`，自动从可用数据源获取行情。
+`stock-api` 是一个零运行时依赖的股票行情工具，支持 Node.js、浏览器、CLI 和 MCP。默认使用 `stocks.auto`，自动从可用数据源获取行情。
+
+## 支持使用方式
+
+<p>
+  <img src="https://img.shields.io/badge/Node.js-TypeScript%20API-22c55e?style=for-the-badge&logo=node.js&logoColor=white" alt="Node.js">
+  <img src="https://img.shields.io/badge/Browser-CDN%20%2F%20Bundler-38bdf8?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Browser">
+  <img src="https://img.shields.io/badge/CLI-npx%20stock--api-f97316?style=for-the-badge&logo=gnubash&logoColor=white" alt="CLI">
+  <img src="https://img.shields.io/badge/MCP-AI%20Tools-a855f7?style=for-the-badge&logo=openai&logoColor=white" alt="MCP">
+</p>
 
 ## 特性
 
 - Node.js / Browser bundler API + TypeScript 类型
 - CLI 查询股票行情、K 线和搜索股票
+- MCP tools 给 AI 客户端直接调用股票接口
 - 默认自动兜底：`tencent -> sina -> eastmoney`
 - 指定数据源：`stocks.tencent` / `stocks.sina` / `stocks.eastmoney`
 - 支持 A 股、港股、美股代码格式
