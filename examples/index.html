@@ -91,7 +91,30 @@
     </section>
 
     <section class="mt-8 space-y-4">
-      <div class="bg-white dark:bg-[#111520] border border-slate-200 dark:border-[#1f2635] rounded-xl overflow-hidden shadow-lg">
+      <div class="inline-flex rounded-xl border border-slate-200 dark:border-[#1f2635] bg-white dark:bg-[#111520] p-1 shadow-lg">
+        <button id="tab-demo" onclick="setHomeTab('demo')" class="rounded-lg px-4 py-2 text-xs font-bold transition-colors" data-i18n="demoTab">Demo List</button>
+        <button id="tab-usage" onclick="setHomeTab('usage')" class="rounded-lg px-4 py-2 text-xs font-bold transition-colors" data-i18n="usageTab">使用方式</button>
+      </div>
+
+      <div id="demo-panel" class="space-y-4">
+        <div>
+          <h2 class="text-sm font-bold tracking-wider uppercase text-slate-500 dark:text-slate-400" data-i18n="demoList">Demo List</h2>
+          <p class="mt-1 text-xs text-slate-500 dark:text-[#5f6a80]" data-i18n="demoHint">选择一个示例查看 stock-api 的实际用法。</p>
+        </div>
+
+        <a href="./web-demo/" class="group block bg-white dark:bg-[#111520] border border-slate-200 dark:border-[#1f2635] hover:border-blue-500/50 rounded-xl p-5 shadow-lg transition-all">
+          <div class="flex items-start justify-between gap-4">
+            <div class="min-w-0">
+              <h2 class="text-lg font-bold text-slate-900 dark:text-slate-100 group-hover:text-blue-500 dark:group-hover:text-blue-400 transition-colors" data-i18n="webExampleTitle">股票接口 Web 示例</h2>
+              <p class="mt-2 text-sm leading-relaxed text-slate-500 dark:text-[#5f6a80]" data-i18n="webExampleDesc">查询单只、批量行情、搜索股票和 K 线数据，展示 stock-api 在浏览器里的完整用法。</p>
+            </div>
+            <div class="shrink-0 rounded-lg bg-blue-500/10 border border-blue-500/20 text-blue-500 dark:text-blue-400 flex items-center justify-center p-2" data-i18n="tryDemo">体验</div>
+          </div>
+        </a>
+      </div>
+
+      <div id="usage-panel" class="hidden space-y-4">
+        <div class="bg-white dark:bg-[#111520] border border-slate-200 dark:border-[#1f2635] rounded-xl overflow-hidden shadow-lg">
         <div class="px-4 py-3 border-b border-slate-200 dark:border-[#1f2635] flex items-center justify-between gap-3">
           <div>
             <h2 class="text-sm font-bold text-slate-900 dark:text-slate-100" data-i18n="nodeUsage">Node.js 使用</h2>
@@ -141,24 +164,8 @@
     }
   }
 }</code></pre>
-      </div>
-    </section>
-
-    <section class="mt-10 space-y-4">
-      <div>
-        <h2 class="text-sm font-bold tracking-wider uppercase text-slate-500 dark:text-slate-400" data-i18n="demoList">Demo List</h2>
-        <p class="mt-1 text-xs text-slate-500 dark:text-[#5f6a80]" data-i18n="demoHint">选择一个示例查看 stock-api 的实际用法。</p>
-      </div>
-
-      <a href="./web-demo/" class="group block bg-white dark:bg-[#111520] border border-slate-200 dark:border-[#1f2635] hover:border-blue-500/50 rounded-xl p-5 shadow-lg transition-all">
-        <div class="flex items-start justify-between gap-4">
-          <div class="min-w-0">
-            <h2 class="text-lg font-bold text-slate-900 dark:text-slate-100 group-hover:text-blue-500 dark:group-hover:text-blue-400 transition-colors" data-i18n="webExampleTitle">股票接口 Web 示例</h2>
-            <p class="mt-2 text-sm leading-relaxed text-slate-500 dark:text-[#5f6a80]" data-i18n="webExampleDesc">查询单只、批量行情、搜索股票和 K 线数据，展示 stock-api 在浏览器里的完整用法。</p>
-          </div>
-          <div class="shrink-0 rounded-lg bg-blue-500/10 border border-blue-500/20 text-blue-500 dark:text-blue-400 flex items-center justify-center p-2" data-i18n="tryDemo">体验</div>
         </div>
-      </a>
+      </div>
     </section>
   </main>
 
@@ -218,6 +225,8 @@
         browserUsageHint: '通过 CDN 在页面中直接调用。',
         mcpUsage: 'MCP 使用',
         mcpUsageHint: '接入支持 MCP 的 AI 客户端。',
+        demoTab: 'Demo List',
+        usageTab: '使用方式',
         demoList: 'Demo List',
         demoHint: '选择一个示例查看 stock-api 的实际用法。',
         webExampleTitle: '股票接口 Web Demo',
@@ -249,6 +258,8 @@
         browserUsageHint: 'Load it from a CDN and call it directly in the page.',
         mcpUsage: 'MCP Usage',
         mcpUsageHint: 'Connect stock-api to MCP-compatible AI clients.',
+        demoTab: 'Demo List',
+        usageTab: 'Usage',
         demoList: 'Demo List',
         demoHint: 'Choose an example to see stock-api in action.',
         webExampleTitle: 'Stock API Web Demo',
@@ -270,6 +281,7 @@
     let currentLanguage = localStorage.getItem('sa_lang') || 'zh';
     let currentTheme = localStorage.getItem('sa_theme') || 'dark';
     let currentColorRule = localStorage.getItem(colorRuleStorageKey) || 'asia';
+    let currentHomeTab = 'demo';
 
     function applyTheme() {
       document.documentElement.classList.toggle('dark', currentTheme === 'dark');
@@ -298,6 +310,26 @@
       localStorage.setItem('sa_lang', currentLanguage);
       document.getElementById('language-menu').classList.add('hidden');
       translate();
+    }
+
+    function setHomeTab(tab) {
+      currentHomeTab = tab === 'usage' ? 'usage' : 'demo';
+      document.getElementById('demo-panel').classList.toggle('hidden', currentHomeTab !== 'demo');
+      document.getElementById('usage-panel').classList.toggle('hidden', currentHomeTab !== 'usage');
+
+      [
+        ['demo', document.getElementById('tab-demo')],
+        ['usage', document.getElementById('tab-usage')],
+      ].forEach(([name, el]) => {
+        const active = name === currentHomeTab;
+        el.classList.toggle('bg-blue-600', active);
+        el.classList.toggle('text-white', active);
+        el.classList.toggle('shadow-sm', active);
+        el.classList.toggle('text-slate-500', !active);
+        el.classList.toggle('dark:text-slate-400', !active);
+        el.classList.toggle('hover:text-slate-900', !active);
+        el.classList.toggle('dark:hover:text-slate-100', !active);
+      });
     }
 
     function toggleTheme() {
@@ -348,6 +380,7 @@
 
     applyTheme();
     translate();
+    setHomeTab('demo');
   </script>
 </body>
 </html>

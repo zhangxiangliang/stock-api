@@ -3,7 +3,6 @@ import { resolve } from "node:path";
 import { Readable, Writable } from "node:stream";
 
 import { stocks } from "../index";
-import StockApi from "../types/stocks";
 import { KlineAdjust, KlinePeriod } from "../types/utils/kline";
 import { StockSource } from "../types/utils/stock";
 import { StockProviderApi } from "../stocks/shared/provider";
@@ -46,7 +45,7 @@ type ToolResult = {
     type: "text";
     text: string;
   }>;
-  structuredContent: unknown;
+  structuredContent: Record<string, unknown>;
   isError?: boolean;
 };
 
@@ -290,8 +289,14 @@ async function callTool(params: ToolCallParams): Promise<unknown> {
     return createToolResult(data);
   } catch (error) {
     const data = {
-      code: "STOCK_API_TOOL_ERROR",
-      message: getErrorMessage(error),
+      input: {
+        arguments: args,
+        tool: name,
+      },
+      response: {
+        code: "STOCK_API_TOOL_ERROR",
+        message: getErrorMessage(error),
+      },
     };
 
     return {
@@ -301,35 +306,90 @@ async function callTool(params: ToolCallParams): Promise<unknown> {
   }
 }
 
-async function executeTool(name: string, args: Record<string, unknown>): Promise<unknown> {
+async function executeTool(
+  name: string,
+  args: Record<string, unknown>
+): Promise<Record<string, unknown>> {
   switch (name) {
     case "get_stock": {
       const values = args as GetStockArgs;
-      return getSource(values.source).getStock(requireString(values.code, "code"));
+      const input = {
+        code: requireString(values.code, "code"),
+        source: optionalSource(values.source),
+      };
+      const stock = await stocks[input.source].getStock(input.code);
+      return {
+        input,
+        response: { stock },
+      };
     }
 
     case "get_stocks": {
       const values = args as GetStocksArgs;
-      return getSource(values.source).getStocks(requireStringArray(values.codes, "codes"));
+      const input = {
+        codes: requireStringArray(values.codes, "codes"),
+        source: optionalSource(values.source),
+      };
+      const stockList = await stocks[input.source].getStocks(input.codes);
+      return {
+        input,
+        response: {
+          count: stockList.length,
+          stocks: stockList,
+        },
+      };
     }
 
     case "get_klines": {
       const values = args as GetKlinesArgs;
-      return getSource(values.source).getKlines(requireString(values.code, "code"), {
+      const input = {
         adjust: optionalKlineAdjust(values.adjust),
+        code: requireString(values.code, "code"),
         count: optionalCount(values.count),
         period: optionalKlinePeriod(values.period),
+        source: optionalSource(values.source),
+      };
+      const klines = await stocks[input.source].getKlines(input.code, {
+        adjust: input.adjust,
+        count: input.count,
+        period: input.period,
       });
+      return {
+        input,
+        response: {
+          count: klines.length,
+          klines,
+        },
+      };
     }
 
     case "search_stocks": {
       const values = args as SearchStocksArgs;
-      return getSource(values.source).searchStocks(requireString(values.query, "query"));
+      const input = {
+        query: requireString(values.query, "query"),
+        source: optionalSource(values.source),
+      };
+      const stockList = await stocks[input.source].searchStocks(input.query);
+      return {
+        input,
+        response: {
+          count: stockList.length,
+          stocks: stockList,
+        },
+      };
     }
 
     case "inspect_stock": {
       const values = args as InspectStockArgs;
-      return getInspectionSource(values.source).inspectStock(requireString(values.code, "code"));
+      const input = {
+        code: requireString(values.code, "code"),
+        source: optionalSource(values.source),
+      };
+      const inspection = await getInspectionSource(input.source).inspectStock(input.code);
+      return {
+        input,
+        response: { inspection },
+      };
     }
 
     default:
@@ -337,13 +397,7 @@ async function executeTool(name: string, args: Record<string, unknown>): Promise
   }
 }
 
-function getSource(value: unknown): StockApi {
-  const source = optionalSource(value);
-  return stocks[source];
-}
-
-function getInspectionSource(value: unknown): StockProviderApi {
-  const source = optionalSource(value);
+function getInspectionSource(source: McpSourceName): StockProviderApi {
   return stocks[source] as StockProviderApi;
 }
 
@@ -427,16 +481,22 @@ function requireStringArray(value: unknown, name: string): string[] {
   return value.map((item) => requireString(item, name));
 }
 
-function createToolResult(data: unknown): ToolResult {
+function createToolResult(data: Record<string, unknown>): ToolResult {
+  const structuredContent = toJsonObject(data);
+
   return {
     content: [
       {
         type: "text",
-        text: JSON.stringify(data, null, 2),
+        text: JSON.stringify(structuredContent, null, 2),
       },
     ],
-    structuredContent: data,
+    structuredContent,
   };
+}
+
+function toJsonObject(data: Record<string, unknown>): Record<string, unknown> {
+  return JSON.parse(JSON.stringify(data)) as Record<string, unknown>;
 }
 
 function stockCodeSchema(): Record<string, unknown> {
