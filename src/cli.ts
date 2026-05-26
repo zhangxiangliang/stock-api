@@ -3,6 +3,7 @@
 import { stocks } from "./index";
 import StockApi from "./types/stocks";
 import { KlineAdjust, KlinePeriod } from "./types/utils/kline";
+import { runMcpServer } from "./mcp/server";
 
 type SourceName = "eastmoney" | "sina" | "tencent";
 type CliSourceName = "auto" | SourceName;
@@ -30,6 +31,11 @@ async function run(args: string[]): Promise<void> {
 
   if (!parsed.command || parsed.command === "help" || parsed.command === "--help") {
     printHelp();
+    return;
+  }
+
+  if (parsed.command === "mcp") {
+    await runMcpServer();
     return;
   }
 
@@ -170,10 +176,12 @@ function printHelp(): void {
   stock-api get-stocks <code...> [--source auto|tencent|sina|eastmoney]
   stock-api get-klines <code> [--period day|week|month] [--count n] [--adjust none|qfq|hfq] [--source auto|tencent|sina|eastmoney]
   stock-api search-stocks <keyword> [--source auto|tencent|sina|eastmoney]
+  stock-api mcp
 
 Examples:
   stock-api get-stock SH510500
   stock-api get-stocks SH510500 SZ000651
   stock-api get-klines SH600519 --period week --count 20
-  stock-api search-stocks 格力电器 --source eastmoney`);
+  stock-api search-stocks 格力电器 --source eastmoney
+  stock-api mcp`);
 }

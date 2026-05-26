@@ -27,6 +27,7 @@ npx stock-api --help
 | `get-stocks <code...>` | 批量获取股票行情 |
 | `get-klines <code>` | 获取日 K / 周 K / 月 K |
 | `search-stocks <keyword>` | 搜索股票并返回行情数据 |
+| `mcp` | 启动 MCP stdio server，给 AI 客户端调用 |
 | `help` / `--help` | 查看帮助 |
 
 ## 参数
@@ -172,6 +173,35 @@ npx stock-api get-klines SH600519 --period month --source sina
 | `--source tencent` | 只使用腾讯 |
 | `--source sina` | 只使用新浪 |
 | `--source eastmoney` | 只使用东方财富 |
+
+## MCP
+
+`stock-api mcp` 会启动一个 MCP stdio server，适合 Claude、Cursor、Codex、Cherry Studio 等支持 MCP 的 AI 客户端使用。
+
+配置示例：
+
+```json
+{
+  "mcpServers": {
+    "stock-api": {
+      "command": "npx",
+      "args": ["-y", "stock-api", "mcp"]
+    }
+  }
+}
+```
+
+可用工具：
+
+| 工具 | 说明 |
+| --- | --- |
+| `get_stock` | 查询单只股票行情 |
+| `get_stocks` | 批量查询股票行情 |
+| `get_klines` | 查询 K 线数据 |
+| `search_stocks` | 搜索股票 |
+| `inspect_stock` | 诊断数据源可用性和兜底结果 |
+
+所有工具默认使用 `source: "auto"`，也可以传 `source: "tencent"` / `"sina"` / `"eastmoney"` 指定数据源。
 
 ## 输出格式
 

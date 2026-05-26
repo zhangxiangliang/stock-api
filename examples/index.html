@@ -124,6 +124,24 @@
   StockApi.stocks.auto.searchStocks(<span class="text-green-300">"格力电器"</span>).then(console.log);
 <span class="text-slate-500">&lt;/script&gt;</span></code></pre>
       </div>
+
+      <div class="bg-white dark:bg-[#111520] border border-slate-200 dark:border-[#1f2635] rounded-xl overflow-hidden shadow-lg">
+        <div class="px-4 py-3 border-b border-slate-200 dark:border-[#1f2635] flex items-center justify-between gap-3">
+          <div>
+            <h2 class="text-sm font-bold text-slate-900 dark:text-slate-100" data-i18n="mcpUsage">MCP 使用</h2>
+            <p class="mt-0.5 text-[11px] text-slate-500 dark:text-[#5f6a80]" data-i18n="mcpUsageHint">接入支持 MCP 的 AI 客户端。</p>
+          </div>
+          <span class="shrink-0 rounded-md border border-emerald-500/20 bg-emerald-500/10 px-2 py-1 text-[10px] font-mono text-emerald-500 dark:text-emerald-400">MCP</span>
+        </div>
+        <pre class="m-0 overflow-x-auto bg-slate-950 p-4 text-[12px] leading-6 text-slate-200"><code>{
+  <span class="text-green-300">"mcpServers"</span>: {
+    <span class="text-green-300">"stock-api"</span>: {
+      <span class="text-green-300">"command"</span>: <span class="text-green-300">"npx"</span>,
+      <span class="text-green-300">"args"</span>: [<span class="text-green-300">"-y"</span>, <span class="text-green-300">"stock-api"</span>, <span class="text-green-300">"mcp"</span>]
+    }
+  }
+}</code></pre>
+      </div>
     </section>
 
     <section class="mt-10 space-y-4">
@@ -198,6 +216,8 @@
         nodeUsageHint: '安装后直接使用默认自动数据源。',
         browserUsage: 'Browser 使用',
         browserUsageHint: '通过 CDN 在页面中直接调用。',
+        mcpUsage: 'MCP 使用',
+        mcpUsageHint: '接入支持 MCP 的 AI 客户端。',
         demoList: 'Demo List',
         demoHint: '选择一个示例查看 stock-api 的实际用法。',
         webExampleTitle: '股票接口 Web Demo',
@@ -227,6 +247,8 @@
         nodeUsageHint: 'Install the package and use the default auto provider.',
         browserUsage: 'Browser Usage',
         browserUsageHint: 'Load it from a CDN and call it directly in the page.',
+        mcpUsage: 'MCP Usage',
+        mcpUsageHint: 'Connect stock-api to MCP-compatible AI clients.',
         demoList: 'Demo List',
         demoHint: 'Choose an example to see stock-api in action.',
         webExampleTitle: 'Stock API Web Demo',

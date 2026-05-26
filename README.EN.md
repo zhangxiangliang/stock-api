@@ -78,6 +78,23 @@ npx stock-api get-klines SH600519 --period day --count 120
 npx stock-api search-stocks 格力电器
 ```
 
+## MCP
+
+Use `stock-api` from any MCP-compatible AI client:
+
+```json
+{
+  "mcpServers": {
+    "stock-api": {
+      "command": "npx",
+      "args": ["-y", "stock-api", "mcp"]
+    }
+  }
+}
+```
+
+Built-in tools: `get_stock`, `get_stocks`, `get_klines`, `search_stocks`, and `inspect_stock`.
+
 ## Providers
 
 Built-in providers include Tencent, Sina, and Eastmoney. `stocks.auto` handles provider fallback by default.

@@ -31,6 +31,7 @@ npx stock-api --help
 | `get-stocks <code...>` | Get multiple quotes |
 | `get-klines <code>` | Get daily / weekly / monthly K-lines |
 | `search-stocks <keyword>` | Search symbols and return quotes |
+| `mcp` | Start an MCP stdio server for AI clients |
 | `help` / `--help` | Show help |
 
 ## Options
@@ -141,6 +142,35 @@ Output:
 | `--source tencent` | Tencent only |
 | `--source sina` | Sina only |
 | `--source eastmoney` | Eastmoney only |
+
+## MCP
+
+`stock-api mcp` starts an MCP stdio server for AI clients such as Claude, Cursor, Codex, and Cherry Studio.
+
+Example configuration:
+
+```json
+{
+  "mcpServers": {
+    "stock-api": {
+      "command": "npx",
+      "args": ["-y", "stock-api", "mcp"]
+    }
+  }
+}
+```
+
+Available tools:
+
+| Tool | Description |
+| --- | --- |
+| `get_stock` | Get one quote |
+| `get_stocks` | Get multiple quotes |
+| `get_klines` | Get K-line rows |
+| `search_stocks` | Search symbols |
+| `inspect_stock` | Inspect provider availability and fallback results |
+
+All tools use `source: "auto"` by default. You can also pass `source: "tencent"`, `"sina"`, or `"eastmoney"`.
 
 ## Output
 
