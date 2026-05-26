@@ -1,3 +1,10 @@
+## [2.7.1](https://github.com/zhangxiangliang/stock-api/compare/v2.7.0...v2.7.1) (2026-05-26)
+
+
+### Bug Fixes
+
+* stabilize mcp tool results ([c05394a](https://github.com/zhangxiangliang/stock-api/commit/c05394ac4cca91a26215e422ff1610b18b7804c6))
+
 # [2.7.0](https://github.com/zhangxiangliang/stock-api/compare/v2.6.0...v2.7.0) (2026-05-26)
 
 
