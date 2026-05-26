@@ -96,6 +96,23 @@ npx stock-api get-klines SH600519 --period day --count 120
 npx stock-api search-stocks 格力电器
 ```
 
+## MCP
+
+把 `stock-api` 接到支持 MCP 的 AI 客户端：
+
+```json
+{
+  "mcpServers": {
+    "stock-api": {
+      "command": "npx",
+      "args": ["-y", "stock-api", "mcp"]
+    }
+  }
+}
+```
+
+内置工具：`get_stock`、`get_stocks`、`get_klines`、`search_stocks`、`inspect_stock`。
+
 ## 数据源
 
 内置腾讯、新浪、东方财富数据源，默认由 `stocks.auto` 自动处理。
