@@ -1,3 +1,10 @@
+# [2.7.0](https://github.com/zhangxiangliang/stock-api/compare/v2.6.0...v2.7.0) (2026-05-26)
+
+
+### Features
+
+* add mcp server ([48d90a1](https://github.com/zhangxiangliang/stock-api/commit/48d90a1a5861425edcf7deeb13163fbbddd4cee6))
+
 # [2.6.0](https://github.com/zhangxiangliang/stock-api/compare/v2.5.1...v2.6.0) (2026-05-25)
 
 
