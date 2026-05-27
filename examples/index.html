@@ -207,8 +207,11 @@
   </div>
 
   <script>
-    const refreshIntervalStorageKey = 'sa_refresh_interval_seconds_v2';
-    const colorRuleStorageKey = 'sa_color_rule_v2';
+    const storagePrefix = 'stock-api:';
+    const refreshIntervalStorageKey = `${storagePrefix}refresh_interval_seconds_v2`;
+    const colorRuleStorageKey = `${storagePrefix}color_rule_v2`;
+    const languageStorageKey = `${storagePrefix}lang`;
+    const themeStorageKey = `${storagePrefix}theme`;
     const dict = {
       zh: {
         title: '股票接口',
@@ -278,8 +281,8 @@
       },
     };
 
-    let currentLanguage = localStorage.getItem('sa_lang') || 'zh';
-    let currentTheme = localStorage.getItem('sa_theme') || 'dark';
+    let currentLanguage = localStorage.getItem(languageStorageKey) || 'zh';
+    let currentTheme = localStorage.getItem(themeStorageKey) || 'dark';
     let currentColorRule = localStorage.getItem(colorRuleStorageKey) || 'asia';
     let currentHomeTab = 'demo';
 
@@ -307,7 +310,7 @@
 
     function setLanguage(language) {
       currentLanguage = language;
-      localStorage.setItem('sa_lang', currentLanguage);
+      localStorage.setItem(languageStorageKey, currentLanguage);
       document.getElementById('language-menu').classList.add('hidden');
       translate();
     }
@@ -334,7 +337,7 @@
 
     function toggleTheme() {
       currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
-      localStorage.setItem('sa_theme', currentTheme);
+      localStorage.setItem(themeStorageKey, currentTheme);
       applyTheme();
     }
 

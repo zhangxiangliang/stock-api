@@ -423,11 +423,15 @@
     };
 
     // Simulated historical data cache to prevent resetting charts
-    const refreshIntervalStorageKey = 'sa_refresh_interval_seconds_v2';
-    const colorRuleStorageKey = 'sa_color_rule_v2';
-    const watchlistStorageKey = 'sa_watchlist_codes_v2';
-    const selectedCodeStorageKey = 'sa_selected_code_v2';
-    const periodStorageKey = 'sa_active_period_v2';
+    const storagePrefix = 'stock-api:';
+    const refreshIntervalStorageKey = `${storagePrefix}refresh_interval_seconds_v2`;
+    const colorRuleStorageKey = `${storagePrefix}color_rule_v2`;
+    const watchlistStorageKey = `${storagePrefix}watchlist_codes_v2`;
+    const selectedCodeStorageKey = `${storagePrefix}selected_code_v2`;
+    const periodStorageKey = `${storagePrefix}active_period_v2`;
+    const themeStorageKey = `${storagePrefix}theme`;
+    const languageStorageKey = `${storagePrefix}lang`;
+    const consoleCollapsedStorageKey = `${storagePrefix}console_collapsed`;
     const historicalCache = {};
     const pendingKlineRequests = {};
 
@@ -874,10 +878,10 @@
     }
 
     function initSettings() {
-      const savedTheme = localStorage.getItem('sa_theme') || 'dark';
+      const savedTheme = localStorage.getItem(themeStorageKey) || 'dark';
       const savedRule = localStorage.getItem(colorRuleStorageKey) || 'asia';
-      const savedLang = localStorage.getItem('sa_lang') || 'zh';
-      const savedConsoleCollapsed = localStorage.getItem('sa_console_collapsed');
+      const savedLang = localStorage.getItem(languageStorageKey) || 'zh';
+      const savedConsoleCollapsed = localStorage.getItem(consoleCollapsedStorageKey);
       const savedRefreshInterval = localStorage.getItem(refreshIntervalStorageKey);
 
       appState.theme = savedTheme;
@@ -895,10 +899,10 @@
 
     // Save configuration utility
     function saveSettings() {
-      localStorage.setItem('sa_theme', appState.theme);
+      localStorage.setItem(themeStorageKey, appState.theme);
       localStorage.setItem(colorRuleStorageKey, appState.colorRule);
-      localStorage.setItem('sa_lang', appState.lang);
-      localStorage.setItem('sa_console_collapsed', appState.consoleCollapsed);
+      localStorage.setItem(languageStorageKey, appState.lang);
+      localStorage.setItem(consoleCollapsedStorageKey, appState.consoleCollapsed);
       localStorage.setItem(refreshIntervalStorageKey, Math.round(appState.refreshInterval / 1000));
     }
 
