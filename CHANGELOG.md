@@ -1,3 +1,10 @@
+## [2.7.3](https://github.com/zhangxiangliang/stock-api/compare/v2.7.2...v2.7.3) (2026-06-24)
+
+
+### Bug Fixes
+
+* polish web demo toast copy ([056f82e](https://github.com/zhangxiangliang/stock-api/commit/056f82e885872daa0849eca2a7e891485db1391f))
+
 ## [2.7.1](https://github.com/zhangxiangliang/stock-api/compare/v2.7.0...v2.7.1) (2026-05-26)
 
 
