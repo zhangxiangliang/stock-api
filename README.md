@@ -123,6 +123,17 @@ npx stock-api search-stocks 格力电器
 
 内置工具：`get_stock`、`get_stocks`、`get_klines`、`search_stocks`、`inspect_stock`。
 
+## AI Agent（任意工具）
+
+不想配置 MCP？把下面这句话发给任意 AI 工具（Claude Code、Codex、GLM 等），它读完就知道怎么用 `stock-api`：
+
+```text
+请阅读 https://raw.githubusercontent.com/zhangxiangliang/stock-api/main/SKILL.md
+然后用 stock-api 回答我的股票问题。
+```
+
+`SKILL.md` 里写了具体的 `npx stock-api` 命令，所以和 MCP 共用同一套数据逻辑，只是接入方式更简单、跨工具通用。
+
 ## 数据源
 
 内置腾讯、新浪、东方财富数据源，默认由 `stocks.auto` 自动处理。

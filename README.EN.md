@@ -104,6 +104,18 @@ Use `stock-api` from any MCP-compatible AI client:
 
 Built-in tools: `get_stock`, `get_stocks`, `get_klines`, `search_stocks`, and `inspect_stock`.
 
+## AI Agent (any tool)
+
+Don't want to set up MCP? Send this line to any AI tool (Claude Code, Codex, GLM, etc.) and it will learn how to use `stock-api` on its own:
+
+```text
+Read https://raw.githubusercontent.com/zhangxiangliang/stock-api/main/SKILL.md
+and use stock-api to answer my stock questions.
+```
+
+`SKILL.md` contains the exact `npx stock-api` commands, so it shares the same
+data logic as MCP — it's just a simpler, tool-agnostic way to plug in.
+
 ## Providers
 
 Built-in providers include Tencent, Sina, and Eastmoney. `stocks.auto` handles provider fallback by default.
