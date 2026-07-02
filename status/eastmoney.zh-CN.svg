@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="102" height="20" role="img" aria-label="东方财富: 可用">
+  <title>东方财富: 可用</title>
+  <linearGradient id="s" x2="0" y2="100%">
+    <stop offset="0" stop-color="#bbb" stop-opacity=".1"/>
+    <stop offset="1" stop-opacity=".1"/>
+  </linearGradient>
+  <clipPath id="r"><rect width="102" height="20" rx="3" fill="#fff"/></clipPath>
+  <g clip-path="url(#r)">
+    <rect width="62" height="20" fill="#555"/>
+    <rect x="62" width="40" height="20" fill="#4c1"/>
+    <rect width="102" height="20" fill="url(#s)"/>
+  </g>
+  <g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision" font-size="110">
+    <text aria-hidden="true" x="310" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)">东方财富</text>
+    <text x="310" y="140" transform="scale(.1)" fill="#fff">东方财富</text>
+    <text aria-hidden="true" x="820" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)">可用</text>
+    <text x="820" y="140" transform="scale(.1)" fill="#fff">可用</text>
+  </g>
+</svg>

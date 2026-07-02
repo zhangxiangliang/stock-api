@@ -1,0 +1,37 @@
+import Stock from "../../../types/utils/stock";
+export type EastmoneyQuote = {
+    f2?: number | string;
+    f3?: number | string;
+    f12?: string;
+    f14?: string;
+    f15?: number | string;
+    f16?: number | string;
+    f18?: number | string;
+    f43?: number | string;
+    f44?: number | string;
+    f45?: number | string;
+    f57?: string;
+    f58?: string;
+    f60?: number | string;
+    f170?: number | string;
+};
+export declare function parseEastmoneyStock(code: string, quote?: EastmoneyQuote): Stock;
+export declare function getEastmoneyStockCode(code: string): string;
+export declare function getEastmoneyStockName(quote?: EastmoneyQuote): string;
+export declare function getEastmoneyStockNow(quote?: EastmoneyQuote): number;
+export declare function getEastmoneyStockLow(quote?: EastmoneyQuote): number;
+export declare function getEastmoneyStockHigh(quote?: EastmoneyQuote): number;
+export declare function getEastmoneyStockYesterday(quote?: EastmoneyQuote): number;
+export declare function getEastmoneyStockPercent(quote?: EastmoneyQuote): number;
+declare const EastmoneyStockTransform: {
+    parse: typeof parseEastmoneyStock;
+    getCode: typeof getEastmoneyStockCode;
+    getName: typeof getEastmoneyStockName;
+    getNow: typeof getEastmoneyStockNow;
+    getLow: typeof getEastmoneyStockLow;
+    getHigh: typeof getEastmoneyStockHigh;
+    getYesterday: typeof getEastmoneyStockYesterday;
+    getPercent: typeof getEastmoneyStockPercent;
+    getStock: typeof parseEastmoneyStock;
+};
+export default EastmoneyStockTransform;
