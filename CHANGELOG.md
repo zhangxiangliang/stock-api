@@ -1,3 +1,10 @@
+## [2.7.4](https://github.com/zhangxiangliang/stock-api/compare/v2.7.3...v2.7.4) (2026-09-06)
+
+
+### Bug Fixes
+
+* **mcp:** honor protocol version negotiation on initialize ([07556d9](https://github.com/zhangxiangliang/stock-api/commit/07556d99a652769906beb1f144b907fd7df5a5d9)), closes [#19](https://github.com/zhangxiangliang/stock-api/issues/19)
+
 ## [2.7.3](https://github.com/zhangxiangliang/stock-api/compare/v2.7.2...v2.7.3) (2026-06-24)
 
 
