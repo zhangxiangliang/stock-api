@@ -104,6 +104,8 @@ Use `stock-api` from any MCP-compatible AI client:
 
 Built-in tools: `get_stock`, `get_stocks`, `get_klines`, `search_stocks`, and `inspect_stock`.
 
+Supported MCP protocol revisions: `2025-11-25` and `2025-06-18`. The handshake echoes back the revision the client asks for, and falls back to the latest supported one otherwise.
+
 ## AI Agent (any tool)
 
 Don't want to set up MCP? Send this line to any AI tool (Claude Code, Codex, GLM, etc.) and it will learn how to use `stock-api` on its own:

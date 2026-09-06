@@ -1,4 +1,4 @@
-import { handleMcpRequest } from "mcp/server";
+import { handleMcpRequest, supportedProtocolVersions } from "mcp/server";
 import { stocks } from "index";
 
 type McpTextContent = {
@@ -34,6 +34,91 @@ describe("MCP server", () => {
           name: "stock-api",
         },
       },
+    });
+  });
+
+  it.each(supportedProtocolVersions)(
+    "echoes the negotiated protocol version %s back to the client",
+    async (protocolVersion) => {
+      await expect(
+        handleMcpRequest({
+          jsonrpc: "2.0",
+          id: 1,
+          method: "initialize",
+          params: { protocolVersion },
+        })
+      ).resolves.toMatchObject({
+        id: 1,
+        result: { protocolVersion },
+      });
+    }
+  );
+
+  it.each([
+    ["an unsupported version", { protocolVersion: "1900-01-01" }],
+    ["a non-string version", { protocolVersion: 20251125 }],
+    ["no version at all", {}],
+    ["no params at all", undefined],
+  ])("falls back to the latest supported version given %s", async (_label, params) => {
+    const response = await handleMcpRequest({
+      jsonrpc: "2.0",
+      id: 1,
+      method: "initialize",
+      params,
+    });
+
+    expect(response).toMatchObject({
+      id: 1,
+      result: { protocolVersion: supportedProtocolVersions[0] },
+    });
+  });
+
+  it("never answers initialize outside its supported window", async () => {
+    const response = await handleMcpRequest({
+      jsonrpc: "2.0",
+      id: 1,
+      method: "initialize",
+      params: { protocolVersion: "2026-07-28" },
+    });
+
+    const result = response?.result as { protocolVersion: string };
+
+    expect(supportedProtocolVersions).toContain(result.protocolVersion);
+  });
+
+  it("answers ping with an empty result", async () => {
+    await expect(
+      handleMcpRequest({
+        jsonrpc: "2.0",
+        id: 9,
+        method: "ping",
+      })
+    ).resolves.toEqual({
+      jsonrpc: "2.0",
+      id: 9,
+      result: {},
+    });
+  });
+
+  it("rejects an unknown method with -32601", async () => {
+    await expect(
+      handleMcpRequest({
+        jsonrpc: "2.0",
+        id: 10,
+        method: "resources/list",
+      })
+    ).resolves.toMatchObject({
+      id: 10,
+      error: { code: -32601 },
+    });
+  });
+
+  it("rejects a malformed message with -32600", async () => {
+    await expect(
+      handleMcpRequest([] as unknown as Parameters<typeof handleMcpRequest>[0])
+    ).resolves.toMatchObject({
+      id: null,
+      error: { code: -32600 },
     });
   });
 

@@ -123,6 +123,8 @@ npx stock-api search-stocks 格力电器
 
 内置工具：`get_stock`、`get_stocks`、`get_klines`、`search_stocks`、`inspect_stock`。
 
+支持的 MCP 协议版本：`2025-11-25`、`2025-06-18`。握手时会返回客户端请求的版本，不支持则回退到最新的一个。
+
 ## AI Agent（任意工具）
 
 不想配置 MCP？把下面这句话发给任意 AI 工具（Claude Code、Codex、GLM 等），它读完就知道怎么用 `stock-api`：

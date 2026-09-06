@@ -29,6 +29,16 @@ type JsonRpcResponse = {
   };
 };
 
+class JsonRpcError extends Error {
+  readonly code: number;
+
+  constructor(code: number, message: string) {
+    super(message);
+    this.name = "JsonRpcError";
+    this.code = code;
+  }
+}
+
 type McpTool = {
   name: string;
   description: string;
@@ -47,6 +57,10 @@ type ToolResult = {
   }>;
   structuredContent: Record<string, unknown>;
   isError?: boolean;
+};
+
+type InitializeParams = {
+  protocolVersion?: unknown;
 };
 
 type ToolCallParams = {
@@ -81,6 +95,15 @@ type InspectStockArgs = {
   code?: unknown;
   source?: unknown;
 };
+
+// Protocol revisions this server actually implements, newest first. The server
+// speaks the `initialize` handshake era only, so revisions from the per-request
+// `_meta` era (2026-07-28 and later) are deliberately not listed. Older
+// revisions are left out too: tool results carry `structuredContent`, which was
+// only added in 2025-06-18.
+export const supportedProtocolVersions = ["2025-11-25", "2025-06-18"] as const;
+
+const latestProtocolVersion = supportedProtocolVersions[0];
 
 const sourceNames: SourceName[] = ["tencent", "sina", "eastmoney"];
 const mcpSourceNames: McpSourceName[] = ["auto", ...sourceNames];
@@ -224,6 +247,10 @@ export async function handleMcpRequest(
       result,
     };
   } catch (error) {
+    if (error instanceof JsonRpcError) {
+      return createError(request.id, error.code, error.message);
+    }
+
     return createError(request.id, -32603, getErrorMessage(error));
   }
 }
@@ -238,14 +265,10 @@ async function handleLine(line: string, output: Writable): Promise<void> {
     return;
   }
 
-  const messages = Array.isArray(payload) ? payload : [payload];
+  const response = await handleMcpRequest(payload as JsonRpcRequest);
 
-  for (const message of messages) {
-    const response = await handleMcpRequest(message as JsonRpcRequest);
-
-    if (response) {
-      writeMessage(output, response);
-    }
+  if (response) {
+    writeMessage(output, response);
   }
 }
 
@@ -253,7 +276,7 @@ async function routeRequest(request: JsonRpcRequest): Promise<unknown> {
   switch (request.method) {
     case "initialize":
       return {
-        protocolVersion: "2025-06-18",
+        protocolVersion: negotiateProtocolVersion(request.params),
         capabilities: {
           tools: {},
         },
@@ -263,6 +286,9 @@ async function routeRequest(request: JsonRpcRequest): Promise<unknown> {
         },
       };
 
+    case "ping":
+      return {};
+
     case "tools/list":
       return { tools };
 
@@ -270,7 +296,7 @@ async function routeRequest(request: JsonRpcRequest): Promise<unknown> {
       return callTool(parseToolCallParams(request.params));
 
     default:
-      throw new Error(`Unknown method: ${request.method}`);
+      throw new JsonRpcError(-32601, `Method not found: ${request.method}`);
   }
 }
 
@@ -451,6 +477,20 @@ function optionalCount(value: unknown): number | undefined {
   }
 
   return Math.floor(value);
+}
+
+function negotiateProtocolVersion(params: unknown): string {
+  const requested = (asObject(params) as InitializeParams).protocolVersion;
+
+  if (typeof requested === "string" && isSupportedProtocolVersion(requested)) {
+    return requested;
+  }
+
+  return latestProtocolVersion;
+}
+
+function isSupportedProtocolVersion(value: string): boolean {
+  return (supportedProtocolVersions as readonly string[]).includes(value);
 }
 
 function parseToolCallParams(value: unknown): ToolCallParams {
