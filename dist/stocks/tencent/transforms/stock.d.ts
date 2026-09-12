@@ -1,0 +1,21 @@
+import Stock from "../../../types/utils/stock";
+export declare function parseTencentStock(code: string, params: string[]): Stock;
+export declare function getTencentStockCode(code: string): string;
+export declare function getTencentStockName(params: string[]): string;
+export declare function getTencentStockNow(params: string[]): number;
+export declare function getTencentStockLow(params: string[]): number;
+export declare function getTencentStockHigh(params: string[]): number;
+export declare function getTencentStockYesterday(params: string[]): number;
+export declare function getTencentStockPercent(params: string[]): number;
+declare const TencentStockTransform: {
+    parse: typeof parseTencentStock;
+    getCode: typeof getTencentStockCode;
+    getName: typeof getTencentStockName;
+    getNow: typeof getTencentStockNow;
+    getLow: typeof getTencentStockLow;
+    getHigh: typeof getTencentStockHigh;
+    getYesterday: typeof getTencentStockYesterday;
+    getPercent: typeof getTencentStockPercent;
+    getStock: typeof parseTencentStock;
+};
+export default TencentStockTransform;
