@@ -1,0 +1,66 @@
+{
+	"name": "make-asynchronous",
+	"version": "1.1.0",
+	"description": "Make a synchronous function asynchronous by running it in a worker",
+	"license": "MIT",
+	"repository": "sindresorhus/make-asynchronous",
+	"funding": "https://github.com/sponsors/sindresorhus",
+	"author": {
+		"name": "Sindre Sorhus",
+		"email": "sindresorhus@gmail.com",
+		"url": "https://sindresorhus.com"
+	},
+	"type": "module",
+	"exports": {
+		"types": "./index.d.ts",
+		"default": "./index.js"
+	},
+	"sideEffects": false,
+	"engines": {
+		"node": ">=18"
+	},
+	"scripts": {
+		"test": "xo && ava && tsd"
+	},
+	"files": [
+		"index.js",
+		"index.d.ts"
+	],
+	"keywords": [
+		"function",
+		"asynchronous",
+		"async",
+		"thread",
+		"dispatch",
+		"synchronous",
+		"sync",
+		"web",
+		"worker",
+		"thread",
+		"cpu",
+		"expensive",
+		"pool"
+	],
+	"dependencies": {
+		"p-event": "^6.0.0",
+		"type-fest": "^4.6.0",
+		"web-worker": "^1.5.0"
+	},
+	"devDependencies": {
+		"ava": "^5.3.1",
+		"delay": "^6.0.0",
+		"in-range": "^3.0.0",
+		"time-span": "^5.1.0",
+		"tsd": "^0.29.0",
+		"xo": "^0.56.0"
+	},
+	"xo": {
+		"rules": {
+			"n/prefer-global/process": "off",
+			"n/prefer-global/buffer": "off"
+		}
+	},
+	"ava": {
+		"workerThreads": false
+	}
+}
