@@ -21,6 +21,7 @@
   <img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fzhangxiangliang%2Fstock-api%2Fapi-status%2Ftencent.zh-CN.json&cacheSeconds=300" alt="腾讯状态">
   <img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fzhangxiangliang%2Fstock-api%2Fapi-status%2Fsina.zh-CN.json&cacheSeconds=300" alt="新浪状态">
   <img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fzhangxiangliang%2Fstock-api%2Fapi-status%2Feastmoney.zh-CN.json&cacheSeconds=300" alt="东方财富状态">
+  <img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fzhangxiangliang%2Fstock-api%2Fapi-status%2Feastmoney.search.zh-CN.json&cacheSeconds=300" alt="东方财富搜索状态">
 </p>
 
 <p align="center">
@@ -146,6 +147,8 @@ npx stock-api search-stocks 格力电器
 | 腾讯 | `stocks.tencent` | 单只行情、批量行情、K 线、搜索、诊断 |
 | 新浪 | `stocks.sina` | 单只行情、批量行情、K 线、搜索、诊断 |
 | 东方财富 | `stocks.eastmoney` | A 股单只行情、批量行情、K 线、搜索、诊断 |
+
+> `stocks.eastmoney.searchStocks` 依赖的搜索接口对部分境外网络环境（例如海外服务器、CI 出口 IP）会返回反爬响应而失败，行情/K 线不受影响。直接依赖东方财富搜索的场景建议改用 `stocks.auto`，它会在东方财富搜索失败时自动回退到腾讯、新浪。
 
 ## 文档
 

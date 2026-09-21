@@ -13,31 +13,43 @@ const checks = [
   {
     id: "tencent",
     label: "tencent",
-    async run() {
-      const quote = await stocks.tencent.getStock("SH510500");
-      assertUsableQuote(quote, "SH510500");
-      const results = await stocks.tencent.searchStocks("贵州茅台");
-      assertContainsCode(results, "SH600519");
+    capabilities: {
+      async quote() {
+        const quote = await stocks.tencent.getStock("SH510500");
+        assertUsableQuote(quote, "SH510500");
+      },
+      async search() {
+        const results = await stocks.tencent.searchStocks("贵州茅台");
+        assertContainsCode(results, "SH600519");
+      },
     },
   },
   {
     id: "sina",
     label: "sina",
-    async run() {
-      const quote = await stocks.sina.getStock("SH510500");
-      assertUsableQuote(quote, "SH510500");
-      const results = await stocks.sina.searchStocks("格力电器");
-      assertContainsCode(results, "SZ000651");
+    capabilities: {
+      async quote() {
+        const quote = await stocks.sina.getStock("SH510500");
+        assertUsableQuote(quote, "SH510500");
+      },
+      async search() {
+        const results = await stocks.sina.searchStocks("格力电器");
+        assertContainsCode(results, "SZ000651");
+      },
     },
   },
   {
     id: "eastmoney",
     label: "eastmoney",
-    async run() {
-      const quote = await stocks.eastmoney.getStock("SH600519");
-      assertUsableQuote(quote, "SH600519");
-      const results = await stocks.eastmoney.searchStocks("贵州茅台");
-      assertContainsCode(results, "SH600519");
+    capabilities: {
+      async quote() {
+        const quote = await stocks.eastmoney.getStock("SH600519");
+        assertUsableQuote(quote, "SH600519");
+      },
+      async search() {
+        const results = await stocks.eastmoney.searchStocks("贵州茅台");
+        assertContainsCode(results, "SH600519");
+      },
     },
   },
 ];
@@ -49,26 +61,36 @@ const checkedAt = new Date().toISOString();
 const results = [];
 
 for (const check of checks) {
-  const startedAt = Date.now();
-  try {
-    await retryCheck(() => withTimeout(check.run(), attemptTimeoutMs), maxAttempts);
-    results.push({
-      id: check.id,
-      label: check.label,
-      ok: true,
-      message: "up",
-      durationMs: Date.now() - startedAt,
-    });
-  } catch (error) {
-    results.push({
-      id: check.id,
-      label: check.label,
-      ok: false,
-      message: "down",
-      durationMs: Date.now() - startedAt,
-      error: error instanceof Error ? error.message : String(error),
-    });
+  const capabilities = {};
+
+  for (const [name, run] of Object.entries(check.capabilities)) {
+    const startedAt = Date.now();
+    try {
+      await retryCheck(() => withTimeout(run(), attemptTimeoutMs), maxAttempts);
+      capabilities[name] = { ok: true, durationMs: Date.now() - startedAt };
+    } catch (error) {
+      capabilities[name] = {
+        ok: false,
+        durationMs: Date.now() - startedAt,
+        error: error instanceof Error ? error.message : String(error),
+      };
+    }
   }
+
+  // Quote/kline is the core capability; search is supplementary and degrades
+  // gracefully (stocks.auto falls back to the next provider on its own), so a
+  // broken search shouldn't paint the whole provider as down.
+  const ok = capabilities.quote.ok;
+  const degraded = ok && !capabilities.search.ok;
+
+  results.push({
+    id: check.id,
+    label: check.label,
+    ok,
+    degraded,
+    message: ok ? (degraded ? "degraded" : "up") : "down",
+    capabilities,
+  });
 }
 
 for (const result of results) {
@@ -76,19 +98,40 @@ for (const result of results) {
     schemaVersion: 1,
     label: result.label,
     message: result.message,
-    color: result.ok ? "brightgreen" : "red",
+    color: getBadgeColorForStatus(result),
   };
   const zhBadge = {
     schemaVersion: 1,
     label: getChineseLabel(result.id),
-    message: result.ok ? "可用" : "不可用",
-    color: result.ok ? "brightgreen" : "red",
+    message: result.degraded ? "可用（搜索受限）" : result.ok ? "可用" : "不可用",
+    color: getBadgeColorForStatus(result),
   };
 
   await writeBadge(`${result.id}.json`, badge);
   await writeBadge(`${result.id}.zh-CN.json`, zhBadge);
   await writeSvgBadge(`${result.id}.svg`, badge);
   await writeSvgBadge(`${result.id}.zh-CN.svg`, zhBadge);
+
+  for (const capability of ["quote", "search"]) {
+    const capabilityResult = result.capabilities[capability];
+    const capabilityBadge = {
+      schemaVersion: 1,
+      label: `${result.label} ${capability}`,
+      message: capabilityResult.ok ? "up" : "down",
+      color: capabilityResult.ok ? "brightgreen" : "red",
+    };
+    const capabilityZhBadge = {
+      schemaVersion: 1,
+      label: `${getChineseLabel(result.id)}${capability === "quote" ? "行情" : "搜索"}`,
+      message: capabilityResult.ok ? "可用" : "不可用",
+      color: capabilityResult.ok ? "brightgreen" : "red",
+    };
+
+    await writeBadge(`${result.id}.${capability}.json`, capabilityBadge);
+    await writeBadge(`${result.id}.${capability}.zh-CN.json`, capabilityZhBadge);
+    await writeSvgBadge(`${result.id}.${capability}.svg`, capabilityBadge);
+    await writeSvgBadge(`${result.id}.${capability}.zh-CN.svg`, capabilityZhBadge);
+  }
 }
 
 const upCount = results.filter((result) => result.ok).length;
@@ -122,14 +165,18 @@ await fs.writeFile(
     "",
     `Checked at: ${checkedAt}`,
     "",
-    "| Source | Status | Duration | Error |",
-    "| --- | --- | ---: | --- |",
+    "| Source | Status | Quote | Search | Error |",
+    "| --- | --- | --- | --- | --- |",
     ...results.map((result) =>
       [
         result.label,
-        result.ok ? "up" : "down",
-        `${result.durationMs}ms`,
-        result.error ? escapeMarkdown(result.error) : "",
+        result.message,
+        formatCapability(result.capabilities.quote),
+        formatCapability(result.capabilities.search),
+        [result.capabilities.quote.error, result.capabilities.search.error]
+          .filter(Boolean)
+          .map(escapeMarkdown)
+          .join("<br>"),
       ].join(" | "),
     ),
     "",
@@ -140,10 +187,23 @@ console.table(
   results.map((result) => ({
     source: result.label,
     status: result.message,
-    duration: `${result.durationMs}ms`,
-    error: result.error || "",
+    quote: formatCapability(result.capabilities.quote),
+    search: formatCapability(result.capabilities.search),
+    error: [result.capabilities.quote.error, result.capabilities.search.error]
+      .filter(Boolean)
+      .join(" | "),
   })),
 );
+
+function formatCapability(capability) {
+  return `${capability.ok ? "up" : "down"} (${capability.durationMs}ms)`;
+}
+
+function getBadgeColorForStatus(result) {
+  if (!result.ok) return "red";
+  if (result.degraded) return "yellow";
+  return "brightgreen";
+}
 
 function assertUsableQuote(quote, code) {
   if (!quote || quote.code !== code || !quote.name || quote.name === "---") {

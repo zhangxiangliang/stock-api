@@ -169,13 +169,33 @@ async function requestJson<T>(url: string, retries = 0): Promise<T> {
         .retries(0)
         .timeout(requestTimeoutMs);
 
-      return JSON.parse(response.text) as T;
+      return parseJsonResponse<T>(response.text);
     } catch (error) {
       lastError = error;
     }
   }
 
   throw lastError;
+}
+
+const jsonpResponsePattern = /^\s*[\w$]+\s*\(/;
+
+function parseJsonResponse<T>(text: string): T {
+  try {
+    return JSON.parse(text) as T;
+  } catch (error) {
+    if (jsonpResponsePattern.test(text)) {
+      throw new Error(
+        `Eastmoney returned a non-JSON (JSONP-like) response, which usually means this request's network/IP was rate-limited or blocked by the upstream: ${text.slice(
+          0,
+          40
+        )}...`,
+        { cause: error }
+      );
+    }
+
+    throw error;
+  }
 }
 
 function getKlinePeriodCode(period: KlineOptions["period"]): string {

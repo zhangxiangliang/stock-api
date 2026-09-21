@@ -21,6 +21,7 @@
   <img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fzhangxiangliang%2Fstock-api%2Fapi-status%2Ftencent.json&cacheSeconds=300" alt="Tencent Status">
   <img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fzhangxiangliang%2Fstock-api%2Fapi-status%2Fsina.json&cacheSeconds=300" alt="Sina Status">
   <img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fzhangxiangliang%2Fstock-api%2Fapi-status%2Feastmoney.json&cacheSeconds=300" alt="Eastmoney Status">
+  <img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fzhangxiangliang%2Fstock-api%2Fapi-status%2Feastmoney.search.json&cacheSeconds=300" alt="Eastmoney Search Status">
 </p>
 
 <p align="center">
@@ -121,6 +122,8 @@ data logic as MCP — it's just a simpler, tool-agnostic way to plug in.
 ## Providers
 
 Built-in providers include Tencent, Sina, and Eastmoney. `stocks.auto` handles provider fallback by default.
+
+> `stocks.eastmoney.searchStocks` can fail from certain overseas networks (e.g. offshore servers, CI runner IPs) because Eastmoney's search endpoint returns an anti-bot response to those IPs; quotes and klines are unaffected. If you call Eastmoney search directly, prefer `stocks.auto`, which falls back to Tencent/Sina automatically.
 
 ## Documentation
 
