@@ -1,3 +1,10 @@
+## [2.7.5](https://github.com/zhangxiangliang/stock-api/compare/v2.7.4...v2.7.5) (2026-09-21)
+
+
+### Bug Fixes
+
+* split quote/search status and detect eastmoney JSONP responses ([8f561df](https://github.com/zhangxiangliang/stock-api/commit/8f561dfac2343abc1f37205c3a73b58fa5636c27))
+
 ## [2.7.4](https://github.com/zhangxiangliang/stock-api/compare/v2.7.3...v2.7.4) (2026-09-06)
 
 
