@@ -1,0 +1,63 @@
+{
+  "name": "web-worker",
+  "version": "1.5.0",
+  "description": "Consistent Web Workers in browser and Node.",
+  "main": "./dist/browser/index.cjs",
+  "browser": "./dist/browser/index.cjs",
+  "types": "./types/index.d.cts",
+  "type": "module",
+  "exports": {
+    "import": {
+      "types": "./types/index.d.ts",
+      "bun": "./src/browser/index.js",
+      "browser": "./src/browser/index.js",
+      "default": "./src/node/index.js"
+    },
+    "module": {
+      "types": "./types/index.d.ts",
+      "bun": "./src/browser/index.js",
+      "browser": "./src/browser/index.js",
+      "default": "./src/node/index.js"
+    },
+    "default": {
+      "types": "./types/index.d.cts",
+      "bun": "./dist/browser/index.cjs",
+      "browser": "./dist/browser/index.cjs",
+      "default": "./dist/node/index.cjs"
+    }
+  },
+  "files": [
+    "dist",
+    "src",
+    "types"
+  ],
+  "scripts": {
+    "prepare": "tsup",
+    "test": "eslint '*.js' test && node --experimental-modules ./node_modules/.bin/ava"
+  },
+  "repository": "developit/web-worker",
+  "keywords": [
+    "worker",
+    "worker_threads",
+    "webworker",
+    "web worker",
+    "web-worker",
+    "threads"
+  ],
+  "authors": [],
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/developit/web-worker",
+  "eslintConfig": {
+    "extends": "developit",
+    "rules": {
+      "no-console": 0
+    }
+  },
+  "devDependencies": {
+    "ava": "^6.2.0",
+    "eslint": "^7.32.0",
+    "eslint-config-developit": "^1.2.0",
+    "eslint-plugin-compat": "^4.2.0",
+    "tsup": "^8.0.2"
+  }
+}
