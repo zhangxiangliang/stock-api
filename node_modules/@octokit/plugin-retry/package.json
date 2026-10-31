@@ -1,0 +1,50 @@
+{
+  "name": "@octokit/plugin-retry",
+  "version": "8.1.0",
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "type": "module",
+  "description": "Automatic retry plugin for octokit",
+  "repository": "github:octokit/plugin-retry.js",
+  "author": "Simon Grondin (http://github.com/SGrondin)",
+  "license": "MIT",
+  "dependencies": {
+    "@octokit/request-error": "^7.0.2",
+    "@octokit/types": "^16.0.0",
+    "bottleneck": "^2.15.3"
+  },
+  "peerDependencies": {
+    "@octokit/core": ">=7"
+  },
+  "devDependencies": {
+    "@octokit/core": "^7.0.6",
+    "@octokit/tsconfig": "^4.0.0",
+    "@types/node": "^24.0.0",
+    "@vitest/coverage-v8": "^4.0.0",
+    "esbuild": "^0.25.0",
+    "fetch-mock": "^12.0.0",
+    "prettier": "3.6.2",
+    "semantic-release-plugin-update-version-in-files": "^2.0.0",
+    "tinyglobby": "^0.2.15",
+    "typescript": "^5.0.0",
+    "vitest": "^4.0.0"
+  },
+  "engines": {
+    "node": ">= 20"
+  },
+  "files": [
+    "dist-*/**",
+    "bin/**"
+  ],
+  "types": "./dist-types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist-types/index.d.ts",
+      "import": "./dist-bundle/index.js",
+      "default": "./dist-bundle/index.js"
+    }
+  },
+  "sideEffects": false
+}
