@@ -1,0 +1,64 @@
+{
+	"name": "read-package-up",
+	"version": "12.0.0",
+	"description": "Read the closest package.json file",
+	"license": "MIT",
+	"repository": "sindresorhus/read-package-up",
+	"funding": "https://github.com/sponsors/sindresorhus",
+	"author": {
+		"name": "Sindre Sorhus",
+		"email": "sindresorhus@gmail.com",
+		"url": "https://sindresorhus.com"
+	},
+	"type": "module",
+	"exports": {
+		"types": "./index.d.ts",
+		"default": "./index.js"
+	},
+	"sideEffects": false,
+	"engines": {
+		"node": ">=20"
+	},
+	"scripts": {
+		"test": "xo && ava"
+	},
+	"files": [
+		"index.js",
+		"index.d.ts"
+	],
+	"keywords": [
+		"json",
+		"read",
+		"parse",
+		"file",
+		"fs",
+		"graceful",
+		"load",
+		"package",
+		"find",
+		"up",
+		"find-up",
+		"findup",
+		"look-up",
+		"look",
+		"search",
+		"match",
+		"resolve",
+		"parent",
+		"parents",
+		"folder",
+		"directory",
+		"walk",
+		"walking",
+		"path"
+	],
+	"dependencies": {
+		"find-up-simple": "^1.0.1",
+		"read-pkg": "^10.0.0",
+		"type-fest": "^5.2.0"
+	},
+	"devDependencies": {
+		"ava": "^6.4.1",
+		"xo": "^1.2.3"
+	}
+}
