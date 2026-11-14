@@ -1,0 +1,57 @@
+{
+  "checkedAt": "2026-11-14T06:56:22.810Z",
+  "results": [
+    {
+      "id": "tencent",
+      "label": "tencent",
+      "ok": true,
+      "degraded": false,
+      "message": "up",
+      "capabilities": {
+        "quote": {
+          "ok": true,
+          "durationMs": 1290
+        },
+        "search": {
+          "ok": true,
+          "durationMs": 1679
+        }
+      }
+    },
+    {
+      "id": "sina",
+      "label": "sina",
+      "ok": true,
+      "degraded": false,
+      "message": "up",
+      "capabilities": {
+        "quote": {
+          "ok": true,
+          "durationMs": 999
+        },
+        "search": {
+          "ok": true,
+          "durationMs": 1905
+        }
+      }
+    },
+    {
+      "id": "eastmoney",
+      "label": "eastmoney",
+      "ok": true,
+      "degraded": true,
+      "message": "degraded",
+      "capabilities": {
+        "quote": {
+          "ok": true,
+          "durationMs": 962
+        },
+        "search": {
+          "ok": false,
+          "durationMs": 4825,
+          "error": "Eastmoney returned a non-JSON (JSONP-like) response, which usually means this request's network/IP was rate-limited or blocked by the upstream: jQuery35108723733748578402_1693632913001..."
+        }
+      }
+    }
+  ]
+}
