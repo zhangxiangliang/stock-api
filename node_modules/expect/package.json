@@ -1,0 +1,44 @@
+{
+  "name": "expect",
+  "version": "30.3.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jestjs/jest.git",
+    "directory": "packages/expect"
+  },
+  "license": "MIT",
+  "main": "./build/index.js",
+  "types": "./build/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./build/index.d.ts",
+      "require": "./build/index.js",
+      "import": "./build/index.mjs",
+      "default": "./build/index.js"
+    },
+    "./package.json": "./package.json",
+    "./build/matchers": "./build/matchers.js",
+    "./build/toThrowMatchers": "./build/toThrowMatchers.js"
+  },
+  "dependencies": {
+    "@jest/expect-utils": "30.3.0",
+    "@jest/get-type": "30.1.0",
+    "jest-matcher-utils": "30.3.0",
+    "jest-message-util": "30.3.0",
+    "jest-mock": "30.3.0",
+    "jest-util": "30.3.0"
+  },
+  "devDependencies": {
+    "@fast-check/jest": "^2.1.1",
+    "@jest/test-utils": "30.3.0",
+    "chalk": "^4.1.2",
+    "immutable": "^5.1.2"
+  },
+  "engines": {
+    "node": "^18.14.0 || ^20.0.0 || ^22.0.0 || >=24.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "gitHead": "efb59c2e81083f8dc941f20d6d20a3af2dc8d068"
+}
